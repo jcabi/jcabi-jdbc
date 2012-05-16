@@ -120,6 +120,11 @@ public final class JdbcSession {
      */
     public JdbcSession autocommit(final boolean autocommit) {
         this.auto.set(autocommit);
+        try {
+            this.conn.setAutoCommit(autocommit);
+        } catch (SQLException ex) {
+            throw new IllegalStateException(ex);
+        }
         return this;
     }
 
