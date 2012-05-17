@@ -314,9 +314,9 @@ public final class JdbcSession {
             if (arg == null) {
                 stmt.setString(pos, null);
             } else if (arg instanceof Long) {
-                stmt.setLong(pos, (Long) arg);
+                stmt.setLong(pos, Long.class.cast(arg));
             } else if (arg instanceof Boolean) {
-                stmt.setBoolean(pos, (Boolean) arg);
+                stmt.setBoolean(pos, Boolean.class.cast(arg));
             } else if (arg instanceof Utc) {
                 Utc.class.cast(arg).setTimestamp(stmt, pos);
             } else {
