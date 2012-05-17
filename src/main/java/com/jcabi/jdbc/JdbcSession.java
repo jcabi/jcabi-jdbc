@@ -277,9 +277,7 @@ public final class JdbcSession {
                 DbUtils.closeQuietly(stmt);
             }
         } catch (SQLException ex) {
-            if (this.auto.get()) {
-                DbUtils.closeQuietly(this.conn);
-            } else {
+            if (!this.auto.get()) {
                 DbUtils.rollbackAndCloseQuietly(this.conn);
             }
             Logger.error(
@@ -291,7 +289,7 @@ public final class JdbcSession {
             throw new IllegalArgumentException(ex);
         } finally {
             if (this.auto.get()) {
-                DbUtils.closeQuietly(this.conn);
+                this.commit();
             }
         }
         Logger.debug(
