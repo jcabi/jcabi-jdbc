@@ -211,7 +211,7 @@ public final class JdbcSession {
     }
 
     /**
-     * Make INSERT request.
+     * Make SQL {@code INSERT} request.
      *
      * <p>{@link Handler} will receive a {@link ResultSet} of generated keys.
      *
@@ -234,7 +234,7 @@ public final class JdbcSession {
     }
 
     /**
-     * Make UPDATE request.
+     * Make SQL {@code UPDATE} request.
      * @return This object
      */
     public JdbcSession update() {
@@ -253,7 +253,7 @@ public final class JdbcSession {
     }
 
     /**
-     * Make UPDATE request.
+     * Make SQL {@code SELECT} request.
      * @param handler The handler or result
      * @return The result
      * @param <T> Type of response
