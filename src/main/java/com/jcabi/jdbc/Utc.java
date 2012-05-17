@@ -89,6 +89,14 @@ public final class Utc {
     }
 
     /**
+     * Get date that is incapsulated.
+     * @return The date
+     */
+    public Date getDate() {
+        return this.date;
+    }
+
+    /**
      * Convert date to timestamp and save to the statement.
      * @param stmt The statement
      * @param pos Position in the statement

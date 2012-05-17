@@ -29,34 +29,42 @@
  */
 package com.jcabi.jdbc;
 
-import java.sql.ResultSet;
+import com.jolbox.bonecp.BoneCPDataSource;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
 
 /**
- * Handler that is doing nothing.
- *
- * <p>Useful handler when you're not interested in the result:
- *
- * <pre>
- * new JdbcSession(source)
- *   .sql("INSERT INTO foo (name) VALUES (?)")
- *   .set("Jeff Lebowski")
- *   .insert(new VoidHandler());
- * </pre>
- *
- * <p>This class is thread-safe.
- *
+ * Test case for {@link SingleHandler}.
  * @author Yegor Bugayenko (yegor@jcabi.com)
  * @version $Id$
- * @since 0.1.8
  */
-public final class VoidHandler implements JdbcSession.Handler<Void> {
+public final class SingleHandlerTest {
 
     /**
-     * {@inheritDoc}
+     * SingleHandler can return the first column of the first row.
+     * @throws Exception If there is some problem inside
      */
-    @Override
-    public Void handle(final ResultSet rset) {
-        return null;
+    @Test
+    public void retrievesFirstRowFromTheFirstColumn() throws Exception {
+        final BoneCPDataSource source = new BoneCPDataSource();
+        source.setDriverClass("org.h2.Driver");
+        source.setJdbcUrl("jdbc:h2:mem:foo");
+        new JdbcSession(source)
+            .sql("CREATE TABLE foo (name VARCHAR(50))")
+            .update();
+        new JdbcSession(source)
+            .autocommit(false)
+            .sql("INSERT INTO foo (name) VALUES (?)")
+            .set("Jeff Lebowski")
+            .update()
+            .set("Walter Sobchak")
+            .update()
+            .commit();
+        final String name = new JdbcSession(source)
+            .sql("SELECT name FROM foo")
+            .select(new SingleHandler<String>(String.class));
+        MatcherAssert.assertThat(name, Matchers.startsWith("Jeff"));
     }
 
 }

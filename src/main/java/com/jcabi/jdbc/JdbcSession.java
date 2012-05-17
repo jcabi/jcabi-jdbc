@@ -128,7 +128,6 @@ public final class JdbcSession {
     public JdbcSession sql(final String sql) {
         synchronized (this.conn) {
             this.query = sql;
-            this.args.clear();
         }
         return this;
     }
@@ -291,6 +290,7 @@ public final class JdbcSession {
             if (this.auto.get()) {
                 this.commit();
             }
+            this.args.clear();
         }
         Logger.debug(
             this,

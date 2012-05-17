@@ -30,18 +30,23 @@
 package com.jcabi.jdbc;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Date;
 
 /**
- * Handler that is doing nothing.
+ * Handler that returns first column in the first row.
  *
- * <p>Useful handler when you're not interested in the result:
+ * <p>Use it when you need the first column in the first row:
  *
  * <pre>
- * new JdbcSession(source)
- *   .sql("INSERT INTO foo (name) VALUES (?)")
+ * Long id = new JdbcSession(source)
+ *   .sql("SELECT id FROM user WHERE name = ?")
  *   .set("Jeff Lebowski")
- *   .insert(new VoidHandler());
+ *   .select(new SingleHandler&lt;Long&gt;(Long.class));
  * </pre>
+ *
+ * <p>Supported types are: {@link String}, {@link Long}, {@link Boolean},
+ * {@link Byte}, {@link Date}, and {@link Utc}.
  *
  * <p>This class is thread-safe.
  *
@@ -49,14 +54,48 @@ import java.sql.ResultSet;
  * @version $Id$
  * @since 0.1.8
  */
-public final class VoidHandler implements JdbcSession.Handler<Void> {
+public final class SingleHandler<T> implements JdbcSession.Handler<T> {
+
+    /**
+     * The type.
+     */
+    private final transient Class<T> type;
+
+    /**
+     * Public ctor.
+     * @param tpe The type to convert to
+     */
+    public SingleHandler(final Class<T> tpe) {
+        this.type = tpe;
+    }
 
     /**
      * {@inheritDoc}
      */
     @Override
-    public Void handle(final ResultSet rset) {
-        return null;
+    public T handle(final ResultSet rset) throws SQLException {
+        if (!rset.next()) {
+            throw new SQLException("no records found");
+        }
+        Object result;
+        if (this.type.equals(String.class)) {
+            result = rset.getString(1);
+        } else if (this.type.equals(Long.class)) {
+            result = rset.getLong(1);
+        } else if (this.type.equals(Boolean.class)) {
+            result = rset.getBoolean(1);
+        } else if (this.type.equals(Byte.class)) {
+            result = rset.getByte(1);
+        } else if (this.type.equals(Date.class)) {
+            result = rset.getDate(1);
+        } else if (this.type.equals(Utc.class)) {
+            result = new Utc(Utc.getTimestamp(rset, 1));
+        } else {
+            throw new SQLException(
+                String.format("type %s is not supported", this.type.getName())
+            );
+        }
+        return this.type.cast(result);
     }
 
 }
