@@ -46,15 +46,7 @@ import com.jcabi.jdbc.JdbcSession;
 String name = new JdbcSession(/* JDBC data source */)
   .sql("SELECT name FROM foo WHERE id = ?")
   .set(123)
-  .select(
-    new JdbcSession.Handler<String>() {
-      @Override
-      public String handle(final ResultSet rset) throws SQLException {
-        rset.next();
-        return rset.getString(1);
-      }
-    }
-  );
+  .select(new SingleHandler<String>(String.class));
 +--
 
   The only dependency you need:

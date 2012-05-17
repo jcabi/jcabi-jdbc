@@ -83,6 +83,17 @@ import org.apache.commons.dbutils.DbUtils;
  *   .commit();
  * </pre>
  *
+ * <p>{@link #autocommit(true)} can be used when it's necessary to execute
+ * a statement and leave the connection open. For example when shutting down
+ * the database through SQL:
+ *
+ * <pre>
+ * new JdbcSession(&#47;* H2 Database data source *&#47;)
+ *   .autocommit(false)
+ *   .sql("SHUTDOWN COMPACT")
+ *   .update();
+ * </pre>
+ *
  * <p>This class is thread-safe.
  *
  * @author Yegor Bugayenko (yegor@jcabi.com)
