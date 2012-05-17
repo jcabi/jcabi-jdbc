@@ -83,11 +83,6 @@ import org.apache.commons.dbutils.DbUtils;
  *   .commit();
  * </pre>
  *
- * <p>Make sure that autocommit is turned OFF in your data source. Otherwise,
- * JDBC driver may complain on our call to {@link Connection#commit()} (which
- * is done automatically in {@link #insert(Handler)}, {@link #update()}, and
- * {@link #select(Handler)}.
- *
  * <p>This class is thread-safe.
  *
  * @author Yegor Bugayenko (yegor@jcabi.com)
@@ -328,7 +323,7 @@ public final class JdbcSession {
             }
             Logger.error(
                 this,
-                "#run(..): '%s':\n%[exception]s",
+                "#run(..): '%s': %[exception]s",
                 this.query,
                 ex
             );
@@ -371,7 +366,7 @@ public final class JdbcSession {
             } else {
                 stmt.setString(pos, arg.toString());
             }
-            pos += 1;
+            ++pos;
         }
     }
 
