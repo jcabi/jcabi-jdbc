@@ -44,6 +44,26 @@ import org.apache.commons.dbutils.DbUtils;
 /**
  * Universal JDBC wrapper.
  *
+ * <p>Execute a simple SQL query over a JDBC data source:
+ *
+ * <pre>
+ * String name = new JdbcSession(source)
+ *   .sql("SELECT name FROM foo WHERE id = ?")
+ *   .set(123)
+ *   .select(
+ *     new JdbcSession.Handler&lt;String&gt;() {
+ *       &#64;Override
+ *       public String handle(final ResultSet rset) throws SQLException {
+ *         rset.next();
+ *         return rset.getString(1);
+ *       }
+ *     }
+ *   );
+ * </pre>
+ *
+ * <p>There are a number of convenient pre-defined handlers, like
+ * {@link VoidHandler}, {@link NotEmptyHandler}, etc.
+ *
  * <p>This class is thread-safe.
  *
  * @author Yegor Bugayenko (yegor@jcabi.com)
@@ -297,6 +317,8 @@ public final class JdbcSession {
                 stmt.setLong(pos, (Long) arg);
             } else if (arg instanceof Boolean) {
                 stmt.setBoolean(pos, (Boolean) arg);
+            } else if (arg instanceof Utc) {
+                Utc.class.cast(arg).setTimestamp(stmt, pos);
             } else {
                 stmt.setString(pos, arg.toString());
             }
