@@ -31,13 +31,13 @@ package com.jcabi.jdbc;
 
 import com.jcabi.log.Logger;
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.atomic.AtomicBoolean;
 import javax.sql.DataSource;
 import org.apache.commons.dbutils.DbUtils;
 
@@ -62,7 +62,26 @@ import org.apache.commons.dbutils.DbUtils;
  * </pre>
  *
  * <p>There are a number of convenient pre-defined handlers, like
- * {@link VoidHandler}, {@link NotEmptyHandler}, etc.
+ * {@link VoidHandler}, {@link NotEmptyHandler}, {@link SingleHandler}, etc.
+ *
+ * <p>Methods {@link #insert(Handler)}, {@link #update()}, and
+ * {@link #select(Handler)} clean the list of arguments pre-set by
+ * {@link #set(Object)}. The class can be used for a complex transaction, when
+ * it's necessary to perform a number of SQL statements in a group. For
+ * example, the following construct will execute two SQL queries, in a single
+ * transaction and will "commit" at the end (or rollback the entire transaction
+ * in case of any error in between):
+ *
+ * <pre>
+ * new JdbcSession(source)
+ *   .autocommit(false)
+ *   .sql("DELETE FROM foo WHERE id = ?")
+ *   .set(444)
+ *   .update()
+ *   .set(555)
+ *   .update()
+ *   .commit();
+ * </pre>
  *
  * <p>This class is thread-safe.
  *
@@ -81,7 +100,7 @@ public final class JdbcSession {
     /**
      * Shall we close/autocommit automatically?
      */
-    private final transient AtomicBoolean auto = new AtomicBoolean(true);
+    private transient boolean auto = true;
 
     /**
      * Arguments.
@@ -134,21 +153,29 @@ public final class JdbcSession {
 
     /**
      * Shall we auto-commit?
+     *
+     * <p>By default this flag is set to TRUE, which means that methods
+     * {@link #insert(Handler)}, {@link #update()}, and
+     * {@link #select(Handler)} will call {@link Connection#commit()} after
+     * their successful execution.
+     *
      * @param autocommit Shall we?
      * @return This object
      */
     public JdbcSession autocommit(final boolean autocommit) {
-        this.auto.set(autocommit);
-        try {
-            this.conn.setAutoCommit(autocommit);
-        } catch (SQLException ex) {
-            throw new IllegalStateException(ex);
+        synchronized (this.conn) {
+            this.auto = autocommit;
         }
         return this;
     }
 
     /**
      * Set new param for the query.
+     *
+     * <p>The following types are supported: {@link Boolean}, {@link Date},
+     * {@link Utc}, {@link Long}, {@link Integer}. All other types will be
+     * converted to {@link String} using their {@code toString()} methods.
+     *
      * @param value The value to add
      * @return This object
      */
@@ -173,6 +200,9 @@ public final class JdbcSession {
 
     /**
      * Make INSERT request.
+     *
+     * <p>{@link Handler} will receive a {@link ResultSet} of generated keys.
+     *
      * @param handler The handler or result
      * @return The result
      * @param <T> Type of response
@@ -197,12 +227,7 @@ public final class JdbcSession {
      */
     public JdbcSession update() {
         this.run(
-            new Handler<Boolean>() {
-                @Override
-                public Boolean handle(final ResultSet rset) {
-                    return true;
-                }
-            },
+            new VoidHandler(),
             new Fetcher() {
                 @Override
                 public ResultSet fetch(final PreparedStatement stmt)
@@ -257,6 +282,9 @@ public final class JdbcSession {
      */
     @SuppressWarnings("PMD.CloseResource")
     private <T> T run(final Handler<T> handler, final Fetcher fetcher) {
+        if (this.query == null) {
+            throw new IllegalStateException("call #sql() first");
+        }
         final long start = System.currentTimeMillis();
         T result;
         try {
@@ -276,7 +304,7 @@ public final class JdbcSession {
                 DbUtils.closeQuietly(stmt);
             }
         } catch (SQLException ex) {
-            if (!this.auto.get()) {
+            if (!this.auto) {
                 DbUtils.rollbackAndCloseQuietly(this.conn);
             }
             Logger.error(
@@ -287,7 +315,7 @@ public final class JdbcSession {
             );
             throw new IllegalArgumentException(ex);
         } finally {
-            if (this.auto.get()) {
+            if (this.auto) {
                 this.commit();
             }
             this.args.clear();
@@ -315,6 +343,10 @@ public final class JdbcSession {
                 stmt.setLong(pos, Long.class.cast(arg));
             } else if (arg instanceof Boolean) {
                 stmt.setBoolean(pos, Boolean.class.cast(arg));
+            } else if (arg instanceof Date) {
+                stmt.setDate(pos, Date.class.cast(arg));
+            } else if (arg instanceof Integer) {
+                stmt.setInt(pos, Integer.class.cast(arg));
             } else if (arg instanceof Utc) {
                 Utc.class.cast(arg).setTimestamp(stmt, pos);
             } else {
