@@ -62,11 +62,26 @@ public final class SingleHandler<T> implements JdbcSession.Handler<T> {
     private final transient Class<T> type;
 
     /**
+     * Silently return NULL if no row found.
+     */
+    private final transient boolean silently;
+
+    /**
      * Public ctor.
      * @param tpe The type to convert to
      */
     public SingleHandler(final Class<T> tpe) {
+        this(tpe, false);
+    }
+
+    /**
+     * Public ctor.
+     * @param tpe The type to convert to
+     * @param slnt Silently return NULL if there is no row
+     */
+    public SingleHandler(final Class<T> tpe, final boolean slnt) {
         this.type = tpe;
+        this.silently = slnt;
     }
 
     /**
@@ -74,9 +89,22 @@ public final class SingleHandler<T> implements JdbcSession.Handler<T> {
      */
     @Override
     public T handle(final ResultSet rset) throws SQLException {
-        if (!rset.next()) {
+        T result = null;
+        if (rset.next()) {
+            result = this.fetch(rset);
+        } else if (!this.silently) {
             throw new SQLException("no records found");
         }
+        return result;
+    }
+
+    /**
+     * Fetch the value from result set.
+     * @param rset Result set
+     * @return The result
+     * @throws SQLException If some error inside
+     */
+    private T fetch(final ResultSet rset) throws SQLException {
         Object result;
         if (this.type.equals(String.class)) {
             result = rset.getString(1);
