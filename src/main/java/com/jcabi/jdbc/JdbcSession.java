@@ -83,6 +83,11 @@ import org.apache.commons.dbutils.DbUtils;
  *   .commit();
  * </pre>
  *
+ * <p>Make sure that autocommit is turned OFF in your data source. Otherwise,
+ * JDBC driver may complain on our call to {@link Connection#commit()} (which
+ * is done automatically in {@link #insert(Handler)}, {@link #update()}, and
+ * {@link #select(Handler)}.
+ *
  * <p>This class is thread-safe.
  *
  * @author Yegor Bugayenko (yegor@jcabi.com)
@@ -140,8 +145,21 @@ public final class JdbcSession {
     }
 
     /**
-     * Use this SQL query.
-     * @param sql The query to use
+     * Use this SQL query (with optional parameters inside).
+     *
+     * <p>The query will be used in {@link PreparedStatement}, that's why
+     * you can use the same formatting as there. Arguments shall be marked
+     * as {@code "?"} (question marks). For example:
+     *
+     * <pre>
+     * String name = new JdbcSession(source)
+     *   .sql("INSERT INTO foo (id, name) VALUES (?, ?)")
+     *   .set(556677)
+     *   .set("Jeffrey Lebowski")
+     *   .insert(new VoidHandler());
+     * </pre>
+     *
+     * @param sql The SQL query to use
      * @return This object
      */
     public JdbcSession sql(final String sql) {
@@ -185,17 +203,16 @@ public final class JdbcSession {
     }
 
     /**
-     * Commit it.
-     * @return This object
+     * Commit the transation (calls {@link Connection#commit()} and then
+     * {@link Connection#close()}).
      */
-    public JdbcSession commit() {
+    public void commit() {
         try {
             this.conn.commit();
         } catch (SQLException ex) {
             throw new IllegalStateException(ex);
         }
         DbUtils.closeQuietly(this.conn);
-        return this;
     }
 
     /**
@@ -278,7 +295,7 @@ public final class JdbcSession {
      * @param fetcher Fetcher of result set
      * @return The result
      * @param <T> Type of response
-     * @checkstyle NestedTryDepth (40 lines)
+     * @checkstyle ExecutableStatementCount (100 lines)
      */
     @SuppressWarnings("PMD.CloseResource")
     private <T> T run(final Handler<T> handler, final Fetcher fetcher) {
@@ -288,6 +305,7 @@ public final class JdbcSession {
         final long start = System.currentTimeMillis();
         T result;
         try {
+            this.conn.setAutoCommit(false);
             final PreparedStatement stmt = this.conn.prepareStatement(
                 this.query,
                 Statement.RETURN_GENERATED_KEYS
@@ -295,6 +313,7 @@ public final class JdbcSession {
             try {
                 this.parametrize(stmt);
                 final ResultSet rset = fetcher.fetch(stmt);
+                // @checkstyle NestedTryDepth (5 lines)
                 try {
                     result = handler.handle(rset);
                 } finally {
