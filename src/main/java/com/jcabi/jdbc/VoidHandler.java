@@ -32,16 +32,14 @@ package com.jcabi.jdbc;
 import java.sql.ResultSet;
 
 /**
- * Handler that is doing nothing.
+ * Handler that does nothing (and always returns {@code null}).
  *
  * <p>Useful handler when you're not interested in the result:
  *
- * <pre>
- * new JdbcSession(source)
+ * <pre>new JdbcSession(source)
  *   .sql("INSERT INTO foo (name) VALUES (?)")
  *   .set("Jeff Lebowski")
- *   .insert(new VoidHandler());
- * </pre>
+ *   .insert(new VoidHandler());</pre>
  *
  * <p>This class is thread-safe.
  *

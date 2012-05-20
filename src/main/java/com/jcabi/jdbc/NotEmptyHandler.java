@@ -35,6 +35,9 @@ import java.sql.SQLException;
 /**
  * Returns {@code TRUE} if at least one SQL record found in {@link ResultSet}.
  *
+ * <p>The handler returns the value of {@link ResultSet#next()} and throws
+ * {@link SQLException} in case of a problem.
+ *
  * <p>This class is thread-safe.
  *
  * @author Yegor Bugayenko (yegor@jcabi.com)

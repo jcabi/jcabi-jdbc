@@ -46,8 +46,7 @@ import org.apache.commons.dbutils.DbUtils;
  *
  * <p>Execute a simple SQL query over a JDBC data source:
  *
- * <pre>
- * String name = new JdbcSession(source)
+ * <pre>String name = new JdbcSession(source)
  *   .sql("SELECT name FROM foo WHERE id = ?")
  *   .set(123)
  *   .select(
@@ -58,8 +57,7 @@ import org.apache.commons.dbutils.DbUtils;
  *         return rset.getString(1);
  *       }
  *     }
- *   );
- * </pre>
+ *   );</pre>
  *
  * <p>There are a number of convenient pre-defined handlers, like
  * {@link VoidHandler}, {@link NotEmptyHandler}, {@link SingleHandler}, etc.
@@ -72,18 +70,26 @@ import org.apache.commons.dbutils.DbUtils;
  * transaction and will "commit" at the end (or rollback the entire transaction
  * in case of any error in between):
  *
- * <pre>
- * new JdbcSession(source)
+ * <pre>new JdbcSession(source)
  *   .autocommit(false)
+ *   .sql("START TRANSACTION")
+ *   .update()
  *   .sql("DELETE FROM foo WHERE id = ?")
  *   .set(444)
  *   .update()
  *   .set(555)
  *   .update()
- *   .commit();
- * </pre>
+ *   .commit();</pre>
  *
- * <p>{@link #autocommit(true)} can be used when it's necessary to execute
+ * <p>The following SQL queries will be sent to the database:
+ *
+ * <pre>START TRANSACTION;
+ * DELETE FROM foo WHERE id = 444;
+ * DELETE FROM foo WHERE id = 555;
+ * COMMIT;</pre>
+ *
+ * <p>{@link #autocommit(boolean)} (with {@code false} as an argument)
+ * can be used when it's necessary to execute
  * a statement and leave the connection open. For example when shutting down
  * the database through SQL:
  *

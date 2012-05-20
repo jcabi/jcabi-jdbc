@@ -38,15 +38,26 @@ import java.util.Date;
  *
  * <p>Use it when you need the first column in the first row:
  *
- * <pre>
- * Long id = new JdbcSession(source)
+ * <pre>Long id = new JdbcSession(source)
  *   .sql("SELECT id FROM user WHERE name = ?")
  *   .set("Jeff Lebowski")
- *   .select(new SingleHandler&lt;Long&gt;(Long.class));
- * </pre>
+ *   .select(new SingleHandler&lt;Long&gt;(Long.class));</pre>
  *
  * <p>Supported types are: {@link String}, {@link Long}, {@link Boolean},
  * {@link Byte}, {@link Date}, and {@link Utc}.
+ *
+ * <p>By default, the handler throws {@link SQLException} if no records
+ * are found in the {@link ResultSet}. You can change this behavior by using
+ * a two-arguments constructor ({@code null} will be returned if
+ * {@link ResultSet} is empty):
+ *
+ * <pre>String name = new JdbcSession(source)
+ *   .sql("SELECT name FROM user WHERE id = ?")
+ *   .set(555)
+ *   .select(new SingleHandler&lt;Long&gt;(Long.class), true);
+ * if (name == null) {
+ *   // such a record wasn't found in the database
+ * }</pre>
  *
  * <p>This class is thread-safe.
  *
