@@ -51,10 +51,9 @@ public final class SingleHandlerTest {
         source.setDriverClass("org.h2.Driver");
         source.setJdbcUrl("jdbc:h2:mem:foo");
         new JdbcSession(source)
-            .sql("CREATE TABLE foo (name VARCHAR(50))")
-            .update();
-        new JdbcSession(source)
             .autocommit(false)
+            .sql("CREATE TABLE foo (name VARCHAR(50))")
+            .update()
             .sql("INSERT INTO foo (name) VALUES (?)")
             .set("Jeff Lebowski")
             .update()

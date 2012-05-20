@@ -53,12 +53,13 @@ public final class JdbcSessionTest {
         source.setDriverClass("org.h2.Driver");
         source.setJdbcUrl("jdbc:h2:mem:x");
         new JdbcSession(source)
+            .autocommit(false)
             .sql("CREATE TABLE foo (name VARCHAR(50))")
-            .update();
-        new JdbcSession(source)
+            .update()
             .sql("INSERT INTO foo (name) VALUES (?)")
             .set("Jeff Lebowski")
-            .update();
+            .update()
+            .commit();
         final String name = new JdbcSession(source)
             .sql("SELECT name FROM foo WHERE name = 'Jeff Lebowski'")
             .select(
