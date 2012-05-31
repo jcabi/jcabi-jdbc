@@ -129,9 +129,11 @@ public final class Utc {
      */
     public static Date getTimestamp(final ResultSet rset, final int pos)
         throws SQLException {
-        final Date when = new Date(
-            rset.getTimestamp(pos, Utc.CALENDAR).getTime()
-        );
+        final Timestamp stamp = rset.getTimestamp(pos, Utc.CALENDAR);
+        Date when = null;
+        if (stamp != null) {
+            when = new Date(stamp.getTime());
+        }
         return when;
     }
 
