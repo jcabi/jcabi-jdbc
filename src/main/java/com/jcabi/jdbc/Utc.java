@@ -65,7 +65,7 @@ import java.util.SimpleTimeZone;
  * <p>{@link java.sql.Timestamp} is used because {@link java.sql.Date}
  * supports only dates (without time).
  *
- * @author Yegor Bugayenko (yegor@jcabi.com)
+ * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1.8
  */

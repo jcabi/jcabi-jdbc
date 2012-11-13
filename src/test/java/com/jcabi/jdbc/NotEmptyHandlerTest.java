@@ -37,7 +37,7 @@ import org.mockito.Mockito;
 
 /**
  * Test case for {@link NotEmptyHandler}.
- * @author Yegor Bugayenko (yegor@jcabi.com)
+ * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
 public final class NotEmptyHandlerTest {

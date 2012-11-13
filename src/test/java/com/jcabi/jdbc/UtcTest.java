@@ -47,7 +47,7 @@ import org.junit.Test;
 
 /**
  * Test case of {@link Utc}.
- * @author Yegor Bugayenko (yegor@jcabi.com)
+ * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
