@@ -39,6 +39,7 @@ import java.sql.Statement;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.sql.DataSource;
+import javax.validation.constraints.NotNull;
 import org.apache.commons.dbutils.DbUtils;
 
 /**
@@ -148,7 +149,7 @@ public final class JdbcSession {
      * Public ctor.
      * @param source Data source
      */
-    public JdbcSession(final DataSource source) {
+    public JdbcSession(@NotNull final DataSource source) {
         try {
             this.conn = source.getConnection();
         } catch (SQLException ex) {
@@ -174,7 +175,7 @@ public final class JdbcSession {
      * @param sql The SQL query to use
      * @return This object
      */
-    public JdbcSession sql(final String sql) {
+    public JdbcSession sql(@NotNull final String sql) {
         synchronized (this.conn) {
             this.query = sql;
         }
@@ -236,7 +237,7 @@ public final class JdbcSession {
      * @return The result
      * @param <T> Type of response
      */
-    public <T> T insert(final Handler<T> handler) {
+    public <T> T insert(@NotNull final Handler<T> handler) {
         return this.run(
             handler,
             new Fetcher() {
@@ -275,7 +276,7 @@ public final class JdbcSession {
      * @return The result
      * @param <T> Type of response
      */
-    public <T> T select(final Handler<T> handler) {
+    public <T> T select(@NotNull final Handler<T> handler) {
         return this.run(
             handler,
             new Fetcher() {
