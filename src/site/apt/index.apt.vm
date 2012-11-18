@@ -57,7 +57,7 @@ String name = new JdbcSession(/* JDBC data source */)
 <dependency>
   <groupId>com.jcabi</groupId>
   <artifactId>jcabi-jdbc</artifactId>
-  <version>${releasedVersion}</version>
+  <version>${project.version}</version>
 </dependency>
 +--
 
