@@ -51,7 +51,10 @@ String name = new JdbcSession(/* JDBC data source */)
   .select(new SingleHandler<String>(String.class));
 +--
 
-  The only dependency you need is:
+  The only dependency you need is
+  (you can also download
+  {{{http://repo1.maven.org/maven2/com/jcabi/jcabi-jdbc/${project.version}/jcabi-jdbc-${project.version}.jar}<<<jcabi-jdbc-${project.version}.jar>>>}}
+  and add it to the classpath):
 
 +--
 <dependency>
