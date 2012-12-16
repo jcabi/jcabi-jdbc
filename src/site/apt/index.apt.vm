@@ -38,7 +38,7 @@
 
 Fluent wrapper around JDBC
 
-  {{{./apidocs/com/jcabi/jdbc/JdbcSession.html}<<<JdbcSession>>>}}
+  {{{./apidocs-${project.version}/com/jcabi/jdbc/JdbcSession.html}<<<JdbcSession>>>}}
   is a convenient
   {{{http://en.wikipedia.org/wiki/Fluent_interface}fluent}}
   wrapper around JDBC:
