@@ -29,6 +29,8 @@
  */
 package com.jcabi.jdbc;
 
+import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -36,6 +38,8 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.SimpleTimeZone;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * UTC time zone manipulator.
@@ -69,6 +73,9 @@ import java.util.SimpleTimeZone;
  * @version $Id$
  * @since 0.1.8
  */
+@Immutable
+@ToString
+@EqualsAndHashCode(of = "date")
 public final class Utc {
 
     /**
@@ -80,7 +87,7 @@ public final class Utc {
     /**
      * The date to work with.
      */
-    private final transient Date date;
+    private final transient long date;
 
     /**
      * Public ctor, with current date.
@@ -94,15 +101,16 @@ public final class Utc {
      * @param when The date to use.
      */
     public Utc(final Date when) {
-        this.date = when;
+        this.date = when.getTime();
     }
 
     /**
      * Get date that is incapsulated.
      * @return The date
      */
+    @Loggable(Loggable.DEBUG)
     public Date getDate() {
-        return this.date;
+        return new Date(this.date);
     }
 
     /**
@@ -111,11 +119,12 @@ public final class Utc {
      * @param pos Position in the statement
      * @throws SQLException If some SQL problem inside
      */
+    @Loggable(Loggable.DEBUG)
     public void setTimestamp(final PreparedStatement stmt, final int pos)
         throws SQLException {
         stmt.setTimestamp(
             pos,
-            new Timestamp(this.date.getTime()),
+            new Timestamp(this.date),
             Utc.CALENDAR
         );
     }
@@ -127,6 +136,7 @@ public final class Utc {
      * @return The date
      * @throws SQLException If some SQL problem inside
      */
+    @Loggable(Loggable.DEBUG)
     public static Date getTimestamp(final ResultSet rset, final int pos)
         throws SQLException {
         final Timestamp stamp = rset.getTimestamp(pos, Utc.CALENDAR);

@@ -29,7 +29,11 @@
  */
 package com.jcabi.jdbc;
 
+import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
 import java.sql.ResultSet;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Handler that does nothing (and always returns {@code null}).
@@ -41,18 +45,20 @@ import java.sql.ResultSet;
  *   .set("Jeff Lebowski")
  *   .insert(new VoidHandler());</pre>
  *
- * <p>This class is thread-safe.
- *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1.8
  */
+@Immutable
+@ToString
+@EqualsAndHashCode
 public final class VoidHandler implements JdbcSession.Handler<Void> {
 
     /**
      * {@inheritDoc}
      */
     @Override
+    @Loggable(Loggable.DEBUG)
     public Void handle(final ResultSet rset) {
         return null;
     }

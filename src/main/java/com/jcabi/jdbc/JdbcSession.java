@@ -29,7 +29,7 @@
  */
 package com.jcabi.jdbc;
 
-import com.jcabi.log.Logger;
+import com.jcabi.aspects.Loggable;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -40,6 +40,8 @@ import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.sql.DataSource;
 import javax.validation.constraints.NotNull;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import org.apache.commons.dbutils.DbUtils;
 
 /**
@@ -107,6 +109,8 @@ import org.apache.commons.dbutils.DbUtils;
  * @version $Id$
  * @since 0.1.8
  */
+@ToString
+@EqualsAndHashCode(of = "conn")
 @SuppressWarnings("PMD.TooManyMethods")
 public final class JdbcSession {
 
@@ -175,6 +179,7 @@ public final class JdbcSession {
      * @param sql The SQL query to use
      * @return This object
      */
+    @Loggable(Loggable.DEBUG)
     public JdbcSession sql(@NotNull final String sql) {
         synchronized (this.conn) {
             this.query = sql;
@@ -193,6 +198,7 @@ public final class JdbcSession {
      * @param autocommit Shall we?
      * @return This object
      */
+    @Loggable(Loggable.DEBUG)
     public JdbcSession autocommit(final boolean autocommit) {
         synchronized (this.conn) {
             this.auto = autocommit;
@@ -210,6 +216,7 @@ public final class JdbcSession {
      * @param value The value to add
      * @return This object
      */
+    @Loggable(Loggable.DEBUG)
     public JdbcSession set(final Object value) {
         this.args.add(value);
         return this;
@@ -219,6 +226,7 @@ public final class JdbcSession {
      * Commit the transation (calls {@link Connection#commit()} and then
      * {@link Connection#close()}).
      */
+    @Loggable(Loggable.DEBUG)
     public void commit() {
         try {
             this.conn.commit();
@@ -237,6 +245,7 @@ public final class JdbcSession {
      * @return The result
      * @param <T> Type of response
      */
+    @Loggable(Loggable.DEBUG)
     public <T> T insert(@NotNull final Handler<T> handler) {
         return this.run(
             handler,
@@ -255,6 +264,7 @@ public final class JdbcSession {
      * Make SQL {@code UPDATE} request.
      * @return This object
      */
+    @Loggable(Loggable.DEBUG)
     public JdbcSession update() {
         this.run(
             new VoidHandler(),
@@ -276,6 +286,7 @@ public final class JdbcSession {
      * @return The result
      * @param <T> Type of response
      */
+    @Loggable(Loggable.DEBUG)
     public <T> T select(@NotNull final Handler<T> handler) {
         return this.run(
             handler,
@@ -315,7 +326,6 @@ public final class JdbcSession {
         if (this.query == null) {
             throw new IllegalStateException("call #sql() first");
         }
-        final long start = System.currentTimeMillis();
         T result;
         try {
             this.conn.setAutoCommit(false);
@@ -339,12 +349,6 @@ public final class JdbcSession {
             if (!this.auto) {
                 DbUtils.rollbackAndCloseQuietly(this.conn);
             }
-            Logger.error(
-                this,
-                "#run(..): '%s': %[exception]s",
-                this.query,
-                ex
-            );
             throw new IllegalArgumentException(ex);
         } finally {
             if (this.auto) {
@@ -352,12 +356,6 @@ public final class JdbcSession {
             }
             this.args.clear();
         }
-        Logger.debug(
-            this,
-            "#run(): '%s' done in %[ms]s",
-            this.query,
-            System.currentTimeMillis() - start
-        );
         return result;
     }
 

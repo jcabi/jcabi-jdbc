@@ -29,9 +29,12 @@
  */
 package com.jcabi.jdbc;
 
+import com.jcabi.aspects.Loggable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Handler that returns first column in the first row.
@@ -59,12 +62,14 @@ import java.util.Date;
  *   // such a record wasn't found in the database
  * }</pre>
  *
- * <p>This class is thread-safe.
- *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1.8
+ * @todo #143 This class should be @Immutable, but we can't do it at the
+ *  moment, because "Class" type is mutable. Let's refactor somehow.
  */
+@ToString
+@EqualsAndHashCode(of = { "type", "silently" })
 public final class SingleHandler<T> implements JdbcSession.Handler<T> {
 
     /**
@@ -99,6 +104,7 @@ public final class SingleHandler<T> implements JdbcSession.Handler<T> {
      * {@inheritDoc}
      */
     @Override
+    @Loggable(Loggable.DEBUG)
     public T handle(final ResultSet rset) throws SQLException {
         T result = null;
         if (rset.next()) {

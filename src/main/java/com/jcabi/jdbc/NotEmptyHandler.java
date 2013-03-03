@@ -29,8 +29,12 @@
  */
 package com.jcabi.jdbc;
 
+import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
  * Returns {@code TRUE} if at least one SQL record found in {@link ResultSet}.
@@ -38,18 +42,20 @@ import java.sql.SQLException;
  * <p>The handler returns the value of {@link ResultSet#next()} and throws
  * {@link SQLException} in case of a problem.
  *
- * <p>This class is thread-safe.
- *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1.8
  */
+@Immutable
+@ToString
+@EqualsAndHashCode
 public final class NotEmptyHandler implements JdbcSession.Handler<Boolean> {
 
     /**
      * {@inheritDoc}
      */
     @Override
+    @Loggable(Loggable.DEBUG)
     public Boolean handle(final ResultSet rset) throws SQLException {
         return rset.next();
     }
