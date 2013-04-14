@@ -1,9 +1,9 @@
  ------
- Fluent JDBC Wrapper
+ Inserting SQL Records Through JDBC
  ------
  Yegor Bugayenko
  ------
- 2012-05-16
+ 2013-04-14
  ------
 
 ~~
@@ -36,61 +36,20 @@
 ~~ OF THE POSSIBILITY OF SUCH DAMAGE.
 ~~
 
-Fluent wrapper around JDBC
+Inserting SQL Records Through JDBC
 
-  {{{./apidocs-${project.version}/com/jcabi/jdbc/JdbcSession.html}<<<JdbcSession>>>}}
-  is a convenient
-  {{{http://en.wikipedia.org/wiki/Fluent_interface}fluent}}
-  wrapper around JDBC:
+  Data insertion <<<INSERT>>> operations can be done through <<<JdbcSession>>>:
 
 +--
-import com.jcabi.jdbc.JdbcSession;
 public class Main {
   public static void main(String[] args) {
-    String name = new JdbcSession(/* JDBC data source */)
-      .sql("SELECT name FROM foo WHERE id = ?")
-      .set(123)
-      .select(new SingleHandler<String>(String.class));
+    final long id = new JdbcSession(/* JDBC data source */)
+      .sql("INSERT INTO employee (name, salary) VALUES (?, ?)")
+      .set("Jeff Lebowski")
+      .set(35000)
+      .update(new SingleHandler<Long>(Long.class));
   }
 }
 +--
 
-  The only dependency you need is
-  (you can also download
-  {{{http://repo1.maven.org/maven2/com/jcabi/jcabi-jdbc/${project.version}/jcabi-jdbc-${project.version}.jar}<<<jcabi-jdbc-${project.version}.jar>>>}}
-  and add it to the classpath):
-
-+--
-<dependency>
-  <groupId>com.jcabi</groupId>
-  <artifactId>jcabi-jdbc</artifactId>
-  <version>${project.version}</version>
-</dependency>
-+--
-
-  Similar solutions (if you know others please
-  {{{https://github.com/yegor256/jcabi/issues}submit it to github}}):
-  {{{http://code.google.com/p/ollin/}ollin}},
-  {{{http://www.jdbi.org/}JDBI}},
-  {{{http://static.springsource.org/spring/docs/2.0.x/api/org/springframework/jdbc/core/JdbcTemplate.html}Spring JdbcTemplate}}.
-
-* Cutting Edge Version
-
-  If you want to use current version of the product, you can do it with
-  this configuration in your <<<pom.xml>>>:
-
-+--
-<repositories>
-  <repository>
-    <id>oss.sonatype.org</id>
-    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-  </repository>
-</repositories>
-<dependencies>
-  <dependency>
-    <groupId>com.jcabi</groupId>
-    <artifactId>jcabi-jdbc</artifactId>
-    <version>1.0-SNAPSHOT</version>
-  </dependency>
-</dependencies>
-+--
+  In this example, <<<id>>> will contain the primary key of the inserted row.

@@ -1,9 +1,9 @@
  ------
- Fluent JDBC Wrapper
+ Selecting SQL Rows Through JDBC
  ------
  Yegor Bugayenko
  ------
- 2012-05-16
+ 2013-04-14
  ------
 
 ~~
@@ -36,61 +36,43 @@
 ~~ OF THE POSSIBILITY OF SUCH DAMAGE.
 ~~
 
-Fluent wrapper around JDBC
+Selecting SQL Rows Through JDBC
 
-  {{{./apidocs-${project.version}/com/jcabi/jdbc/JdbcSession.html}<<<JdbcSession>>>}}
-  is a convenient
-  {{{http://en.wikipedia.org/wiki/Fluent_interface}fluent}}
-  wrapper around JDBC:
+  This is how you fetch all rows from an SQL <<<SELECT>>> query:
 
 +--
-import com.jcabi.jdbc.JdbcSession;
+public class Main {
+  public static void main(String[] args) {
+    Collection<String> names = new JdbcSession(/* JDBC data source */)
+      .sql("SELECT name FROM employee WHERE salary > 35000")
+      .select(
+        new JdbcSession.Handler<Collection<String>>() {
+          @Override
+          public Collection<String> handle(ResultSet rset) throws SQLException {
+            final Collection<String> names = new LinkedList<String>();
+            while (rset.next()) {
+              names.add(rset.getString(1));
+            }
+            return names;
+          }
+        }
+      );
+  }
+}
++--
+
+  There is an off-the-shelf <<<SingleHandler>>> handler, which can be used
+  if you interested in the first value of the first row of the <<<SELECT>>>
+  query result set:
+
++--
 public class Main {
   public static void main(String[] args) {
     String name = new JdbcSession(/* JDBC data source */)
-      .sql("SELECT name FROM foo WHERE id = ?")
-      .set(123)
+      .sql("SELECT name FROM employee WHERE name = ?")
+      .set("Jeff Bridges")
       .select(new SingleHandler<String>(String.class));
   }
 }
 +--
 
-  The only dependency you need is
-  (you can also download
-  {{{http://repo1.maven.org/maven2/com/jcabi/jcabi-jdbc/${project.version}/jcabi-jdbc-${project.version}.jar}<<<jcabi-jdbc-${project.version}.jar>>>}}
-  and add it to the classpath):
-
-+--
-<dependency>
-  <groupId>com.jcabi</groupId>
-  <artifactId>jcabi-jdbc</artifactId>
-  <version>${project.version}</version>
-</dependency>
-+--
-
-  Similar solutions (if you know others please
-  {{{https://github.com/yegor256/jcabi/issues}submit it to github}}):
-  {{{http://code.google.com/p/ollin/}ollin}},
-  {{{http://www.jdbi.org/}JDBI}},
-  {{{http://static.springsource.org/spring/docs/2.0.x/api/org/springframework/jdbc/core/JdbcTemplate.html}Spring JdbcTemplate}}.
-
-* Cutting Edge Version
-
-  If you want to use current version of the product, you can do it with
-  this configuration in your <<<pom.xml>>>:
-
-+--
-<repositories>
-  <repository>
-    <id>oss.sonatype.org</id>
-    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
-  </repository>
-</repositories>
-<dependencies>
-  <dependency>
-    <groupId>com.jcabi</groupId>
-    <artifactId>jcabi-jdbc</artifactId>
-    <version>1.0-SNAPSHOT</version>
-  </dependency>
-</dependencies>
-+--
