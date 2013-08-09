@@ -256,6 +256,13 @@ public final class JdbcSession {
                     stmt.execute();
                     return stmt.getGeneratedKeys();
                 }
+                @Override
+                public PreparedStatement statement() throws SQLException {
+                    return JdbcSession.this.conn.prepareStatement(
+                        JdbcSession.this.query,
+                        Statement.RETURN_GENERATED_KEYS
+                    );
+                }
             }
         );
     }
@@ -274,6 +281,13 @@ public final class JdbcSession {
                     throws SQLException {
                     stmt.executeUpdate();
                     return null;
+                }
+                @Override
+                public PreparedStatement statement() throws SQLException {
+                    return JdbcSession.this.conn.prepareStatement(
+                        JdbcSession.this.query,
+                        Statement.RETURN_GENERATED_KEYS
+                    );
                 }
             }
         );
@@ -296,6 +310,12 @@ public final class JdbcSession {
                     throws SQLException {
                     return stmt.executeQuery();
                 }
+                @Override
+                public PreparedStatement statement() throws SQLException {
+                    return JdbcSession.this.conn.prepareStatement(
+                        JdbcSession.this.query
+                    );
+                }
             }
         );
     }
@@ -304,6 +324,12 @@ public final class JdbcSession {
      * The fetcher.
      */
     private interface Fetcher {
+        /**
+         * Create prepare statement.
+         * @return The statement
+         * @throws SQLException If some problem
+         */
+        PreparedStatement statement() throws SQLException;
         /**
          * Fetch result set from statement.
          * @param stmt The statement
@@ -329,10 +355,7 @@ public final class JdbcSession {
         T result;
         try {
             this.conn.setAutoCommit(false);
-            final PreparedStatement stmt = this.conn.prepareStatement(
-                this.query,
-                Statement.RETURN_GENERATED_KEYS
-            );
+            final PreparedStatement stmt = fetcher.statement();
             try {
                 this.parametrize(stmt);
                 final ResultSet rset = fetcher.fetch(stmt);
