@@ -38,18 +38,18 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicReference;
 import javax.sql.DataSource;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
-import org.apache.commons.dbutils.DbUtils;
 
 /**
  * Universal JDBC wrapper.
  *
  * <p>Execute a simple SQL query over a JDBC data source:
  *
- * <pre>String name = new JdbcSession(source)
+ * <pre> String name = new JdbcSession(source)
  *   .sql("SELECT name FROM foo WHERE id = ?")
  *   .set(123)
  *   .select(
@@ -73,7 +73,7 @@ import org.apache.commons.dbutils.DbUtils;
  * transaction and will "commit" at the end (or rollback the entire transaction
  * in case of any error in between):
  *
- * <pre>new JdbcSession(source)
+ * <pre> new JdbcSession(source)
  *   .autocommit(false)
  *   .sql("START TRANSACTION")
  *   .update()
@@ -86,7 +86,7 @@ import org.apache.commons.dbutils.DbUtils;
  *
  * <p>The following SQL queries will be sent to the database:
  *
- * <pre>START TRANSACTION;
+ * <pre> START TRANSACTION;
  * DELETE FROM foo WHERE id = 444;
  * DELETE FROM foo WHERE id = 555;
  * COMMIT;</pre>
@@ -96,12 +96,10 @@ import org.apache.commons.dbutils.DbUtils;
  * a statement and leave the connection open. For example when shutting down
  * the database through SQL:
  *
- * <pre>
- * new JdbcSession(&#47;* H2 Database data source *&#47;)
+ * <pre> new JdbcSession(&#47;* H2 Database data source *&#47;)
  *   .autocommit(false)
  *   .sql("SHUTDOWN COMPACT")
- *   .update();
- * </pre>
+ *   .update();</pre>
  *
  * <p>This class is thread-safe.
  *
@@ -110,25 +108,32 @@ import org.apache.commons.dbutils.DbUtils;
  * @since 0.1.8
  */
 @ToString
-@EqualsAndHashCode(of = "conn")
-@SuppressWarnings("PMD.TooManyMethods")
+@EqualsAndHashCode(of = { "source", "connection", "args", "auto", "query" })
+@Loggable(Loggable.DEBUG)
+@SuppressWarnings({ "PMD.TooManyMethods", "PMD.CloseResource" })
 public final class JdbcSession {
 
     /**
-     * Connection to use.
+     * JDBC DataSource to get connections from.
      */
-    private final transient Connection conn;
-
-    /**
-     * Shall we close/autocommit automatically?
-     */
-    private transient boolean auto = true;
+    private final transient DataSource source;
 
     /**
      * Arguments.
      */
     private final transient List<Object> args =
         new CopyOnWriteArrayList<Object>();
+
+    /**
+     * Connection currently open.
+     */
+    private final transient AtomicReference<Connection> connection =
+        new AtomicReference<Connection>();
+
+    /**
+     * Shall we close/autocommit automatically?
+     */
+    private transient boolean auto = true;
 
     /**
      * The query to use.
@@ -151,14 +156,10 @@ public final class JdbcSession {
 
     /**
      * Public ctor.
-     * @param source Data source
+     * @param src Data source
      */
-    public JdbcSession(@NotNull final DataSource source) {
-        try {
-            this.conn = source.getConnection();
-        } catch (SQLException ex) {
-            throw new IllegalStateException(ex);
-        }
+    public JdbcSession(@NotNull final DataSource src) {
+        this.source = src;
     }
 
     /**
@@ -168,20 +169,17 @@ public final class JdbcSession {
      * you can use the same formatting as there. Arguments shall be marked
      * as {@code "?"} (question marks). For example:
      *
-     * <pre>
-     * String name = new JdbcSession(source)
+     * <pre> String name = new JdbcSession(source)
      *   .sql("INSERT INTO foo (id, name) VALUES (?, ?)")
      *   .set(556677)
      *   .set("Jeffrey Lebowski")
-     *   .insert(new VoidHandler());
-     * </pre>
+     *   .insert(new VoidHandler());</pre>
      *
      * @param sql The SQL query to use
      * @return This object
      */
-    @Loggable(Loggable.DEBUG)
     public JdbcSession sql(@NotNull final String sql) {
-        synchronized (this.conn) {
+        synchronized (this.args) {
             this.query = sql;
         }
         return this;
@@ -198,16 +196,15 @@ public final class JdbcSession {
      * @param autocommit Shall we?
      * @return This object
      */
-    @Loggable(Loggable.DEBUG)
     public JdbcSession autocommit(final boolean autocommit) {
-        synchronized (this.conn) {
+        synchronized (this.args) {
             this.auto = autocommit;
         }
         return this;
     }
 
     /**
-     * Set new param for the query.
+     * Set new parameter for the query.
      *
      * <p>The following types are supported: {@link Boolean}, {@link Date},
      * {@link Utc}, {@link Long}, {@link Integer}. All other types will be
@@ -216,24 +213,25 @@ public final class JdbcSession {
      * @param value The value to add
      * @return This object
      */
-    @Loggable(Loggable.DEBUG)
     public JdbcSession set(final Object value) {
         this.args.add(value);
         return this;
     }
 
     /**
-     * Commit the transation (calls {@link Connection#commit()} and then
+     * Commit the transaction (calls {@link Connection#commit()} and then
      * {@link Connection#close()}).
+     * @throws SQLException If fails to do the SQL operation
      */
-    @Loggable(Loggable.DEBUG)
-    public void commit() {
-        try {
-            this.conn.commit();
-        } catch (SQLException ex) {
-            throw new IllegalStateException(ex);
+    public void commit() throws SQLException {
+        final Connection conn = this.connection.get();
+        if (conn == null) {
+            throw new IllegalStateException(
+                "connection is not open, can't commit"
+            );
         }
-        DbUtils.closeQuietly(this.conn);
+        conn.commit();
+        this.disconnect();
     }
 
     /**
@@ -241,12 +239,14 @@ public final class JdbcSession {
      *
      * <p>{@link Handler} will receive a {@link ResultSet} of generated keys.
      *
+     * <p>JDBC connection is opened and, optionally, closed by this method.
+     *
      * @param handler The handler or result
      * @return The result
      * @param <T> Type of response
+     * @throws SQLException If fails
      */
-    @Loggable(Loggable.DEBUG)
-    public <T> T insert(@NotNull final Handler<T> handler) {
+    public <T> T insert(@NotNull final Handler<T> handler) throws SQLException {
         return this.run(
             handler,
             new Fetcher() {
@@ -257,8 +257,9 @@ public final class JdbcSession {
                     return stmt.getGeneratedKeys();
                 }
                 @Override
-                public PreparedStatement statement() throws SQLException {
-                    return JdbcSession.this.conn.prepareStatement(
+                public PreparedStatement statement(final Connection conn)
+                    throws SQLException {
+                    return conn.prepareStatement(
                         JdbcSession.this.query,
                         Statement.RETURN_GENERATED_KEYS
                     );
@@ -269,10 +270,13 @@ public final class JdbcSession {
 
     /**
      * Make SQL {@code UPDATE} request.
+     *
+     * <p>JDBC connection is opened and, optionally, closed by this method.
+     *
      * @return This object
+     * @throws SQLException If fails
      */
-    @Loggable(Loggable.DEBUG)
-    public JdbcSession update() {
+    public JdbcSession update() throws SQLException {
         this.run(
             new VoidHandler(),
             new Fetcher() {
@@ -283,8 +287,9 @@ public final class JdbcSession {
                     return null;
                 }
                 @Override
-                public PreparedStatement statement() throws SQLException {
-                    return JdbcSession.this.conn.prepareStatement(
+                public PreparedStatement statement(final Connection conn)
+                    throws SQLException {
+                    return conn.prepareStatement(
                         JdbcSession.this.query,
                         Statement.RETURN_GENERATED_KEYS
                     );
@@ -296,12 +301,15 @@ public final class JdbcSession {
 
     /**
      * Make SQL {@code SELECT} request.
+     *
+     * <p>JDBC connection is opened and, optionally, closed by this method.
+     *
      * @param handler The handler or result
      * @return The result
      * @param <T> Type of response
+     * @throws SQLException If fails
      */
-    @Loggable(Loggable.DEBUG)
-    public <T> T select(@NotNull final Handler<T> handler) {
+    public <T> T select(@NotNull final Handler<T> handler) throws SQLException {
         return this.run(
             handler,
             new Fetcher() {
@@ -311,10 +319,9 @@ public final class JdbcSession {
                     return stmt.executeQuery();
                 }
                 @Override
-                public PreparedStatement statement() throws SQLException {
-                    return JdbcSession.this.conn.prepareStatement(
-                        JdbcSession.this.query
-                    );
+                public PreparedStatement statement(final Connection conn)
+                    throws SQLException {
+                    return conn.prepareStatement(JdbcSession.this.query);
                 }
             }
         );
@@ -326,10 +333,11 @@ public final class JdbcSession {
     private interface Fetcher {
         /**
          * Create prepare statement.
+         * @param conn Open connection
          * @return The statement
          * @throws SQLException If some problem
          */
-        PreparedStatement statement() throws SQLException;
+        PreparedStatement statement(Connection conn) throws SQLException;
         /**
          * Fetch result set from statement.
          * @param stmt The statement
@@ -345,17 +353,19 @@ public final class JdbcSession {
      * @param fetcher Fetcher of result set
      * @return The result
      * @param <T> Type of response
+     * @throws SQLException If fails
      * @checkstyle ExecutableStatementCount (100 lines)
      */
-    @SuppressWarnings("PMD.CloseResource")
-    private <T> T run(final Handler<T> handler, final Fetcher fetcher) {
+    private <T> T run(final Handler<T> handler, final Fetcher fetcher)
+        throws SQLException {
         if (this.query == null) {
             throw new IllegalStateException("call #sql() first");
         }
+        final Connection conn = this.connect();
         T result;
         try {
-            this.conn.setAutoCommit(false);
-            final PreparedStatement stmt = fetcher.statement();
+            conn.setAutoCommit(false);
+            final PreparedStatement stmt = fetcher.statement(conn);
             try {
                 this.parametrize(stmt);
                 final ResultSet rset = fetcher.fetch(stmt);
@@ -363,16 +373,19 @@ public final class JdbcSession {
                 try {
                     result = handler.handle(rset);
                 } finally {
-                    DbUtils.closeQuietly(rset);
+                    if (rset != null) {
+                        rset.close();
+                    }
                 }
             } finally {
-                DbUtils.closeQuietly(stmt);
+                stmt.close();
             }
         } catch (SQLException ex) {
             if (!this.auto) {
-                DbUtils.rollbackAndCloseQuietly(this.conn);
+                conn.rollback();
+                this.disconnect();
             }
-            throw new IllegalArgumentException(ex);
+            throw new SQLException(ex);
         } finally {
             if (this.auto) {
                 this.commit();
@@ -380,6 +393,34 @@ public final class JdbcSession {
             this.args.clear();
         }
         return result;
+    }
+
+    /**
+     * Open connection and cache it locally in the class.
+     * @return Connection to use
+     * @throws SQLException If fails
+     */
+    private Connection connect() throws SQLException {
+        synchronized (this.args) {
+            if (this.connection.get() == null) {
+                this.connection.set(this.source.getConnection());
+            }
+            return this.connection.get();
+        }
+    }
+
+    /**
+     * Close connection if it's open (runtime exception otherwise).
+     * @throws SQLException If fails to do the SQL operation
+     */
+    private void disconnect() throws SQLException {
+        final Connection conn = this.connection.getAndSet(null);
+        if (conn == null) {
+            throw new IllegalStateException(
+                "connection is not open, can't close"
+            );
+        }
+        conn.close();
     }
 
     /**
