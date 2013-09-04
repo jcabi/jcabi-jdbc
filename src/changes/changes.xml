@@ -31,6 +31,7 @@
  -->
 <document xmlns="http://maven.apache.org/changes/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
     <body>
+        <release version="0.8" date="4 Sep 2013" description="standalone Git repository"/>
         <release version="0.1.8" date="20 May 2012" description="first version"/>
     </body>
 </document>
