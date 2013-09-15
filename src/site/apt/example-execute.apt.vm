@@ -1,9 +1,9 @@
  ------
- Updating SQL Records Through JDBC
+ Executing SQL Statements Through JDBC
  ------
  Yegor Bugayenko
  ------
- 2013-04-14
+ 2013-09-15
  ------
 
 ~~
@@ -36,32 +36,29 @@
 ~~ OF THE POSSIBILITY OF SUCH DAMAGE.
 ~~
 
-Updating SQL Records Through JDBC
+Executing SQL Statements Through JDBC
 
-  <<<UPDATE>>> or any other data manipulation queries can be done
-  through <<<JdbcSession>>>:
+  Data and schema modifications, if they are not returning any
+  results, can be done through <<<execute()>>> method of <<<JdbcSession>>>:
 
 +--
 public class Main {
   public static void main(String[] args) {
     new JdbcSession(/* JDBC data source */)
-      .sql("UPDATE employee SET salary = 35000 WHERE name = ?")
-      .set("Jeff Lebowski")
-      .update(new VoidHandler());
+      .sql("CREATE TABLE foo (name VARCHAR(30))")
+      .execute();
   }
 }
 +--
 
-  You can also run a stored procedure (for example, in Oracle):
+  You can also run a server instruction (for example, in PostgreSQL 9.2):
 
 +--
 public class Main {
   public static void main(String[] args) {
     new JdbcSession(/* JDBC data source */)
-      .sql("CALL db.set_salary(?, ?)")
-      .set("Jeff Lebowski")
-      .set(35000)
-      .update(new VoidHandler());
+      .sql("ANALYZE my_table")
+      .execute();
   }
 }
 +--

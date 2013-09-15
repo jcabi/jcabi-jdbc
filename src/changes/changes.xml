@@ -31,6 +31,18 @@
  -->
 <document xmlns="http://maven.apache.org/changes/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/changes/1.0.0 http://maven.apache.org/xsd/changes-1.0.0.xsd">
     <body>
+        <release version="0.9" date="15 Sep 2013" description="JdbcSession#execute()">
+            <action dev="yegor" issue="1" type="add">
+                method execute() added to class JdbcSession in order
+                to enable execution of server instructions without
+                returning any data back
+            </action>
+            <action dev="yegor" issue="1" type="fix">
+                method update(Handler) of class JdbcSession requires
+                an argument now, which has to be a handler of results
+                returned
+            </action>
+        </release>
         <release version="0.8" date="4 Sep 2013" description="standalone Git repository"/>
         <release version="0.1.8" date="20 May 2012" description="first version"/>
     </body>

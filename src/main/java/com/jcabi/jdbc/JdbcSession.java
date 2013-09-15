@@ -65,7 +65,8 @@ import lombok.ToString;
  * <p>There are a number of convenient pre-defined handlers, like
  * {@link VoidHandler}, {@link NotEmptyHandler}, {@link SingleHandler}, etc.
  *
- * <p>Methods {@link #insert(Handler)}, {@link #update()}, and
+ * <p>Methods {@link #insert(Handler)}, {@link #update(Handler)},
+ * {@link #execute()}, and
  * {@link #select(Handler)} clean the list of arguments pre-set by
  * {@link #set(Object)}. The class can be used for a complex transaction, when
  * it's necessary to perform a number of SQL statements in a group. For
@@ -76,12 +77,12 @@ import lombok.ToString;
  * <pre> new JdbcSession(source)
  *   .autocommit(false)
  *   .sql("START TRANSACTION")
- *   .update()
+ *   .execute()
  *   .sql("DELETE FROM foo WHERE id = ?")
  *   .set(444)
- *   .update()
+ *   .execute()
  *   .set(555)
- *   .update()
+ *   .execute()
  *   .commit();</pre>
  *
  * <p>The following SQL queries will be sent to the database:
@@ -99,7 +100,7 @@ import lombok.ToString;
  * <pre> new JdbcSession(&#47;* H2 Database data source *&#47;)
  *   .autocommit(false)
  *   .sql("SHUTDOWN COMPACT")
- *   .update();</pre>
+ *   .execute();</pre>
  *
  * <p>This class is thread-safe.
  *
@@ -273,12 +274,15 @@ public final class JdbcSession {
      *
      * <p>JDBC connection is opened and, optionally, closed by this method.
      *
+     * @param <T> Type of result expected
+     * @param handler Handler of result
      * @return This object
      * @throws SQLException If fails
      */
-    public JdbcSession update() throws SQLException {
-        this.run(
-            new VoidHandler(),
+    public <T> T update(@NotNull final Handler<T> handler)
+        throws SQLException {
+        return this.run(
+            handler,
             new Fetcher() {
                 @Override
                 public ResultSet fetch(final PreparedStatement stmt)
@@ -293,6 +297,41 @@ public final class JdbcSession {
                         JdbcSession.this.query,
                         Statement.RETURN_GENERATED_KEYS
                     );
+                }
+            }
+        );
+    }
+
+    /**
+     * Make SQL request expecting no response from the server.
+     *
+     * <p>This method should be used for schema manipulation statements,
+     * like CREATE TABLE, CREATE INDEX, DROP COLUMN, etc. and server-side
+     * instructions that return no data back. Main difference between this
+     * one and {@link #update()} is that the later requests JDBC to return
+     * generated keys. When SQL server doesn't return any keys this may
+     * cause runtime exceptions in JDBC.
+     *
+     * <p>JDBC connection is opened and, optionally, closed by this method.
+     *
+     * @return This object
+     * @throws SQLException If fails
+     * @since 0.9
+     */
+    public JdbcSession execute() throws SQLException {
+        this.run(
+            new VoidHandler(),
+            new Fetcher() {
+                @Override
+                public ResultSet fetch(final PreparedStatement stmt)
+                    throws SQLException {
+                    stmt.execute();
+                    return null;
+                }
+                @Override
+                public PreparedStatement statement(final Connection conn)
+                    throws SQLException {
+                    return conn.prepareStatement(JdbcSession.this.query);
                 }
             }
         );

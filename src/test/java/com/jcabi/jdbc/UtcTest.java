@@ -76,7 +76,7 @@ public final class UtcTest {
         );
         new JdbcSession(this.source)
             .sql("CREATE TABLE foo (date DATETIME)")
-            .update();
+            .execute();
         this.fmt = new SimpleDateFormat(
             "yyyy-MM-dd HH:mm:ss.SSS", Locale.ENGLISH
         );

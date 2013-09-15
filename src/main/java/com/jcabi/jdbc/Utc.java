@@ -47,7 +47,7 @@ import lombok.ToString;
  * <p>When it's necessary to save date/time to the DB in UTC timezone, use
  * this class:
  *
- * <pre>new JdbcSession(source)
+ * <pre> new JdbcSession(source)
  *   .sql("INSERT INTO payment (amount, date) VALUES (?, ?)")
  *   .set(500)
  *   .set(new Utc()) // current date to be set, in UTC timezone
@@ -55,7 +55,7 @@ import lombok.ToString;
  *
  * <p>This class also helps during date/time retrieval:
  *
- * <pre>Date date = new JdbcSession(source)
+ * <pre> Date date = new JdbcSession(source)
  *   .sql("SELECT date FROM payment WHERE id = 555")
  *   .select(
  *     new JdbcSession.Handler&lt;Date&gt;() {
