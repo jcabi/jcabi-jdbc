@@ -159,7 +159,8 @@ public final class JdbcSession {
      * Public ctor.
      * @param src Data source
      */
-    public JdbcSession(@NotNull final DataSource src) {
+    public JdbcSession(
+        @NotNull(message = "data source can't be NULL") final DataSource src) {
         this.source = src;
     }
 
@@ -179,7 +180,8 @@ public final class JdbcSession {
      * @param sql The SQL query to use
      * @return This object
      */
-    public JdbcSession sql(@NotNull final String sql) {
+    public JdbcSession sql(
+        @NotNull(message = "SQL query can't be NULL") final String sql) {
         synchronized (this.args) {
             this.query = sql;
         }
@@ -247,7 +249,9 @@ public final class JdbcSession {
      * @param <T> Type of response
      * @throws SQLException If fails
      */
-    public <T> T insert(@NotNull final Handler<T> handler) throws SQLException {
+    public <T> T insert(
+        @NotNull(message = "handler can't be NULL") final Handler<T> handler)
+        throws SQLException {
         return this.run(
             handler,
             new Fetcher() {
@@ -279,7 +283,8 @@ public final class JdbcSession {
      * @return This object
      * @throws SQLException If fails
      */
-    public <T> T update(@NotNull final Handler<T> handler)
+    public <T> T update(
+        @NotNull(message = "handler can't be NULL") final Handler<T> handler)
         throws SQLException {
         return this.run(
             handler,
@@ -348,7 +353,9 @@ public final class JdbcSession {
      * @param <T> Type of response
      * @throws SQLException If fails
      */
-    public <T> T select(@NotNull final Handler<T> handler) throws SQLException {
+    public <T> T select(
+        @NotNull(message = "handler can't be NULL") final Handler<T> handler)
+        throws SQLException {
         return this.run(
             handler,
             new Fetcher() {

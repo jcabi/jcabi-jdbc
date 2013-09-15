@@ -33,6 +33,7 @@ import com.jcabi.aspects.Loggable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -86,7 +87,8 @@ public final class SingleHandler<T> implements JdbcSession.Handler<T> {
      * Public ctor.
      * @param tpe The type to convert to
      */
-    public SingleHandler(final Class<T> tpe) {
+    public SingleHandler(
+        @NotNull(message = "type of result can't be NULL") final Class<T> tpe) {
         this(tpe, false);
     }
 
@@ -95,7 +97,9 @@ public final class SingleHandler<T> implements JdbcSession.Handler<T> {
      * @param tpe The type to convert to
      * @param slnt Silently return NULL if there is no row
      */
-    public SingleHandler(final Class<T> tpe, final boolean slnt) {
+    public SingleHandler(
+        @NotNull(message = "type can't be NULL") final Class<T> tpe,
+        final boolean slnt) {
         this.type = tpe;
         this.silently = slnt;
     }
