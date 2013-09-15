@@ -32,6 +32,7 @@ package com.jcabi.jdbc;
 import com.jolbox.bonecp.BoneCPDataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.sql.DataSource;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -49,9 +50,7 @@ public final class JdbcSessionTest {
      */
     @Test
     public void sendsSqlManipulationsToJdbcDriver() throws Exception {
-        final BoneCPDataSource source = new BoneCPDataSource();
-        source.setDriverClass("org.h2.Driver");
-        source.setJdbcUrl("jdbc:h2:mem:x");
+        final DataSource source = this.source();
         new JdbcSession(source)
             .autocommit(false)
             .sql("CREATE TABLE foo (name VARCHAR(50))")
@@ -73,6 +72,33 @@ public final class JdbcSessionTest {
                 }
             );
         MatcherAssert.assertThat(name, Matchers.startsWith("Jeff"));
+    }
+
+    /**
+     * JdbcSession can execute SQL.
+     * @throws Exception If there is some problem inside
+     * @since 0.9
+     */
+    @Test
+    public void executesSql() throws Exception {
+        new JdbcSession(this.source())
+            .autocommit(false)
+            .sql("CREATE TABLE foo5 (name VARCHAR(30))")
+            .execute()
+            .sql("DROP TABLE foo5")
+            .execute()
+            .commit();
+    }
+
+    /**
+     * Get data source.
+     * @return Source
+     */
+    private DataSource source() {
+        final BoneCPDataSource source = new BoneCPDataSource();
+        source.setDriverClass("org.h2.Driver");
+        source.setJdbcUrl(String.format("jdbc:h2:mem:x%d", System.nanoTime()));
+        return source;
     }
 
 }

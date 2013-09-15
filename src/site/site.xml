@@ -59,6 +59,7 @@
             <item name="Select SQL rows" href="./example-select.html"/>
             <item name="Insert records" href="./example-insert.html"/>
             <item name="Update records" href="./example-update.html"/>
+            <item name="Execute statements" href="./example-execute.html"/>
             <item name="Transaction management" href="./example-transaction.html"/>
         </menu>
         <menu ref="reports"/>

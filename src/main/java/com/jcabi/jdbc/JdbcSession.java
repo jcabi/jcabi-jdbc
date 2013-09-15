@@ -300,6 +300,35 @@ public final class JdbcSession {
     }
 
     /**
+     * Make SQL request expecting no response from the server.
+     *
+     * <p>JDBC connection is opened and, optionally, closed by this method.
+     *
+     * @return This object
+     * @throws SQLException If fails
+     * @since 0.9
+     */
+    public JdbcSession execute() throws SQLException {
+        this.run(
+            new VoidHandler(),
+            new Fetcher() {
+                @Override
+                public ResultSet fetch(final PreparedStatement stmt)
+                    throws SQLException {
+                    stmt.execute();
+                    return null;
+                }
+                @Override
+                public PreparedStatement statement(final Connection conn)
+                    throws SQLException {
+                    return conn.prepareStatement(JdbcSession.this.query);
+                }
+            }
+        );
+        return this;
+    }
+
+    /**
      * Make SQL {@code SELECT} request.
      *
      * <p>JDBC connection is opened and, optionally, closed by this method.
