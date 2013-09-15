@@ -41,7 +41,7 @@ import lombok.ToString;
  *
  * <p>Use it when you need the first column in the first row:
  *
- * <pre>Long id = new JdbcSession(source)
+ * <pre> Long id = new JdbcSession(source)
  *   .sql("SELECT id FROM user WHERE name = ?")
  *   .set("Jeff Lebowski")
  *   .select(new SingleHandler&lt;Long&gt;(Long.class));</pre>
@@ -54,7 +54,7 @@ import lombok.ToString;
  * a two-arguments constructor ({@code null} will be returned if
  * {@link ResultSet} is empty):
  *
- * <pre>String name = new JdbcSession(source)
+ * <pre> String name = new JdbcSession(source)
  *   .sql("SELECT name FROM user WHERE id = ?")
  *   .set(555)
  *   .select(new SingleHandler&lt;Long&gt;(Long.class), true);

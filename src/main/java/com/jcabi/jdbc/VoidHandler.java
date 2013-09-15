@@ -40,7 +40,7 @@ import lombok.ToString;
  *
  * <p>Useful handler when you're not interested in the result:
  *
- * <pre>new JdbcSession(source)
+ * <pre> new JdbcSession(source)
  *   .sql("INSERT INTO foo (name) VALUES (?)")
  *   .set("Jeff Lebowski")
  *   .insert(new VoidHandler());</pre>
