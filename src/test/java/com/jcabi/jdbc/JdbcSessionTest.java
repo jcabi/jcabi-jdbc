@@ -54,10 +54,10 @@ public final class JdbcSessionTest {
         new JdbcSession(source)
             .autocommit(false)
             .sql("CREATE TABLE foo (name VARCHAR(50))")
-            .update()
+            .execute()
             .sql("INSERT INTO foo (name) VALUES (?)")
             .set("Jeff Lebowski")
-            .update()
+            .execute()
             .commit();
         final String name = new JdbcSession(source)
             .sql("SELECT name FROM foo WHERE name = 'Jeff Lebowski'")

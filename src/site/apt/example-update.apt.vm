@@ -47,7 +47,7 @@ public class Main {
     new JdbcSession(/* JDBC data source */)
       .sql("UPDATE employee SET salary = 35000 WHERE name = ?")
       .set("Jeff Lebowski")
-      .update();
+      .update(new VoidHandler());
   }
 }
 +--
@@ -61,7 +61,7 @@ public class Main {
       .sql("CALL db.set_salary(?, ?)")
       .set("Jeff Lebowski")
       .set(35000)
-      .update();
+      .update(new VoidHandler());
   }
 }
 +--

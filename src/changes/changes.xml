@@ -37,6 +37,11 @@
                 to enable execution of server instructions without
                 returning any data back
             </action>
+            <action dev="yegor" issue="1" type="fix">
+                method update(Handler) of class JdbcSession requires
+                an argument now, which has to be a handler of results
+                returned
+            </action>
         </release>
         <release version="0.8" date="4 Sep 2013" description="standalone Git repository"/>
         <release version="0.1.8" date="20 May 2012" description="first version"/>
