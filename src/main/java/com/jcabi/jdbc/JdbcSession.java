@@ -165,6 +165,16 @@ public final class JdbcSession {
     }
 
     /**
+     * Public ctor.
+     * @param cnx Connection to use
+     * @since 0.10
+     */
+    public JdbcSession(
+        @NotNull(message = "connection can't be NULL") final Connection cnx) {
+        this.source = new StaticSource(cnx);
+    }
+
+    /**
      * Use this SQL query (with optional parameters inside).
      *
      * <p>The query will be used in {@link PreparedStatement}, that's why
