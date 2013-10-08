@@ -142,20 +142,6 @@ public final class JdbcSession {
     private transient String query;
 
     /**
-     * Handler or ResultSet.
-     * @param <T> Type of expected result
-     */
-    public interface Handler<T> {
-        /**
-         * Process the result set and return some value.
-         * @param rset The result set to process
-         * @return The result
-         * @throws SQLException If something goes wrong inside
-         */
-        T handle(ResultSet rset) throws SQLException;
-    }
-
-    /**
      * Public ctor.
      * @param src Data source
      */
@@ -384,26 +370,6 @@ public final class JdbcSession {
     }
 
     /**
-     * The fetcher.
-     */
-    private interface Fetcher {
-        /**
-         * Create prepare statement.
-         * @param conn Open connection
-         * @return The statement
-         * @throws SQLException If some problem
-         */
-        PreparedStatement statement(Connection conn) throws SQLException;
-        /**
-         * Fetch result set from statement.
-         * @param stmt The statement
-         * @return The result set
-         * @throws SQLException If some problem
-         */
-        ResultSet fetch(PreparedStatement stmt) throws SQLException;
-    }
-
-    /**
      * Run this handler, and this fetcher.
      * @param handler The handler or result
      * @param fetcher Fetcher of result set
@@ -504,6 +470,40 @@ public final class JdbcSession {
             }
             ++pos;
         }
+    }
+
+    /**
+     * Handler or ResultSet.
+     * @param <T> Type of expected result
+     */
+    public interface Handler<T> {
+        /**
+         * Process the result set and return some value.
+         * @param rset The result set to process
+         * @return The result
+         * @throws SQLException If something goes wrong inside
+         */
+        T handle(ResultSet rset) throws SQLException;
+    }
+
+    /**
+     * The fetcher.
+     */
+    private interface Fetcher {
+        /**
+         * Create prepare statement.
+         * @param conn Open connection
+         * @return The statement
+         * @throws SQLException If some problem
+         */
+        PreparedStatement statement(Connection conn) throws SQLException;
+        /**
+         * Fetch result set from statement.
+         * @param stmt The statement
+         * @return The result set
+         * @throws SQLException If some problem
+         */
+        ResultSet fetch(PreparedStatement stmt) throws SQLException;
     }
 
 }

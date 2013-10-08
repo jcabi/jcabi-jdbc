@@ -32,8 +32,8 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.jcabi</groupId>
-        <artifactId>jcabi</artifactId>
-        <version>0.7.22</version>
+        <artifactId>parent</artifactId>
+        <version>0.10.2</version>
     </parent>
     <artifactId>jcabi-jdbc</artifactId>
     <version>0.10</version>
@@ -53,6 +53,12 @@
         <developerConnection>scm:git:github.com:jcabi/jcabi-jdbc.git</developerConnection>
         <url>https://github.com/jcabi/jcabi-jdbc</url>
     </scm>
+    <distributionManagement>
+        <site>
+            <id>www.jcabi.com</id>
+            <url>s3://www.jcabi.com/jcabi-jdbc</url>
+        </site>
+    </distributionManagement>
     <dependencies>
         <dependency>
             <groupId>com.jcabi</groupId>
