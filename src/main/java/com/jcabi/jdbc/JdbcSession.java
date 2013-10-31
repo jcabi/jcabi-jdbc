@@ -383,7 +383,7 @@ public final class JdbcSession {
      * @throws SQLException If fails
      * @checkstyle ExecutableStatementCount (100 lines)
      */
-    private <T> T run(final JdbcSession.Handler<T> handler,
+    public <T> T run(final JdbcSession.Handler<T> handler,
         final JdbcSession.Fetcher fetcher)
         throws SQLException {
         if (this.query == null) {
@@ -495,7 +495,7 @@ public final class JdbcSession {
     /**
      * The fetcher.
      */
-    private interface Fetcher {
+    public interface Fetcher {
         /**
          * Create prepare statement.
          * @param conn Open connection
