@@ -1,0 +1,40 @@
+# Selecting SQL Rows Through JDBC
+
+This is how you fetch all rows from an SQL `SELECT` query:
+
+```
+public class Main {
+  public static void main(String[] args) {
+    Collection<String> names = new JdbcSession(/* JDBC data source */)
+      .sql("SELECT name FROM employee WHERE salary > 35000")
+      .select(
+        new JdbcSession.Handler<Collection<String>>() {
+          @Override
+          public Collection<String> handle(ResultSet rset) throws SQLException {
+            final Collection<String> names = new LinkedList<String>();
+            while (rset.next()) {
+              names.add(rset.getString(1));
+            }
+            return names;
+          }
+        }
+      );
+  }
+}
+```
+
+There is an off-the-shelf `SingleHandler` handler, which can be used
+if you interested in the first value of the first row of the `SELECT`
+query result set:
+
+```
+public class Main {
+  public static void main(String[] args) {
+    String name = new JdbcSession(/* JDBC data source */)
+      .sql("SELECT name FROM employee WHERE name = ?")
+      .set("Jeff Bridges")
+      .select(new SingleHandler<String>(String.class));
+  }
+}
+```
+

@@ -1,0 +1,29 @@
+# Updating SQL Records Through JDBC
+
+`UPDATE` or any other data manipulation queries can be done
+through `JdbcSession`:
+
+```
+public class Main {
+  public static void main(String[] args) {
+    new JdbcSession(/* JDBC data source */)
+      .sql("UPDATE employee SET salary = 35000 WHERE name = ?")
+      .set("Jeff Lebowski")
+      .update(new VoidHandler());
+  }
+}
+```
+
+You can also run a stored procedure (for example, in Oracle):
+
+```
+public class Main {
+  public static void main(String[] args) {
+    new JdbcSession(/* JDBC data source */)
+      .sql("CALL db.set_salary(?, ?)")
+      .set("Jeff Lebowski")
+      .set(35000)
+      .update(new VoidHandler());
+  }
+}
+```

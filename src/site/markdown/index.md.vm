@@ -1,0 +1,58 @@
+# Fluent JDBC Wrapper
+
+[`JdbcSession`](./apidocs-${project.version}/com/jcabi/jdbc/JdbcSession.html)
+is a convenient
+[fluent](http://en.wikipedia.org/wiki/Fluent_interface)
+wrapper around JDBC:
+
+```
+import com.jcabi.jdbc.JdbcSession;
+public class Main {
+  public static void main(String[] args) {
+    String name = new JdbcSession(/* JDBC data source */)
+      .sql("SELECT name FROM foo WHERE id = ?")
+      .set(123)
+      .select(new SingleHandler<String>(String.class));
+  }
+}
+```
+
+The only dependency you need is
+(you can also download
+[jcabi-jdbc-${project.version}.jar](http://repo1.maven.org/maven2/com/jcabi/jcabi-jdbc/${project.version}/jcabi-jdbc-${project.version}.jar)
+and add it to the classpath):
+
+```
+<dependency>
+  <groupId>com.jcabi</groupId>
+  <artifactId>jcabi-jdbc</artifactId>
+  <version>${project.version}</version>
+</dependency>
+```
+
+Similar solutions (if you know others please
+[submit it to github](https://github.com/yegor256/jcabi/issues)):
+[ollin](http://code.google.com/p/ollin/),
+[JDBI](http://www.jdbi.org/),
+[Spring JdbcTemplate](http://static.springsource.org/spring/docs/2.0.x/api/org/springframework/jdbc/core/JdbcTemplate.html).
+
+## Cutting Edge Version
+
+If you want to use current version of the product, you can do it with
+this configuration in your <<<pom.xml>>>:
+
+```
+<repositories>
+  <repository>
+    <id>oss.sonatype.org</id>
+    <url>https://oss.sonatype.org/content/repositories/snapshots/</url>
+  </repository>
+</repositories>
+<dependencies>
+  <dependency>
+    <groupId>com.jcabi</groupId>
+    <artifactId>jcabi-jdbc</artifactId>
+    <version>1.0-SNAPSHOT</version>
+  </dependency>
+</dependencies>
+```

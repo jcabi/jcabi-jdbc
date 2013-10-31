@@ -1,0 +1,17 @@
+# Inserting SQL Records Through JDBC
+
+Data insertion `INSERT` operations can be done through `JdbcSession`:
+
+```
+public class Main {
+  public static void main(String[] args) {
+    final long id = new JdbcSession(/* JDBC data source */)
+      .sql("INSERT INTO employee (name, salary) VALUES (?, ?)")
+      .set("Jeff Lebowski")
+      .set(35000)
+      .update(new SingleHandler<Long>(Long.class));
+  }
+}
+```
+
+In this example, `id` will contain the primary key of the inserted row.
