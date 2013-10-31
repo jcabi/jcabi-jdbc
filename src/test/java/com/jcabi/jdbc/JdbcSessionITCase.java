@@ -68,7 +68,7 @@ public final class JdbcSessionITCase {
         final DataSource source = JdbcSessionITCase.source();
         new JdbcSession(source)
             .autocommit(false)
-            .sql("CREATE TABLE foo (name VARCHAR(50))")
+            .sql("CREATE TABLE IF NOT EXISTS foo (name VARCHAR(50))")
             .execute()
             .sql("INSERT INTO foo (name) VALUES (?)")
             .set("Jeff Lebowski")
@@ -83,9 +83,7 @@ public final class JdbcSessionITCase {
     @Test
     public void changesTransactionIsolationLevel() throws Exception {
         final DataSource source = JdbcSessionITCase.source();
-        new JdbcSession(source)
-            .sql("VACUUM FULL")
-            .execute();
+        new JdbcSession(source).sql("VACUUM").execute();
     }
 
     /**

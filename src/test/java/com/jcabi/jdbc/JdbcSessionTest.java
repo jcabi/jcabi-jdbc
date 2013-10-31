@@ -91,6 +91,34 @@ public final class JdbcSessionTest {
     }
 
     /**
+     * JdbcSession can automatically commit.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void automaticallyCommitsByDefault() throws Exception {
+        final DataSource source = JdbcSessionTest.source();
+        new JdbcSession(source)
+            .sql("CREATE TABLE foo16 (name VARCHAR(50))")
+            .execute()
+            .sql("INSERT INTO foo16 (name) VALUES (?)")
+            .set("Walter")
+            .execute();
+        final String name = new JdbcSession(source)
+            .sql("SELECT name FROM foo16 WHERE name = 'Walter'")
+            .select(
+                new JdbcSession.Handler<String>() {
+                    @Override
+                    public String handle(final ResultSet rset)
+                        throws SQLException {
+                        rset.next();
+                        return rset.getString(1);
+                    }
+                }
+            );
+        MatcherAssert.assertThat(name, Matchers.startsWith("Wa"));
+    }
+
+    /**
      * Get data source.
      * @return Source
      */

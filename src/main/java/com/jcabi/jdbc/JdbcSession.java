@@ -190,7 +190,8 @@ public final class JdbcSession {
      *
      * <p>By default this flag is set to TRUE, which means that methods
      * {@link #insert(JdbcSession.Handler)}, {@link #execute()}, and
-     * {@link #select(JdbcSession.Handler)} will call {@link Connection#commit()} after
+     * {@link #select(JdbcSession.Handler)} will
+     * call {@link Connection#commit()} after
      * their successful execution.
      *
      * @param autocommit Shall we?
@@ -383,7 +384,7 @@ public final class JdbcSession {
      * @throws SQLException If fails
      * @checkstyle ExecutableStatementCount (100 lines)
      */
-    public <T> T run(final JdbcSession.Handler<T> handler,
+    private <T> T run(final JdbcSession.Handler<T> handler,
         final JdbcSession.Fetcher fetcher)
         throws SQLException {
         if (this.query == null) {
@@ -392,7 +393,7 @@ public final class JdbcSession {
         final Connection conn = this.connect();
         T result;
         try {
-            conn.setAutoCommit(false);
+            conn.setAutoCommit(this.auto);
             final PreparedStatement stmt = fetcher.statement(conn);
             try {
                 this.parametrize(stmt);
@@ -415,9 +416,6 @@ public final class JdbcSession {
             }
             throw new SQLException(ex);
         } finally {
-            if (this.auto) {
-                this.commit();
-            }
             this.args.clear();
         }
         return result;
