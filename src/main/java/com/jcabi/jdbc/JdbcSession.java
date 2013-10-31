@@ -36,7 +36,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.List;
+import java.util.Collection;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.sql.DataSource;
@@ -65,9 +65,10 @@ import lombok.ToString;
  * <p>There are a number of convenient pre-defined handlers, like
  * {@link VoidHandler}, {@link NotEmptyHandler}, {@link SingleHandler}, etc.
  *
- * <p>Methods {@link #insert(Handler)}, {@link #update(Handler)},
+ * <p>Methods {@link #insert(JdbcSession.Handler)},
+ * {@link #update(JdbcSession.Handler)},
  * {@link #execute()}, and
- * {@link #select(Handler)} clean the list of arguments pre-set by
+ * {@link #select(JdbcSession.Handler)} clean the list of arguments pre-set by
  * {@link #set(Object)}. The class can be used for a complex transaction, when
  * it's necessary to perform a number of SQL statements in a group. For
  * example, the following construct will execute two SQL queries, in a single
@@ -122,7 +123,7 @@ public final class JdbcSession {
     /**
      * Arguments.
      */
-    private final transient List<Object> args =
+    private final transient Collection<Object> args =
         new CopyOnWriteArrayList<Object>();
 
     /**
@@ -188,8 +189,8 @@ public final class JdbcSession {
      * Shall we auto-commit?
      *
      * <p>By default this flag is set to TRUE, which means that methods
-     * {@link #insert(Handler)}, {@link #update()}, and
-     * {@link #select(Handler)} will call {@link Connection#commit()} after
+     * {@link #insert(JdbcSession.Handler)}, {@link #execute()}, and
+     * {@link #select(JdbcSession.Handler)} will call {@link Connection#commit()} after
      * their successful execution.
      *
      * @param autocommit Shall we?
@@ -236,7 +237,8 @@ public final class JdbcSession {
     /**
      * Make SQL {@code INSERT} request.
      *
-     * <p>{@link Handler} will receive a {@link ResultSet} of generated keys.
+     * <p>{@link JdbcSession.Handler} will receive
+     * a {@link ResultSet} of generated keys.
      *
      * <p>JDBC connection is opened and, optionally, closed by this method.
      *
@@ -246,11 +248,12 @@ public final class JdbcSession {
      * @throws SQLException If fails
      */
     public <T> T insert(
-        @NotNull(message = "handler can't be NULL") final Handler<T> handler)
+        @NotNull(message = "handler can't be NULL")
+        final JdbcSession.Handler<T> handler)
         throws SQLException {
         return this.run(
             handler,
-            new Fetcher() {
+            new JdbcSession.Fetcher() {
                 @Override
                 public ResultSet fetch(final PreparedStatement stmt)
                     throws SQLException {
@@ -280,11 +283,12 @@ public final class JdbcSession {
      * @throws SQLException If fails
      */
     public <T> T update(
-        @NotNull(message = "handler can't be NULL") final Handler<T> handler)
+        @NotNull(message = "handler can't be NULL")
+        final JdbcSession.Handler<T> handler)
         throws SQLException {
         return this.run(
             handler,
-            new Fetcher() {
+            new JdbcSession.Fetcher() {
                 @Override
                 public ResultSet fetch(final PreparedStatement stmt)
                     throws SQLException {
@@ -309,7 +313,7 @@ public final class JdbcSession {
      * <p>This method should be used for schema manipulation statements,
      * like CREATE TABLE, CREATE INDEX, DROP COLUMN, etc. and server-side
      * instructions that return no data back. Main difference between this
-     * one and {@link #update()} is that the later requests JDBC to return
+     * one and {@code #execute()} is that the later requests JDBC to return
      * generated keys. When SQL server doesn't return any keys this may
      * cause runtime exceptions in JDBC.
      *
@@ -322,7 +326,7 @@ public final class JdbcSession {
     public JdbcSession execute() throws SQLException {
         this.run(
             new VoidHandler(),
-            new Fetcher() {
+            new JdbcSession.Fetcher() {
                 @Override
                 public ResultSet fetch(final PreparedStatement stmt)
                     throws SQLException {
@@ -350,11 +354,12 @@ public final class JdbcSession {
      * @throws SQLException If fails
      */
     public <T> T select(
-        @NotNull(message = "handler can't be NULL") final Handler<T> handler)
+        @NotNull(message = "handler can't be NULL")
+        final JdbcSession.Handler<T> handler)
         throws SQLException {
         return this.run(
             handler,
-            new Fetcher() {
+            new JdbcSession.Fetcher() {
                 @Override
                 public ResultSet fetch(final PreparedStatement stmt)
                     throws SQLException {
@@ -378,7 +383,8 @@ public final class JdbcSession {
      * @throws SQLException If fails
      * @checkstyle ExecutableStatementCount (100 lines)
      */
-    private <T> T run(final Handler<T> handler, final Fetcher fetcher)
+    private <T> T run(final JdbcSession.Handler<T> handler,
+        final JdbcSession.Fetcher fetcher)
         throws SQLException {
         if (this.query == null) {
             throw new IllegalStateException("call #sql() first");
@@ -452,7 +458,7 @@ public final class JdbcSession {
      */
     private void parametrize(final PreparedStatement stmt) throws SQLException {
         int pos = 1;
-        for (Object arg : this.args) {
+        for (final Object arg : this.args) {
             if (arg == null) {
                 stmt.setString(pos, null);
             } else if (arg instanceof Long) {

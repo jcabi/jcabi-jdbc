@@ -30,6 +30,7 @@
 package com.jcabi.jdbc;
 
 import com.jolbox.bonecp.BoneCPDataSource;
+import java.security.SecureRandom;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -38,7 +39,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
-import java.util.Random;
 import java.util.TimeZone;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -72,7 +72,7 @@ public final class UtcTest {
         this.source = new BoneCPDataSource();
         this.source.setDriverClass("org.h2.Driver");
         this.source.setJdbcUrl(
-            String.format("jdbc:h2:mem:%s", new Random().nextInt())
+            String.format("jdbc:h2:mem:%s", new SecureRandom().nextInt())
         );
         new JdbcSession(this.source)
             .sql("CREATE TABLE foo (date DATETIME)")

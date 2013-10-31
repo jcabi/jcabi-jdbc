@@ -50,7 +50,7 @@ public final class JdbcSessionTest {
      */
     @Test
     public void sendsSqlManipulationsToJdbcDriver() throws Exception {
-        final DataSource source = this.source();
+        final DataSource source = JdbcSessionTest.source();
         new JdbcSession(source)
             .autocommit(false)
             .sql("CREATE TABLE foo (name VARCHAR(50))")
@@ -81,7 +81,7 @@ public final class JdbcSessionTest {
      */
     @Test
     public void executesSql() throws Exception {
-        new JdbcSession(this.source())
+        new JdbcSession(JdbcSessionTest.source())
             .autocommit(false)
             .sql("CREATE TABLE foo5 (name VARCHAR(30))")
             .execute()
@@ -94,7 +94,7 @@ public final class JdbcSessionTest {
      * Get data source.
      * @return Source
      */
-    private DataSource source() {
+    private static DataSource source() {
         final BoneCPDataSource source = new BoneCPDataSource();
         source.setDriverClass("org.h2.Driver");
         source.setJdbcUrl(String.format("jdbc:h2:mem:x%d", System.nanoTime()));

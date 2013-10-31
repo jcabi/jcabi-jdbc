@@ -51,9 +51,6 @@ import lombok.ToString;
 @EqualsAndHashCode
 public final class NotEmptyHandler implements JdbcSession.Handler<Boolean> {
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Loggable(Loggable.DEBUG)
     public Boolean handle(final ResultSet rset) throws SQLException {

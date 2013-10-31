@@ -54,9 +54,6 @@ import lombok.ToString;
 @EqualsAndHashCode
 public final class VoidHandler implements JdbcSession.Handler<Void> {
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Loggable(Loggable.DEBUG)
     public Void handle(final ResultSet rset) {

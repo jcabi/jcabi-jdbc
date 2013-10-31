@@ -58,78 +58,51 @@ final class StaticSource implements DataSource {
      * Public ctor.
      * @param cnx Connection
      */
-    protected StaticSource(final Connection cnx) {
+    StaticSource(final Connection cnx) {
         this.conn = cnx;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Connection getConnection() throws SQLException {
         return this.conn;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Connection getConnection(final String username,
         final String password) throws SQLException {
         return this.conn;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public PrintWriter getLogWriter() throws SQLException {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void setLogWriter(final PrintWriter out) throws SQLException {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public void setLoginTimeout(final int seconds) throws SQLException {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public int getLoginTimeout() throws SQLException {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public Logger getParentLogger() throws SQLFeatureNotSupportedException {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public <T> T unwrap(final Class<T> iface) throws SQLException {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     public boolean isWrapperFor(final Class<?> iface) throws SQLException {
         throw new UnsupportedOperationException();

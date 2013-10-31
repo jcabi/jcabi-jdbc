@@ -104,9 +104,6 @@ public final class SingleHandler<T> implements JdbcSession.Handler<T> {
         this.silently = slnt;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     @Override
     @Loggable(Loggable.DEBUG)
     public T handle(final ResultSet rset) throws SQLException {
@@ -126,7 +123,7 @@ public final class SingleHandler<T> implements JdbcSession.Handler<T> {
      * @throws SQLException If some error inside
      */
     private T fetch(final ResultSet rset) throws SQLException {
-        Object result;
+        final Object result;
         if (this.type.equals(String.class)) {
             result = rset.getString(1);
         } else if (this.type.equals(Long.class)) {
