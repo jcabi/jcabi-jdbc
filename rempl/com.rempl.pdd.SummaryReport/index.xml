@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type='text/xsl' href='puzzles.xsl'?><puzzles>
+   <puzzle>
+      <ticket>143</ticket>
+      <file>src/main/java/com/jcabi/jdbc/SingleHandler.java</file>
+      <prefix> * </prefix>
+      <body>This class should be @Immutable, but we can't do it at the moment, because "Class" type is mutable. Let's refactor somehow.</body>
+      <estimate>0</estimate>
+      <lines>69-70</lines>
+      <owner>someone</owner>
+   </puzzle>
+</puzzles>
