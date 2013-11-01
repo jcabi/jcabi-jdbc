@@ -29,9 +29,12 @@
  */
 package com.jcabi.jdbc;
 
+import com.jcabi.aspects.Parallel;
+import com.jcabi.aspects.Tv;
 import com.jolbox.bonecp.BoneCPDataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.concurrent.TimeUnit;
 import javax.sql.DataSource;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -119,6 +122,53 @@ public final class JdbcSessionTest {
     }
 
     /**
+     * JdbcSession can release connections from the pool.
+     * @throws Exception If there is some problem inside
+     * @since 0.10.2
+     */
+    @Test
+    public void releasesConnectionsFromThePool() throws Exception {
+        final DataSource src = JdbcSessionTest.source();
+        new JdbcSession(src)
+            .sql("CREATE TABLE foo776 (name VARCHAR(30))")
+            .execute();
+        for (int idx = 0; idx < Tv.TEN; ++idx) {
+            new JdbcSession(src)
+                .sql("INSERT INTO foo776 VALUES ('hello, world!')")
+                .execute();
+        }
+    }
+
+    /**
+     * JdbcSession can execute SQL in parallel threads.
+     * @throws Exception If there is some problem inside
+     * @since 0.10.2
+     */
+    @Test
+    public void executesSqlInParallelThreads() throws Exception {
+        final DataSource src = JdbcSessionTest.source();
+        new JdbcSession(src)
+            .sql("CREATE TABLE foo99 (name VARCHAR(30))")
+            .execute();
+        this.insert(src, "foo99");
+    }
+
+    /**
+     * Insert a row into a table.
+     * @param src Data source
+     * @param table Name of the table to INSERT into
+     * @throws Exception If there is some problem inside
+     * @since 0.10.2
+     */
+    @Parallel(threads = Tv.FIFTY)
+    private void insert(final DataSource src, final String table)
+        throws Exception{
+        new JdbcSession(src)
+            .sql(String.format("INSERT INTO %s VALUES ('hey')", table))
+            .execute();
+    }
+
+    /**
      * Get data source.
      * @return Source
      */
@@ -126,6 +176,9 @@ public final class JdbcSessionTest {
         final BoneCPDataSource source = new BoneCPDataSource();
         source.setDriverClass("org.h2.Driver");
         source.setJdbcUrl(String.format("jdbc:h2:mem:x%d", System.nanoTime()));
+        source.setConnectionTimeout((long) Tv.TEN, TimeUnit.SECONDS);
+        source.setMaxConnectionsPerPartition(Tv.THREE);
+        source.setPartitionCount(1);
         return source;
     }
 
