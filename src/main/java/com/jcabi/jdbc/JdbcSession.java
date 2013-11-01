@@ -416,6 +416,9 @@ public final class JdbcSession {
             }
             throw new SQLException(ex);
         } finally {
+            if (this.auto) {
+                this.disconnect();
+            }
             this.args.clear();
         }
         return result;

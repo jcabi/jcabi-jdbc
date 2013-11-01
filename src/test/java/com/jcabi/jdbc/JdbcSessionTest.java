@@ -127,6 +127,7 @@ public final class JdbcSessionTest {
      * @since 0.10.2
      */
     @Test
+    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public void releasesConnectionsFromThePool() throws Exception {
         final DataSource src = JdbcSessionTest.source();
         new JdbcSession(src)
@@ -162,7 +163,7 @@ public final class JdbcSessionTest {
      */
     @Parallel(threads = Tv.FIFTY)
     private void insert(final DataSource src, final String table)
-        throws Exception{
+        throws Exception {
         new JdbcSession(src)
             .sql(String.format("INSERT INTO %s VALUES ('hey')", table))
             .execute();
