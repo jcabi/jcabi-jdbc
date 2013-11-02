@@ -426,101 +426,104 @@
 <a class="jxr_linenumber" name="416" href="#416">416</a>             }
 <a class="jxr_linenumber" name="417" href="#417">417</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> SQLException(ex);
 <a class="jxr_linenumber" name="418" href="#418">418</a>         } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="419" href="#419">419</a>             <strong class="jxr_keyword">this</strong>.args.clear();
-<a class="jxr_linenumber" name="420" href="#420">420</a>         }
-<a class="jxr_linenumber" name="421" href="#421">421</a>         <strong class="jxr_keyword">return</strong> result;
-<a class="jxr_linenumber" name="422" href="#422">422</a>     }
-<a class="jxr_linenumber" name="423" href="#423">423</a> 
-<a class="jxr_linenumber" name="424" href="#424">424</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="425" href="#425">425</a> <em class="jxr_javadoccomment">     * Open connection and cache it locally in the class.</em>
-<a class="jxr_linenumber" name="426" href="#426">426</a> <em class="jxr_javadoccomment">     * @return Connection to use</em>
-<a class="jxr_linenumber" name="427" href="#427">427</a> <em class="jxr_javadoccomment">     * @throws SQLException If fails</em>
-<a class="jxr_linenumber" name="428" href="#428">428</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="429" href="#429">429</a>     <strong class="jxr_keyword">private</strong> Connection connect() <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="430" href="#430">430</a>         <strong class="jxr_keyword">synchronized</strong> (<strong class="jxr_keyword">this</strong>.args) {
-<a class="jxr_linenumber" name="431" href="#431">431</a>             <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">this</strong>.connection.get() == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="432" href="#432">432</a>                 <strong class="jxr_keyword">this</strong>.connection.set(<strong class="jxr_keyword">this</strong>.source.getConnection());
-<a class="jxr_linenumber" name="433" href="#433">433</a>             }
-<a class="jxr_linenumber" name="434" href="#434">434</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.connection.get();
-<a class="jxr_linenumber" name="435" href="#435">435</a>         }
-<a class="jxr_linenumber" name="436" href="#436">436</a>     }
-<a class="jxr_linenumber" name="437" href="#437">437</a> 
-<a class="jxr_linenumber" name="438" href="#438">438</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="439" href="#439">439</a> <em class="jxr_javadoccomment">     * Close connection if it's open (runtime exception otherwise).</em>
-<a class="jxr_linenumber" name="440" href="#440">440</a> <em class="jxr_javadoccomment">     * @throws SQLException If fails to do the SQL operation</em>
-<a class="jxr_linenumber" name="441" href="#441">441</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="442" href="#442">442</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> disconnect() <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="443" href="#443">443</a>         <strong class="jxr_keyword">final</strong> Connection conn = <strong class="jxr_keyword">this</strong>.connection.getAndSet(<strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="444" href="#444">444</a>         <strong class="jxr_keyword">if</strong> (conn == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="445" href="#445">445</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalStateException(
-<a class="jxr_linenumber" name="446" href="#446">446</a>                 <span class="jxr_string">"connection is not open, can't close"</span>
-<a class="jxr_linenumber" name="447" href="#447">447</a>             );
-<a class="jxr_linenumber" name="448" href="#448">448</a>         }
-<a class="jxr_linenumber" name="449" href="#449">449</a>         conn.close();
-<a class="jxr_linenumber" name="450" href="#450">450</a>     }
-<a class="jxr_linenumber" name="451" href="#451">451</a> 
-<a class="jxr_linenumber" name="452" href="#452">452</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="453" href="#453">453</a> <em class="jxr_javadoccomment">     * Add params to the statement.</em>
-<a class="jxr_linenumber" name="454" href="#454">454</a> <em class="jxr_javadoccomment">     * @param stmt The statement to parametrize</em>
-<a class="jxr_linenumber" name="455" href="#455">455</a> <em class="jxr_javadoccomment">     * @throws SQLException If some problem</em>
-<a class="jxr_linenumber" name="456" href="#456">456</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="457" href="#457">457</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> parametrize(<strong class="jxr_keyword">final</strong> PreparedStatement stmt) <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="458" href="#458">458</a>         <strong class="jxr_keyword">int</strong> pos = 1;
-<a class="jxr_linenumber" name="459" href="#459">459</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> Object arg : <strong class="jxr_keyword">this</strong>.args) {
-<a class="jxr_linenumber" name="460" href="#460">460</a>             <strong class="jxr_keyword">if</strong> (arg == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="461" href="#461">461</a>                 stmt.setString(pos, <strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="462" href="#462">462</a>             } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (arg instanceof Long) {
-<a class="jxr_linenumber" name="463" href="#463">463</a>                 stmt.setLong(pos, Long.<strong class="jxr_keyword">class</strong>.<strong class="jxr_keyword">cast</strong>(arg));
-<a class="jxr_linenumber" name="464" href="#464">464</a>             } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (arg instanceof Boolean) {
-<a class="jxr_linenumber" name="465" href="#465">465</a>                 stmt.setBoolean(pos, Boolean.<strong class="jxr_keyword">class</strong>.<strong class="jxr_keyword">cast</strong>(arg));
-<a class="jxr_linenumber" name="466" href="#466">466</a>             } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (arg instanceof Date) {
-<a class="jxr_linenumber" name="467" href="#467">467</a>                 stmt.setDate(pos, Date.<strong class="jxr_keyword">class</strong>.<strong class="jxr_keyword">cast</strong>(arg));
-<a class="jxr_linenumber" name="468" href="#468">468</a>             } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (arg instanceof Integer) {
-<a class="jxr_linenumber" name="469" href="#469">469</a>                 stmt.setInt(pos, Integer.<strong class="jxr_keyword">class</strong>.<strong class="jxr_keyword">cast</strong>(arg));
-<a class="jxr_linenumber" name="470" href="#470">470</a>             } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (arg instanceof Utc) {
-<a class="jxr_linenumber" name="471" href="#471">471</a>                 Utc.<strong class="jxr_keyword">class</strong>.<strong class="jxr_keyword">cast</strong>(arg).setTimestamp(stmt, pos);
-<a class="jxr_linenumber" name="472" href="#472">472</a>             } <strong class="jxr_keyword">else</strong> {
-<a class="jxr_linenumber" name="473" href="#473">473</a>                 stmt.setString(pos, arg.toString());
-<a class="jxr_linenumber" name="474" href="#474">474</a>             }
-<a class="jxr_linenumber" name="475" href="#475">475</a>             ++pos;
-<a class="jxr_linenumber" name="476" href="#476">476</a>         }
-<a class="jxr_linenumber" name="477" href="#477">477</a>     }
-<a class="jxr_linenumber" name="478" href="#478">478</a> 
-<a class="jxr_linenumber" name="479" href="#479">479</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="480" href="#480">480</a> <em class="jxr_javadoccomment">     * Handler or ResultSet.</em>
-<a class="jxr_linenumber" name="481" href="#481">481</a> <em class="jxr_javadoccomment">     * @param &lt;T&gt; Type of expected result</em>
-<a class="jxr_linenumber" name="482" href="#482">482</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="483" href="#483">483</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">interface</strong> Handler&lt;T&gt; {
-<a class="jxr_linenumber" name="484" href="#484">484</a>         <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="485" href="#485">485</a> <em class="jxr_javadoccomment">         * Process the result set and return some value.</em>
-<a class="jxr_linenumber" name="486" href="#486">486</a> <em class="jxr_javadoccomment">         * @param rset The result set to process</em>
-<a class="jxr_linenumber" name="487" href="#487">487</a> <em class="jxr_javadoccomment">         * @return The result</em>
-<a class="jxr_linenumber" name="488" href="#488">488</a> <em class="jxr_javadoccomment">         * @throws SQLException If something goes wrong inside</em>
-<a class="jxr_linenumber" name="489" href="#489">489</a> <em class="jxr_javadoccomment">         */</em>
-<a class="jxr_linenumber" name="490" href="#490">490</a>         T handle(ResultSet rset) <strong class="jxr_keyword">throws</strong> SQLException;
-<a class="jxr_linenumber" name="491" href="#491">491</a>     }
-<a class="jxr_linenumber" name="492" href="#492">492</a> 
-<a class="jxr_linenumber" name="493" href="#493">493</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="494" href="#494">494</a> <em class="jxr_javadoccomment">     * The fetcher.</em>
-<a class="jxr_linenumber" name="495" href="#495">495</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="496" href="#496">496</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">interface</strong> <a href="../../../com/jcabi/jdbc/JdbcSession.html">Fetcher</a> {
-<a class="jxr_linenumber" name="497" href="#497">497</a>         <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="498" href="#498">498</a> <em class="jxr_javadoccomment">         * Create prepare statement.</em>
-<a class="jxr_linenumber" name="499" href="#499">499</a> <em class="jxr_javadoccomment">         * @param conn Open connection</em>
-<a class="jxr_linenumber" name="500" href="#500">500</a> <em class="jxr_javadoccomment">         * @return The statement</em>
-<a class="jxr_linenumber" name="501" href="#501">501</a> <em class="jxr_javadoccomment">         * @throws SQLException If some problem</em>
-<a class="jxr_linenumber" name="502" href="#502">502</a> <em class="jxr_javadoccomment">         */</em>
-<a class="jxr_linenumber" name="503" href="#503">503</a>         PreparedStatement statement(Connection conn) <strong class="jxr_keyword">throws</strong> SQLException;
-<a class="jxr_linenumber" name="504" href="#504">504</a>         <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="505" href="#505">505</a> <em class="jxr_javadoccomment">         * Fetch result set from statement.</em>
-<a class="jxr_linenumber" name="506" href="#506">506</a> <em class="jxr_javadoccomment">         * @param stmt The statement</em>
-<a class="jxr_linenumber" name="507" href="#507">507</a> <em class="jxr_javadoccomment">         * @return The result set</em>
-<a class="jxr_linenumber" name="508" href="#508">508</a> <em class="jxr_javadoccomment">         * @throws SQLException If some problem</em>
-<a class="jxr_linenumber" name="509" href="#509">509</a> <em class="jxr_javadoccomment">         */</em>
-<a class="jxr_linenumber" name="510" href="#510">510</a>         ResultSet fetch(PreparedStatement stmt) <strong class="jxr_keyword">throws</strong> SQLException;
-<a class="jxr_linenumber" name="511" href="#511">511</a>     }
-<a class="jxr_linenumber" name="512" href="#512">512</a> 
-<a class="jxr_linenumber" name="513" href="#513">513</a> }
+<a class="jxr_linenumber" name="419" href="#419">419</a>             <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">this</strong>.auto) {
+<a class="jxr_linenumber" name="420" href="#420">420</a>                 <strong class="jxr_keyword">this</strong>.disconnect();
+<a class="jxr_linenumber" name="421" href="#421">421</a>             }
+<a class="jxr_linenumber" name="422" href="#422">422</a>             <strong class="jxr_keyword">this</strong>.args.clear();
+<a class="jxr_linenumber" name="423" href="#423">423</a>         }
+<a class="jxr_linenumber" name="424" href="#424">424</a>         <strong class="jxr_keyword">return</strong> result;
+<a class="jxr_linenumber" name="425" href="#425">425</a>     }
+<a class="jxr_linenumber" name="426" href="#426">426</a> 
+<a class="jxr_linenumber" name="427" href="#427">427</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="428" href="#428">428</a> <em class="jxr_javadoccomment">     * Open connection and cache it locally in the class.</em>
+<a class="jxr_linenumber" name="429" href="#429">429</a> <em class="jxr_javadoccomment">     * @return Connection to use</em>
+<a class="jxr_linenumber" name="430" href="#430">430</a> <em class="jxr_javadoccomment">     * @throws SQLException If fails</em>
+<a class="jxr_linenumber" name="431" href="#431">431</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="432" href="#432">432</a>     <strong class="jxr_keyword">private</strong> Connection connect() <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="433" href="#433">433</a>         <strong class="jxr_keyword">synchronized</strong> (<strong class="jxr_keyword">this</strong>.args) {
+<a class="jxr_linenumber" name="434" href="#434">434</a>             <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">this</strong>.connection.get() == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="435" href="#435">435</a>                 <strong class="jxr_keyword">this</strong>.connection.set(<strong class="jxr_keyword">this</strong>.source.getConnection());
+<a class="jxr_linenumber" name="436" href="#436">436</a>             }
+<a class="jxr_linenumber" name="437" href="#437">437</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.connection.get();
+<a class="jxr_linenumber" name="438" href="#438">438</a>         }
+<a class="jxr_linenumber" name="439" href="#439">439</a>     }
+<a class="jxr_linenumber" name="440" href="#440">440</a> 
+<a class="jxr_linenumber" name="441" href="#441">441</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="442" href="#442">442</a> <em class="jxr_javadoccomment">     * Close connection if it's open (runtime exception otherwise).</em>
+<a class="jxr_linenumber" name="443" href="#443">443</a> <em class="jxr_javadoccomment">     * @throws SQLException If fails to do the SQL operation</em>
+<a class="jxr_linenumber" name="444" href="#444">444</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="445" href="#445">445</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> disconnect() <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="446" href="#446">446</a>         <strong class="jxr_keyword">final</strong> Connection conn = <strong class="jxr_keyword">this</strong>.connection.getAndSet(<strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="447" href="#447">447</a>         <strong class="jxr_keyword">if</strong> (conn == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="448" href="#448">448</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalStateException(
+<a class="jxr_linenumber" name="449" href="#449">449</a>                 <span class="jxr_string">"connection is not open, can't close"</span>
+<a class="jxr_linenumber" name="450" href="#450">450</a>             );
+<a class="jxr_linenumber" name="451" href="#451">451</a>         }
+<a class="jxr_linenumber" name="452" href="#452">452</a>         conn.close();
+<a class="jxr_linenumber" name="453" href="#453">453</a>     }
+<a class="jxr_linenumber" name="454" href="#454">454</a> 
+<a class="jxr_linenumber" name="455" href="#455">455</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="456" href="#456">456</a> <em class="jxr_javadoccomment">     * Add params to the statement.</em>
+<a class="jxr_linenumber" name="457" href="#457">457</a> <em class="jxr_javadoccomment">     * @param stmt The statement to parametrize</em>
+<a class="jxr_linenumber" name="458" href="#458">458</a> <em class="jxr_javadoccomment">     * @throws SQLException If some problem</em>
+<a class="jxr_linenumber" name="459" href="#459">459</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="460" href="#460">460</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> parametrize(<strong class="jxr_keyword">final</strong> PreparedStatement stmt) <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="461" href="#461">461</a>         <strong class="jxr_keyword">int</strong> pos = 1;
+<a class="jxr_linenumber" name="462" href="#462">462</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> Object arg : <strong class="jxr_keyword">this</strong>.args) {
+<a class="jxr_linenumber" name="463" href="#463">463</a>             <strong class="jxr_keyword">if</strong> (arg == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="464" href="#464">464</a>                 stmt.setString(pos, <strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="465" href="#465">465</a>             } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (arg instanceof Long) {
+<a class="jxr_linenumber" name="466" href="#466">466</a>                 stmt.setLong(pos, Long.<strong class="jxr_keyword">class</strong>.<strong class="jxr_keyword">cast</strong>(arg));
+<a class="jxr_linenumber" name="467" href="#467">467</a>             } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (arg instanceof Boolean) {
+<a class="jxr_linenumber" name="468" href="#468">468</a>                 stmt.setBoolean(pos, Boolean.<strong class="jxr_keyword">class</strong>.<strong class="jxr_keyword">cast</strong>(arg));
+<a class="jxr_linenumber" name="469" href="#469">469</a>             } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (arg instanceof Date) {
+<a class="jxr_linenumber" name="470" href="#470">470</a>                 stmt.setDate(pos, Date.<strong class="jxr_keyword">class</strong>.<strong class="jxr_keyword">cast</strong>(arg));
+<a class="jxr_linenumber" name="471" href="#471">471</a>             } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (arg instanceof Integer) {
+<a class="jxr_linenumber" name="472" href="#472">472</a>                 stmt.setInt(pos, Integer.<strong class="jxr_keyword">class</strong>.<strong class="jxr_keyword">cast</strong>(arg));
+<a class="jxr_linenumber" name="473" href="#473">473</a>             } <strong class="jxr_keyword">else</strong> <strong class="jxr_keyword">if</strong> (arg instanceof Utc) {
+<a class="jxr_linenumber" name="474" href="#474">474</a>                 Utc.<strong class="jxr_keyword">class</strong>.<strong class="jxr_keyword">cast</strong>(arg).setTimestamp(stmt, pos);
+<a class="jxr_linenumber" name="475" href="#475">475</a>             } <strong class="jxr_keyword">else</strong> {
+<a class="jxr_linenumber" name="476" href="#476">476</a>                 stmt.setString(pos, arg.toString());
+<a class="jxr_linenumber" name="477" href="#477">477</a>             }
+<a class="jxr_linenumber" name="478" href="#478">478</a>             ++pos;
+<a class="jxr_linenumber" name="479" href="#479">479</a>         }
+<a class="jxr_linenumber" name="480" href="#480">480</a>     }
+<a class="jxr_linenumber" name="481" href="#481">481</a> 
+<a class="jxr_linenumber" name="482" href="#482">482</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="483" href="#483">483</a> <em class="jxr_javadoccomment">     * Handler or ResultSet.</em>
+<a class="jxr_linenumber" name="484" href="#484">484</a> <em class="jxr_javadoccomment">     * @param &lt;T&gt; Type of expected result</em>
+<a class="jxr_linenumber" name="485" href="#485">485</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="486" href="#486">486</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">interface</strong> Handler&lt;T&gt; {
+<a class="jxr_linenumber" name="487" href="#487">487</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="488" href="#488">488</a> <em class="jxr_javadoccomment">         * Process the result set and return some value.</em>
+<a class="jxr_linenumber" name="489" href="#489">489</a> <em class="jxr_javadoccomment">         * @param rset The result set to process</em>
+<a class="jxr_linenumber" name="490" href="#490">490</a> <em class="jxr_javadoccomment">         * @return The result</em>
+<a class="jxr_linenumber" name="491" href="#491">491</a> <em class="jxr_javadoccomment">         * @throws SQLException If something goes wrong inside</em>
+<a class="jxr_linenumber" name="492" href="#492">492</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="493" href="#493">493</a>         T handle(ResultSet rset) <strong class="jxr_keyword">throws</strong> SQLException;
+<a class="jxr_linenumber" name="494" href="#494">494</a>     }
+<a class="jxr_linenumber" name="495" href="#495">495</a> 
+<a class="jxr_linenumber" name="496" href="#496">496</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="497" href="#497">497</a> <em class="jxr_javadoccomment">     * The fetcher.</em>
+<a class="jxr_linenumber" name="498" href="#498">498</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="499" href="#499">499</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">interface</strong> <a href="../../../com/jcabi/jdbc/JdbcSession.html">Fetcher</a> {
+<a class="jxr_linenumber" name="500" href="#500">500</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="501" href="#501">501</a> <em class="jxr_javadoccomment">         * Create prepare statement.</em>
+<a class="jxr_linenumber" name="502" href="#502">502</a> <em class="jxr_javadoccomment">         * @param conn Open connection</em>
+<a class="jxr_linenumber" name="503" href="#503">503</a> <em class="jxr_javadoccomment">         * @return The statement</em>
+<a class="jxr_linenumber" name="504" href="#504">504</a> <em class="jxr_javadoccomment">         * @throws SQLException If some problem</em>
+<a class="jxr_linenumber" name="505" href="#505">505</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="506" href="#506">506</a>         PreparedStatement statement(Connection conn) <strong class="jxr_keyword">throws</strong> SQLException;
+<a class="jxr_linenumber" name="507" href="#507">507</a>         <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="508" href="#508">508</a> <em class="jxr_javadoccomment">         * Fetch result set from statement.</em>
+<a class="jxr_linenumber" name="509" href="#509">509</a> <em class="jxr_javadoccomment">         * @param stmt The statement</em>
+<a class="jxr_linenumber" name="510" href="#510">510</a> <em class="jxr_javadoccomment">         * @return The result set</em>
+<a class="jxr_linenumber" name="511" href="#511">511</a> <em class="jxr_javadoccomment">         * @throws SQLException If some problem</em>
+<a class="jxr_linenumber" name="512" href="#512">512</a> <em class="jxr_javadoccomment">         */</em>
+<a class="jxr_linenumber" name="513" href="#513">513</a>         ResultSet fetch(PreparedStatement stmt) <strong class="jxr_keyword">throws</strong> SQLException;
+<a class="jxr_linenumber" name="514" href="#514">514</a>     }
+<a class="jxr_linenumber" name="515" href="#515">515</a> 
+<a class="jxr_linenumber" name="516" href="#516">516</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>
