@@ -400,7 +400,7 @@ public final class JdbcSession {
                 final ResultSet rset = fetcher.fetch(stmt);
                 // @checkstyle NestedTryDepth (5 lines)
                 try {
-                    result = handler.handle(rset);
+                    result = handler.handle(rset, stmt);
                 } finally {
                     if (rset != null) {
                         rset.close();
@@ -487,10 +487,11 @@ public final class JdbcSession {
         /**
          * Process the result set and return some value.
          * @param rset The result set to process
+         * @param stmt The statement used in the run
          * @return The result
          * @throws SQLException If something goes wrong inside
          */
-        T handle(ResultSet rset) throws SQLException;
+        T handle(ResultSet rset, Statement stmt) throws SQLException;
     }
 
     /**

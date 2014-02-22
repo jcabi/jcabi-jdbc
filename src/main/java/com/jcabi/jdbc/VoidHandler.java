@@ -32,6 +32,7 @@ package com.jcabi.jdbc;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import java.sql.ResultSet;
+import java.sql.Statement;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -56,7 +57,7 @@ public final class VoidHandler implements JdbcSession.Handler<Void> {
 
     @Override
     @Loggable(Loggable.DEBUG)
-    public Void handle(final ResultSet rset) {
+    public Void handle(final ResultSet rset, final Statement stmt) {
         return null;
     }
 

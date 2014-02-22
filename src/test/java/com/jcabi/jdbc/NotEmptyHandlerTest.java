@@ -30,6 +30,7 @@
 package com.jcabi.jdbc;
 
 import java.sql.ResultSet;
+import java.sql.Statement;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -50,9 +51,10 @@ public final class NotEmptyHandlerTest {
     @SuppressWarnings("PMD.CloseResource")
     public void returnsTrueIfResultSetIsNotEmpty() throws Exception {
         final ResultSet rset = Mockito.mock(ResultSet.class);
+        final Statement stmt = Mockito.mock(Statement.class);
         Mockito.doReturn(true).when(rset).next();
         MatcherAssert.assertThat(
-            new NotEmptyHandler().handle(rset),
+            new NotEmptyHandler().handle(rset, stmt),
             Matchers.is(true)
         );
     }
@@ -65,9 +67,10 @@ public final class NotEmptyHandlerTest {
     @SuppressWarnings("PMD.CloseResource")
     public void returnsFalseIfResultSetIsEmpty() throws Exception {
         final ResultSet rset = Mockito.mock(ResultSet.class);
+        final Statement stmt = Mockito.mock(Statement.class);
         Mockito.doReturn(false).when(rset).next();
         MatcherAssert.assertThat(
-            new NotEmptyHandler().handle(rset),
+            new NotEmptyHandler().handle(rset, stmt),
             Matchers.is(false)
         );
     }

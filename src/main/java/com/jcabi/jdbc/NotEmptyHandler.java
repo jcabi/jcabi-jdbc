@@ -33,6 +33,7 @@ import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -53,7 +54,8 @@ public final class NotEmptyHandler implements JdbcSession.Handler<Boolean> {
 
     @Override
     @Loggable(Loggable.DEBUG)
-    public Boolean handle(final ResultSet rset) throws SQLException {
+    public Boolean handle(final ResultSet rset, final Statement stmt)
+        throws SQLException {
         return rset.next();
     }
 
