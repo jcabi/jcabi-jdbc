@@ -6,7 +6,7 @@ results, can be done through `execute()` method of `JdbcSession`:
 ```
 public class Main {
   public static void main(String[] args) {
-    new JdbcSession(/* JDBC data source */)
+    new JdbcSession(source)
       .sql("CREATE TABLE foo (name VARCHAR(30))")
       .execute();
   }
@@ -18,7 +18,7 @@ You can also run a server instruction (for example, in PostgreSQL 9.2):
 ```
 public class Main {
   public static void main(String[] args) {
-    new JdbcSession(/* JDBC data source */)
+    new JdbcSession(source)
       .sql("ANALYZE my_table")
       .execute();
   }

@@ -5,7 +5,7 @@ This is how you fetch all rows from an SQL `SELECT` query:
 ```
 public class Main {
   public static void main(String[] args) {
-    Collection<String> names = new JdbcSession(/* JDBC data source */)
+    Collection<String> names = new JdbcSession(source)
       .sql("SELECT name FROM employee WHERE salary > 35000")
       .select(
         new JdbcSession.Handler<Collection<String>>() {
@@ -30,7 +30,7 @@ query result set:
 ```
 public class Main {
   public static void main(String[] args) {
-    String name = new JdbcSession(/* JDBC data source */)
+    String name = new JdbcSession(source)
       .sql("SELECT name FROM employee WHERE name = ?")
       .set("Jeff Bridges")
       .select(new SingleHandler<String>(String.class));

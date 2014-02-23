@@ -9,7 +9,7 @@ wrapper around JDBC:
 import com.jcabi.jdbc.JdbcSession;
 public class Main {
   public static void main(String[] args) {
-    String name = new JdbcSession(/* JDBC data source */)
+    String name = new JdbcSession(source)
       .sql("SELECT name FROM foo WHERE id = ?")
       .set(123)
       .select(new SingleHandler<String>(String.class));

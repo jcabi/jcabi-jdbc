@@ -6,7 +6,7 @@ the first one is deletion and the second one is inserting:
 ```
 public class Main {
   public static void main(String[] args) {
-    new JdbcSession(/* JDBC data source */)
+    new JdbcSession(source)
       .autocommit(false)
       .sql("START TRANSACTION")
       .update()

@@ -6,7 +6,7 @@ through `JdbcSession`:
 ```
 public class Main {
   public static void main(String[] args) {
-    new JdbcSession(/* JDBC data source */)
+    new JdbcSession(source)
       .sql("UPDATE employee SET salary = 35000 WHERE name = ?")
       .set("Jeff Lebowski")
       .update(new VoidHandler());
@@ -19,7 +19,7 @@ You can also run a stored procedure (for example, in Oracle):
 ```
 public class Main {
   public static void main(String[] args) {
-    new JdbcSession(/* JDBC data source */)
+    new JdbcSession(source)
       .sql("CALL db.set_salary(?, ?)")
       .set("Jeff Lebowski")
       .set(35000)
@@ -33,7 +33,7 @@ Since version 0.11 you can get a number of updated rows:
 ```
 public class Main {
   public static void main(String[] args) {
-    int updated = new JdbcSession(/* JDBC data source */)
+    int updated = new JdbcSession(source)
       .sql("UPDATE employee SET salary = 35000")
       .update(
         new JdbcSession.Handler<Integer>() {
