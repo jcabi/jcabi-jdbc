@@ -32,6 +32,7 @@ package com.jcabi.jdbc;
 import com.jcabi.aspects.Loggable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.Date;
 import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
@@ -106,7 +107,8 @@ public final class SingleHandler<T> implements JdbcSession.Handler<T> {
 
     @Override
     @Loggable(Loggable.DEBUG)
-    public T handle(final ResultSet rset) throws SQLException {
+    public T handle(final ResultSet rset, final Statement stmt)
+        throws SQLException {
         T result = null;
         if (rset.next()) {
             result = this.fetch(rset);

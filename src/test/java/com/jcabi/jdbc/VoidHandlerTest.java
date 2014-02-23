@@ -30,6 +30,7 @@
 package com.jcabi.jdbc;
 
 import java.sql.ResultSet;
+import java.sql.Statement;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -49,7 +50,9 @@ public final class VoidHandlerTest {
     @Test
     public void returnsNullNoMatterWhatIsTheInput() throws Exception {
         MatcherAssert.assertThat(
-            new VoidHandler().handle(Mockito.mock(ResultSet.class)),
+            new VoidHandler().handle(
+                Mockito.mock(ResultSet.class), Mockito.mock(Statement.class)
+            ),
             Matchers.nullValue()
         );
     }

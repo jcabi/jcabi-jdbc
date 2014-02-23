@@ -34,6 +34,7 @@ import com.jcabi.aspects.Tv;
 import com.jolbox.bonecp.BoneCPDataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.concurrent.TimeUnit;
 import javax.sql.DataSource;
 import org.hamcrest.MatcherAssert;
@@ -67,7 +68,8 @@ public final class JdbcSessionTest {
             .select(
                 new JdbcSession.Handler<String>() {
                     @Override
-                    public String handle(final ResultSet rset)
+                    public String handle(final ResultSet rset,
+                        final Statement stmt)
                         throws SQLException {
                         rset.next();
                         return rset.getString(1);
@@ -111,7 +113,8 @@ public final class JdbcSessionTest {
             .select(
                 new JdbcSession.Handler<String>() {
                     @Override
-                    public String handle(final ResultSet rset)
+                    public String handle(final ResultSet rset,
+                        final Statement stmt)
                         throws SQLException {
                         rset.next();
                         return rset.getString(1);
