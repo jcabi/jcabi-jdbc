@@ -27,3 +27,22 @@ public class Main {
   }
 }
 ```
+
+Since version 0.11 you can get a number of updated rows:
+
+```
+public class Main {
+  public static void main(String[] args) {
+    int updated = new JdbcSession(/* JDBC data source */)
+      .sql("UPDATE employee SET salary = 35000")
+      .update(
+        new JdbcSession.Handler<Integer>() {
+          @Override
+          Integer handle(ResultSet rset, Statement stmt) throws SQLException {
+            return stmt.getUpdateCount();
+          }
+        }
+      );
+  }
+}
+```
