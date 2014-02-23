@@ -39,7 +39,7 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>jcabi-jdbc</name>
-    <description>Fluent Interfact to JDBC</description>
+    <description>Fluent Interface to JDBC</description>
     <issueManagement>
         <system>github</system>
         <url>https://github.com/jcabi/jcabi-jdbc/issues</url>
