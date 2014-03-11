@@ -409,7 +409,7 @@ public final class JdbcSession {
             } finally {
                 stmt.close();
             }
-        } catch (SQLException ex) {
+        } catch (final SQLException ex) {
             if (!this.auto) {
                 conn.rollback();
                 this.disconnect();
