@@ -30,6 +30,7 @@
 package com.jcabi.jdbc;
 
 import com.jcabi.aspects.Loggable;
+import edu.umd.cs.findbugs.annotations.SuppressFBWarnings;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -113,6 +114,7 @@ import lombok.ToString;
 @EqualsAndHashCode(of = { "source", "connection", "args", "auto", "query" })
 @Loggable(Loggable.DEBUG)
 @SuppressWarnings({ "PMD.TooManyMethods", "PMD.CloseResource" })
+@SuppressFBWarnings("SQL_PREPARED_STATEMENT_GENERATED_FROM_NONCONSTANT_STRING")
 public final class JdbcSession {
 
     /**
@@ -409,7 +411,7 @@ public final class JdbcSession {
             } finally {
                 stmt.close();
             }
-        } catch (SQLException ex) {
+        } catch (final SQLException ex) {
             if (!this.auto) {
                 conn.rollback();
                 this.disconnect();
