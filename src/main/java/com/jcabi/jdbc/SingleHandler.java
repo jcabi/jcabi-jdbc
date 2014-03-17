@@ -29,6 +29,7 @@
  */
 package com.jcabi.jdbc;
 
+import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -67,9 +68,8 @@ import lombok.ToString;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1.8
- * @todo #143 This class should be @Immutable, but we can't do it at the
- *  moment, because "Class" type is mutable. Let's refactor somehow.
  */
+@Immutable
 @ToString
 @EqualsAndHashCode(of = { "type", "silently" })
 public final class SingleHandler<T> implements JdbcSession.Handler<T> {
@@ -77,7 +77,7 @@ public final class SingleHandler<T> implements JdbcSession.Handler<T> {
     /**
      * The type.
      */
-    private final transient Class<T> type;
+    private final transient Type<T> type;
 
     /**
      * Silently return NULL if no row found.
@@ -101,7 +101,26 @@ public final class SingleHandler<T> implements JdbcSession.Handler<T> {
     public SingleHandler(
         @NotNull(message = "type can't be NULL") final Class<T> tpe,
         final boolean slnt) {
-        this.type = tpe;
+        this.type = new Type<T>() {
+            @Override
+            public Class<T> get() {
+                return tpe;
+            }
+            @Override
+            public boolean equals(final Object obj) {
+                final boolean result;
+                if (obj instanceof Type) {
+                    result = this.get().equals(((Type<?>) obj).get());
+                } else {
+                    result = false;
+                }
+                return result;
+            }
+            @Override
+            public int hashCode() {
+                return this.get().hashCode();
+            }
+        };
         this.silently = slnt;
     }
 
@@ -126,24 +145,39 @@ public final class SingleHandler<T> implements JdbcSession.Handler<T> {
      */
     private T fetch(final ResultSet rset) throws SQLException {
         final Object result;
-        if (this.type.equals(String.class)) {
+        final Class<T> tpe = this.type.get();
+        if (tpe.equals(String.class)) {
             result = rset.getString(1);
-        } else if (this.type.equals(Long.class)) {
+        } else if (tpe.equals(Long.class)) {
             result = rset.getLong(1);
-        } else if (this.type.equals(Boolean.class)) {
+        } else if (tpe.equals(Boolean.class)) {
             result = rset.getBoolean(1);
-        } else if (this.type.equals(Byte.class)) {
+        } else if (tpe.equals(Byte.class)) {
             result = rset.getByte(1);
-        } else if (this.type.equals(Date.class)) {
+        } else if (tpe.equals(Date.class)) {
             result = rset.getDate(1);
-        } else if (this.type.equals(Utc.class)) {
+        } else if (tpe.equals(Utc.class)) {
             result = new Utc(Utc.getTimestamp(rset, 1));
         } else {
             throw new SQLException(
-                String.format("type %s is not supported", this.type.getName())
+                String.format(
+                    "type %s is not supported", tpe.getName()
+                )
             );
         }
-        return this.type.cast(result);
+        return tpe.cast(result);
+    }
+
+    /**
+     * Holder interface for Class objects.
+     */
+    @Immutable
+    private interface Type<T> {
+        /**
+         * Gets the class.
+         * @return The class
+         */
+        Class<T> get();
     }
 
 }
