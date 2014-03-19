@@ -75,9 +75,9 @@ import lombok.ToString;
 public final class SingleHandler<T> implements JdbcSession.Handler<T> {
 
     /**
-     * The type.
+     * The type name.
      */
-    private final transient Type<T> type;
+    private final transient String type;
 
     /**
      * Silently return NULL if no row found.
@@ -101,26 +101,7 @@ public final class SingleHandler<T> implements JdbcSession.Handler<T> {
     public SingleHandler(
         @NotNull(message = "type can't be NULL") final Class<T> tpe,
         final boolean slnt) {
-        this.type = new Type<T>() {
-            @Override
-            public Class<T> get() {
-                return tpe;
-            }
-            @Override
-            public boolean equals(final Object obj) {
-                final boolean result;
-                if (obj instanceof Type) {
-                    result = this.get().equals(((Type<?>) obj).get());
-                } else {
-                    result = false;
-                }
-                return result;
-            }
-            @Override
-            public int hashCode() {
-                return this.get().hashCode();
-            }
-        };
+        this.type = tpe.getName();
         this.silently = slnt;
     }
 
@@ -143,41 +124,37 @@ public final class SingleHandler<T> implements JdbcSession.Handler<T> {
      * @return The result
      * @throws SQLException If some error inside
      */
+    @SuppressWarnings("unchecked")
     private T fetch(final ResultSet rset) throws SQLException {
         final Object result;
-        final Class<T> tpe = this.type.get();
-        if (tpe.equals(String.class)) {
-            result = rset.getString(1);
-        } else if (tpe.equals(Long.class)) {
-            result = rset.getLong(1);
-        } else if (tpe.equals(Boolean.class)) {
-            result = rset.getBoolean(1);
-        } else if (tpe.equals(Byte.class)) {
-            result = rset.getByte(1);
-        } else if (tpe.equals(Date.class)) {
-            result = rset.getDate(1);
-        } else if (tpe.equals(Utc.class)) {
-            result = new Utc(Utc.getTimestamp(rset, 1));
-        } else {
-            throw new SQLException(
-                String.format(
-                    "type %s is not supported", tpe.getName()
-                )
+        Class<T> tpe;
+        try {
+            tpe = (Class<T>) Class.forName(this.type);
+            if (tpe.equals(String.class)) {
+                result = rset.getString(1);
+            } else if (tpe.equals(Long.class)) {
+                result = rset.getLong(1);
+            } else if (tpe.equals(Boolean.class)) {
+                result = rset.getBoolean(1);
+            } else if (tpe.equals(Byte.class)) {
+                result = rset.getByte(1);
+            } else if (tpe.equals(Date.class)) {
+                result = rset.getDate(1);
+            } else if (tpe.equals(Utc.class)) {
+                result = new Utc(Utc.getTimestamp(rset, 1));
+            } else {
+                throw new SQLException(
+                    String.format(
+                        "type %s is not supported", tpe.getName()
+                    )
+                );
+            }
+        } catch (final ClassNotFoundException ex) {
+            throw new IllegalArgumentException(
+                String.format("Unknown type: %s", this.type), ex
             );
         }
         return tpe.cast(result);
-    }
-
-    /**
-     * Holder interface for Class objects.
-     */
-    @Immutable
-    private interface Type<T> {
-        /**
-         * Gets the class.
-         * @return The class
-         */
-        Class<T> get();
     }
 
 }
