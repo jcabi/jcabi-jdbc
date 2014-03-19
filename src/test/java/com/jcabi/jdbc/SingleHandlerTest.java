@@ -66,26 +66,4 @@ public final class SingleHandlerTest {
         MatcherAssert.assertThat(name, Matchers.startsWith("Jeff"));
     }
 
-    /**
-     * SingleHandler is compliant with the equals and hash code contract.
-     */
-    @Test
-    public void obeysEqualsAndHashCodeContract() {
-        final SingleHandler<Integer> first =
-            new SingleHandler<Integer>(Integer.class);
-        final SingleHandler<Integer> second =
-            new SingleHandler<Integer>(Integer.class);
-        MatcherAssert.assertThat(
-            first, Matchers.equalTo(second)
-        );
-        MatcherAssert.assertThat(
-            first.hashCode(),
-            Matchers.equalTo(second.hashCode())
-        );
-        MatcherAssert.assertThat(
-            first.equals(new SingleHandler<Double>(Double.class)),
-            Matchers.equalTo(false)
-        );
-    }
-
 }
