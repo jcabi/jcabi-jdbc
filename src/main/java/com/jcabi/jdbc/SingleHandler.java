@@ -29,6 +29,7 @@
  */
 package com.jcabi.jdbc;
 
+import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -67,17 +68,16 @@ import lombok.ToString;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1.8
- * @todo #143 This class should be @Immutable, but we can't do it at the
- *  moment, because "Class" type is mutable. Let's refactor somehow.
  */
+@Immutable
 @ToString
 @EqualsAndHashCode(of = { "type", "silently" })
 public final class SingleHandler<T> implements JdbcSession.Handler<T> {
 
     /**
-     * The type.
+     * The type name.
      */
-    private final transient Class<T> type;
+    private final transient String type;
 
     /**
      * Silently return NULL if no row found.
@@ -101,7 +101,7 @@ public final class SingleHandler<T> implements JdbcSession.Handler<T> {
     public SingleHandler(
         @NotNull(message = "type can't be NULL") final Class<T> tpe,
         final boolean slnt) {
-        this.type = tpe;
+        this.type = tpe.getName();
         this.silently = slnt;
     }
 
@@ -124,26 +124,37 @@ public final class SingleHandler<T> implements JdbcSession.Handler<T> {
      * @return The result
      * @throws SQLException If some error inside
      */
+    @SuppressWarnings("unchecked")
     private T fetch(final ResultSet rset) throws SQLException {
         final Object result;
-        if (this.type.equals(String.class)) {
-            result = rset.getString(1);
-        } else if (this.type.equals(Long.class)) {
-            result = rset.getLong(1);
-        } else if (this.type.equals(Boolean.class)) {
-            result = rset.getBoolean(1);
-        } else if (this.type.equals(Byte.class)) {
-            result = rset.getByte(1);
-        } else if (this.type.equals(Date.class)) {
-            result = rset.getDate(1);
-        } else if (this.type.equals(Utc.class)) {
-            result = new Utc(Utc.getTimestamp(rset, 1));
-        } else {
-            throw new SQLException(
-                String.format("type %s is not supported", this.type.getName())
+        Class<T> tpe;
+        try {
+            tpe = (Class<T>) Class.forName(this.type);
+            if (tpe.equals(String.class)) {
+                result = rset.getString(1);
+            } else if (tpe.equals(Long.class)) {
+                result = rset.getLong(1);
+            } else if (tpe.equals(Boolean.class)) {
+                result = rset.getBoolean(1);
+            } else if (tpe.equals(Byte.class)) {
+                result = rset.getByte(1);
+            } else if (tpe.equals(Date.class)) {
+                result = rset.getDate(1);
+            } else if (tpe.equals(Utc.class)) {
+                result = new Utc(Utc.getTimestamp(rset, 1));
+            } else {
+                throw new SQLException(
+                    String.format(
+                        "type %s is not supported", tpe.getName()
+                    )
+                );
+            }
+        } catch (final ClassNotFoundException ex) {
+            throw new IllegalArgumentException(
+                String.format("Unknown type: %s", this.type), ex
             );
         }
-        return this.type.cast(result);
+        return tpe.cast(result);
     }
 
 }
