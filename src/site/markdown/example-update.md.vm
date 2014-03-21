@@ -9,7 +9,7 @@ public class Main {
     new JdbcSession(source)
       .sql("UPDATE employee SET salary = 35000 WHERE name = ?")
       .set("Jeff Lebowski")
-      .update(new VoidHandler());
+      .update(new VoidOutcome());
   }
 }
 ```
@@ -23,7 +23,7 @@ public class Main {
       .sql("CALL db.set_salary(?, ?)")
       .set("Jeff Lebowski")
       .set(35000)
-      .update(new VoidHandler());
+      .update(new VoidOutcome());
   }
 }
 ```
@@ -36,7 +36,7 @@ public class Main {
     int updated = new JdbcSession(source)
       .sql("UPDATE employee SET salary = 35000")
       .update(
-        new JdbcSession.Handler<Integer>() {
+        new Outcome<Integer>() {
           @Override
           Integer handle(ResultSet rset, Statement stmt) throws SQLException {
             return stmt.getUpdateCount();

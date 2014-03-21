@@ -66,7 +66,7 @@ public final class JdbcSessionTest {
         final String name = new JdbcSession(source)
             .sql("SELECT name FROM foo WHERE name = 'Jeff Lebowski'")
             .select(
-                new JdbcSession.Handler<String>() {
+                new Outcome<String>() {
                     @Override
                     public String handle(final ResultSet rset,
                         final Statement stmt)
@@ -111,7 +111,7 @@ public final class JdbcSessionTest {
         final String name = new JdbcSession(source)
             .sql("SELECT name FROM foo16 WHERE name = 'Walter'")
             .select(
-                new JdbcSession.Handler<String>() {
+                new Outcome<String>() {
                     @Override
                     public String handle(final ResultSet rset,
                         final Statement stmt)

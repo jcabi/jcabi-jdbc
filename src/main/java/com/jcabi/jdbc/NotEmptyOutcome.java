@@ -29,32 +29,34 @@
  */
 package com.jcabi.jdbc;
 
+import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Test;
-import org.mockito.Mockito;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Test case for {@link VoidHandler}.
+ * Returns {@code TRUE} if at least one SQL record found in {@link ResultSet}.
+ *
+ * <p>The outcome returns the value of {@link ResultSet#next()} and throws
+ * {@link SQLException} in case of a problem.
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @since 0.1.8
  */
-public final class VoidHandlerTest {
+@Immutable
+@ToString
+@EqualsAndHashCode
+public final class NotEmptyOutcome implements Outcome<Boolean> {
 
-    /**
-     * VoidHandler can always return null.
-     * @throws Exception If there is some problem inside
-     */
-    @Test
-    public void returnsNullNoMatterWhatIsTheInput() throws Exception {
-        MatcherAssert.assertThat(
-            new VoidHandler().handle(
-                Mockito.mock(ResultSet.class), Mockito.mock(Statement.class)
-            ),
-            Matchers.nullValue()
-        );
+    @Override
+    @Loggable(Loggable.DEBUG)
+    public Boolean handle(final ResultSet rset, final Statement stmt)
+        throws SQLException {
+        return rset.next();
     }
 
 }

@@ -32,16 +32,19 @@ package com.jcabi.jdbc;
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Returns {@code TRUE} if at least one SQL record found in {@link ResultSet}.
+ * Outcome that does nothing (and always returns {@code null}).
  *
- * <p>The handler returns the value of {@link ResultSet#next()} and throws
- * {@link SQLException} in case of a problem.
+ * <p>Useful when you're not interested in the result:
+ *
+ * <pre> new JdbcSession(source)
+ *   .sql("INSERT INTO foo (name) VALUES (?)")
+ *   .set("Jeff Lebowski")
+ *   .insert(new VoidOutcome());</pre>
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -50,13 +53,12 @@ import lombok.ToString;
 @Immutable
 @ToString
 @EqualsAndHashCode
-public final class NotEmptyHandler implements JdbcSession.Handler<Boolean> {
+public final class VoidOutcome implements Outcome<Void> {
 
     @Override
     @Loggable(Loggable.DEBUG)
-    public Boolean handle(final ResultSet rset, final Statement stmt)
-        throws SQLException {
-        return rset.next();
+    public Void handle(final ResultSet rset, final Statement stmt) {
+        return null;
     }
 
 }

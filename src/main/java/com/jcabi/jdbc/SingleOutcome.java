@@ -40,19 +40,19 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Handler that returns first column in the first row.
+ * Outcome that returns first column in the first row.
  *
  * <p>Use it when you need the first column in the first row:
  *
  * <pre> Long id = new JdbcSession(source)
  *   .sql("SELECT id FROM user WHERE name = ?")
  *   .set("Jeff Lebowski")
- *   .select(new SingleHandler&lt;Long&gt;(Long.class));</pre>
+ *   .select(new SingleOutcome&lt;Long&gt;(Long.class));</pre>
  *
  * <p>Supported types are: {@link String}, {@link Long}, {@link Boolean},
  * {@link Byte}, {@link Date}, and {@link Utc}.
  *
- * <p>By default, the handler throws {@link SQLException} if no records
+ * <p>By default, the outcome throws {@link SQLException} if no records
  * are found in the {@link ResultSet}. You can change this behavior by using
  * a two-arguments constructor ({@code null} will be returned if
  * {@link ResultSet} is empty):
@@ -60,7 +60,7 @@ import lombok.ToString;
  * <pre> String name = new JdbcSession(source)
  *   .sql("SELECT name FROM user WHERE id = ?")
  *   .set(555)
- *   .select(new SingleHandler&lt;Long&gt;(Long.class), true);
+ *   .select(new SingleOutcome&lt;Long&gt;(Long.class), true);
  * if (name == null) {
  *   // such a record wasn't found in the database
  * }</pre>
@@ -72,7 +72,7 @@ import lombok.ToString;
 @Immutable
 @ToString
 @EqualsAndHashCode(of = { "type", "silently" })
-public final class SingleHandler<T> implements JdbcSession.Handler<T> {
+public final class SingleOutcome<T> implements Outcome<T> {
 
     /**
      * The type name.
@@ -88,7 +88,7 @@ public final class SingleHandler<T> implements JdbcSession.Handler<T> {
      * Public ctor.
      * @param tpe The type to convert to
      */
-    public SingleHandler(
+    public SingleOutcome(
         @NotNull(message = "type of result can't be NULL") final Class<T> tpe) {
         this(tpe, false);
     }
@@ -98,7 +98,7 @@ public final class SingleHandler<T> implements JdbcSession.Handler<T> {
      * @param tpe The type to convert to
      * @param slnt Silently return NULL if there is no row
      */
-    public SingleHandler(
+    public SingleOutcome(
         @NotNull(message = "type can't be NULL") final Class<T> tpe,
         final boolean slnt) {
         this.type = tpe.getName();

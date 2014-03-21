@@ -30,49 +30,22 @@
 package com.jcabi.jdbc;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Test;
-import org.mockito.Mockito;
 
 /**
- * Test case for {@link NotEmptyHandler}.
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * Outcome of ResultSet.
+ * @param <T> Type of expected result
+ * @author Carlos Miranda (miranda.cma@gmail.com)
  * @version $Id$
  */
-public final class NotEmptyHandlerTest {
-
+public interface Outcome<T> {
     /**
-     * NotEmptyHandler can return TRUE if result set is not empty.
-     * @throws Exception If there is some problem inside
+     * Process the result set and return some value.
+     * @param rset The result set to process
+     * @param stmt The statement used in the run
+     * @return The result
+     * @throws SQLException If something goes wrong inside
      */
-    @Test
-    @SuppressWarnings("PMD.CloseResource")
-    public void returnsTrueIfResultSetIsNotEmpty() throws Exception {
-        final ResultSet rset = Mockito.mock(ResultSet.class);
-        final Statement stmt = Mockito.mock(Statement.class);
-        Mockito.doReturn(true).when(rset).next();
-        MatcherAssert.assertThat(
-            new NotEmptyHandler().handle(rset, stmt),
-            Matchers.is(true)
-        );
-    }
-
-    /**
-     * NotEmptyHandler can return FALSE if result set is empty.
-     * @throws Exception If there is some problem inside
-     */
-    @Test
-    @SuppressWarnings("PMD.CloseResource")
-    public void returnsFalseIfResultSetIsEmpty() throws Exception {
-        final ResultSet rset = Mockito.mock(ResultSet.class);
-        final Statement stmt = Mockito.mock(Statement.class);
-        Mockito.doReturn(false).when(rset).next();
-        MatcherAssert.assertThat(
-            new NotEmptyHandler().handle(rset, stmt),
-            Matchers.is(false)
-        );
-    }
-
+    T handle(ResultSet rset, Statement stmt) throws SQLException;
 }

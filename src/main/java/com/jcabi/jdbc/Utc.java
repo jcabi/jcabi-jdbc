@@ -52,14 +52,14 @@ import lombok.ToString;
  *   .sql("INSERT INTO payment (amount, date) VALUES (?, ?)")
  *   .set(500)
  *   .set(new Utc()) // current date to be set, in UTC timezone
- *   .insert(new VoidHandler());</pre>
+ *   .insert(new VoidOutcome());</pre>
  *
  * <p>This class also helps during date/time retrieval:
  *
  * <pre> Date date = new JdbcSession(source)
  *   .sql("SELECT date FROM payment WHERE id = 555")
  *   .select(
- *     new JdbcSession.Handler&lt;Date&gt;() {
+ *     new Outcome&lt;Date&gt;() {
  *       &#64;Override
  *       public Date handle(final ResultSet rset) throws SQLException {
  *         return Utc.getTimestamp(rset, 1);

@@ -29,41 +29,50 @@
  */
 package com.jcabi.jdbc;
 
-import com.jolbox.bonecp.BoneCPDataSource;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
- * Test case for {@link SingleHandler}.
+ * Test case for {@link NotEmptyOutcome}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-public final class SingleHandlerTest {
+public final class NotEmptyOutcomeTest {
 
     /**
-     * SingleHandler can return the first column of the first row.
+     * NotEmptyOutcome can return TRUE if result set is not empty.
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void retrievesFirstRowFromTheFirstColumn() throws Exception {
-        final BoneCPDataSource source = new BoneCPDataSource();
-        source.setDriverClass("org.h2.Driver");
-        source.setJdbcUrl("jdbc:h2:mem:foo");
-        new JdbcSession(source)
-            .autocommit(false)
-            .sql("CREATE TABLE foo (name VARCHAR(50))")
-            .execute()
-            .sql("INSERT INTO foo (name) VALUES (?)")
-            .set("Jeff Lebowski")
-            .execute()
-            .set("Walter Sobchak")
-            .execute()
-            .commit();
-        final String name = new JdbcSession(source)
-            .sql("SELECT name FROM foo")
-            .select(new SingleHandler<String>(String.class));
-        MatcherAssert.assertThat(name, Matchers.startsWith("Jeff"));
+    @SuppressWarnings("PMD.CloseResource")
+    public void returnsTrueIfResultSetIsNotEmpty() throws Exception {
+        final ResultSet rset = Mockito.mock(ResultSet.class);
+        final Statement stmt = Mockito.mock(Statement.class);
+        Mockito.doReturn(true).when(rset).next();
+        MatcherAssert.assertThat(
+            new NotEmptyOutcome().handle(rset, stmt),
+            Matchers.is(true)
+        );
+    }
+
+    /**
+     * NotEmptyOutcome can return FALSE if result set is empty.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    @SuppressWarnings("PMD.CloseResource")
+    public void returnsFalseIfResultSetIsEmpty() throws Exception {
+        final ResultSet rset = Mockito.mock(ResultSet.class);
+        final Statement stmt = Mockito.mock(Statement.class);
+        Mockito.doReturn(false).when(rset).next();
+        MatcherAssert.assertThat(
+            new NotEmptyOutcome().handle(rset, stmt),
+            Matchers.is(false)
+        );
     }
 
 }
