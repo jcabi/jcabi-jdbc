@@ -72,7 +72,7 @@ import lombok.ToString;
 @Immutable
 @ToString
 @EqualsAndHashCode(of = { "type", "silently" })
-public final class SingleOutcome<T> implements JdbcSession.Outcome<T> {
+public final class SingleOutcome<T> implements Outcome<T> {
 
     /**
      * The type name.

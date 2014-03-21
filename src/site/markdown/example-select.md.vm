@@ -8,7 +8,7 @@ public class Main {
     Collection<String> names = new JdbcSession(source)
       .sql("SELECT name FROM employee WHERE salary > 35000")
       .select(
-        new JdbcSession.Outcome<Collection<String>>() {
+        new Outcome<Collection<String>>() {
           @Override
           public Collection<String> handle(ResultSet rset) throws SQLException {
             final Collection<String> names = new LinkedList<String>();

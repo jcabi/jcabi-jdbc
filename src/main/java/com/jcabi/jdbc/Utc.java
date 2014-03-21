@@ -59,7 +59,7 @@ import lombok.ToString;
  * <pre> Date date = new JdbcSession(source)
  *   .sql("SELECT date FROM payment WHERE id = 555")
  *   .select(
- *     new JdbcSession.Outcome&lt;Date&gt;() {
+ *     new Outcome&lt;Date&gt;() {
  *       &#64;Override
  *       public Date handle(final ResultSet rset) throws SQLException {
  *         return Utc.getTimestamp(rset, 1);

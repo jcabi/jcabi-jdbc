@@ -50,7 +50,7 @@ import lombok.ToString;
 @Immutable
 @ToString
 @EqualsAndHashCode
-public final class NotEmptyOutcome implements JdbcSession.Outcome<Boolean> {
+public final class NotEmptyOutcome implements Outcome<Boolean> {
 
     @Override
     @Loggable(Loggable.DEBUG)

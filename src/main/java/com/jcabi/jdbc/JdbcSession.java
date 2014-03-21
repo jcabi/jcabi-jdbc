@@ -54,7 +54,7 @@ import lombok.ToString;
  *   .sql("SELECT name FROM foo WHERE id = ?")
  *   .set(123)
  *   .select(
- *     new JdbcSession.Outcome&lt;String&gt;() {
+ *     new Outcome&lt;String&gt;() {
  *       &#64;Override
  *       public String handle(final ResultSet rset) throws SQLException {
  *         rset.next();
@@ -66,10 +66,10 @@ import lombok.ToString;
  * <p>There are a number of convenient pre-defined outcomes, like
  * {@link VoidOutcome}, {@link NotEmptyOutcome}, {@link SingleOutcome}, etc.
  *
- * <p>Methods {@link #insert(JdbcSession.Outcome)},
- * {@link #update(JdbcSession.Outcome)},
+ * <p>Methods {@link #insert(Outcome)},
+ * {@link #update(Outcome)},
  * {@link #execute()}, and
- * {@link #select(JdbcSession.Outcome)} clean the list of arguments pre-set by
+ * {@link #select(Outcome)} clean the list of arguments pre-set by
  * {@link #set(Object)}. The class can be used for a complex transaction, when
  * it's necessary to perform a number of SQL statements in a group. For
  * example, the following construct will execute two SQL queries, in a single
@@ -191,8 +191,8 @@ public final class JdbcSession {
      * Shall we auto-commit?
      *
      * <p>By default this flag is set to TRUE, which means that methods
-     * {@link #insert(JdbcSession.Outcome)}, {@link #execute()}, and
-     * {@link #select(JdbcSession.Outcome)} will
+     * {@link #insert(Outcome)}, {@link #execute()}, and
+     * {@link #select(Outcome)} will
      * call {@link Connection#commit()} after
      * their successful execution.
      *
@@ -240,7 +240,7 @@ public final class JdbcSession {
     /**
      * Make SQL {@code INSERT} request.
      *
-     * <p>{@link JdbcSession.Outcome} will receive
+     * <p>{@link Outcome} will receive
      * a {@link ResultSet} of generated keys.
      *
      * <p>JDBC connection is opened and, optionally, closed by this method.
@@ -252,7 +252,7 @@ public final class JdbcSession {
      */
     public <T> T insert(
         @NotNull(message = "outcome can't be NULL")
-        final JdbcSession.Outcome<T> outcome)
+        final Outcome<T> outcome)
         throws SQLException {
         return this.run(
             outcome,
@@ -287,7 +287,7 @@ public final class JdbcSession {
      */
     public <T> T update(
         @NotNull(message = "outcome can't be NULL")
-        final JdbcSession.Outcome<T> outcome)
+        final Outcome<T> outcome)
         throws SQLException {
         return this.run(
             outcome,
@@ -358,7 +358,7 @@ public final class JdbcSession {
      */
     public <T> T select(
         @NotNull(message = "outcome can't be NULL")
-        final JdbcSession.Outcome<T> outcome)
+        final Outcome<T> outcome)
         throws SQLException {
         return this.run(
             outcome,
@@ -386,7 +386,7 @@ public final class JdbcSession {
      * @throws SQLException If fails
      * @checkstyle ExecutableStatementCount (100 lines)
      */
-    private <T> T run(final JdbcSession.Outcome<T> outcome,
+    private <T> T run(final Outcome<T> outcome,
         final JdbcSession.Fetcher fetcher)
         throws SQLException {
         if (this.query == null) {
@@ -479,21 +479,6 @@ public final class JdbcSession {
             }
             ++pos;
         }
-    }
-
-    /**
-     * Outcome of ResultSet.
-     * @param <T> Type of expected result
-     */
-    public interface Outcome<T> {
-        /**
-         * Process the result set and return some value.
-         * @param rset The result set to process
-         * @param stmt The statement used in the run
-         * @return The result
-         * @throws SQLException If something goes wrong inside
-         */
-        T handle(ResultSet rset, Statement stmt) throws SQLException;
     }
 
     /**

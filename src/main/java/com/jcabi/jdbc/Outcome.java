@@ -29,36 +29,23 @@
  */
 package com.jcabi.jdbc;
 
-import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
 
 /**
- * Outcome that does nothing (and always returns {@code null}).
- *
- * <p>Useful when you're not interested in the result:
- *
- * <pre> new JdbcSession(source)
- *   .sql("INSERT INTO foo (name) VALUES (?)")
- *   .set("Jeff Lebowski")
- *   .insert(new VoidOutcome());</pre>
- *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * Outcome of ResultSet.
+ * @param <T> Type of expected result
+ * @author Carlos Miranda (miranda.cma@gmail.com)
  * @version $Id$
- * @since 0.1.8
  */
-@Immutable
-@ToString
-@EqualsAndHashCode
-public final class VoidOutcome implements Outcome<Void> {
-
-    @Override
-    @Loggable(Loggable.DEBUG)
-    public Void handle(final ResultSet rset, final Statement stmt) {
-        return null;
-    }
-
+public interface Outcome<T> {
+    /**
+     * Process the result set and return some value.
+     * @param rset The result set to process
+     * @param stmt The statement used in the run
+     * @return The result
+     * @throws SQLException If something goes wrong inside
+     */
+    T handle(ResultSet rset, Statement stmt) throws SQLException;
 }

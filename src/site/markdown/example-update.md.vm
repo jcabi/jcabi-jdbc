@@ -36,7 +36,7 @@ public class Main {
     int updated = new JdbcSession(source)
       .sql("UPDATE employee SET salary = 35000")
       .update(
-        new JdbcSession.Outcome<Integer>() {
+        new Outcome<Integer>() {
           @Override
           Integer handle(ResultSet rset, Statement stmt) throws SQLException {
             return stmt.getUpdateCount();
