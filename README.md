@@ -11,7 +11,7 @@ public class Main {
     String name = new JdbcSession(/* JDBC data source */)
       .sql("SELECT name FROM foo WHERE id = ?")
       .set(123)
-      .select(new SingleHandler<String>(String.class));
+      .select(new SingleOutcome<String>(String.class));
   }
 }
 ```

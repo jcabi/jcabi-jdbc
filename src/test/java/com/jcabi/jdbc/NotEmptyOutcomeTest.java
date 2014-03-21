@@ -37,23 +37,41 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 /**
- * Test case for {@link VoidHandler}.
+ * Test case for {@link NotEmptyOutcome}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-public final class VoidHandlerTest {
+public final class NotEmptyOutcomeTest {
 
     /**
-     * VoidHandler can always return null.
+     * NotEmptyOutcome can return TRUE if result set is not empty.
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void returnsNullNoMatterWhatIsTheInput() throws Exception {
+    @SuppressWarnings("PMD.CloseResource")
+    public void returnsTrueIfResultSetIsNotEmpty() throws Exception {
+        final ResultSet rset = Mockito.mock(ResultSet.class);
+        final Statement stmt = Mockito.mock(Statement.class);
+        Mockito.doReturn(true).when(rset).next();
         MatcherAssert.assertThat(
-            new VoidHandler().handle(
-                Mockito.mock(ResultSet.class), Mockito.mock(Statement.class)
-            ),
-            Matchers.nullValue()
+            new NotEmptyOutcome().handle(rset, stmt),
+            Matchers.is(true)
+        );
+    }
+
+    /**
+     * NotEmptyOutcome can return FALSE if result set is empty.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    @SuppressWarnings("PMD.CloseResource")
+    public void returnsFalseIfResultSetIsEmpty() throws Exception {
+        final ResultSet rset = Mockito.mock(ResultSet.class);
+        final Statement stmt = Mockito.mock(Statement.class);
+        Mockito.doReturn(false).when(rset).next();
+        MatcherAssert.assertThat(
+            new NotEmptyOutcome().handle(rset, stmt),
+            Matchers.is(false)
         );
     }
 

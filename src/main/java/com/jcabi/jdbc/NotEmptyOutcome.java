@@ -40,7 +40,7 @@ import lombok.ToString;
 /**
  * Returns {@code TRUE} if at least one SQL record found in {@link ResultSet}.
  *
- * <p>The handler returns the value of {@link ResultSet#next()} and throws
+ * <p>The outcome returns the value of {@link ResultSet#next()} and throws
  * {@link SQLException} in case of a problem.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
@@ -50,7 +50,7 @@ import lombok.ToString;
 @Immutable
 @ToString
 @EqualsAndHashCode
-public final class NotEmptyHandler implements JdbcSession.Handler<Boolean> {
+public final class NotEmptyOutcome implements JdbcSession.Outcome<Boolean> {
 
     @Override
     @Loggable(Loggable.DEBUG)

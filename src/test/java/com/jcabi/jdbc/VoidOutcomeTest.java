@@ -29,41 +29,32 @@
  */
 package com.jcabi.jdbc;
 
-import com.jolbox.bonecp.BoneCPDataSource;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
+import org.mockito.Mockito;
 
 /**
- * Test case for {@link SingleHandler}.
+ * Test case for {@link VoidOutcome}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  */
-public final class SingleHandlerTest {
+public final class VoidOutcomeTest {
 
     /**
-     * SingleHandler can return the first column of the first row.
+     * VoidOutcome can always return null.
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void retrievesFirstRowFromTheFirstColumn() throws Exception {
-        final BoneCPDataSource source = new BoneCPDataSource();
-        source.setDriverClass("org.h2.Driver");
-        source.setJdbcUrl("jdbc:h2:mem:foo");
-        new JdbcSession(source)
-            .autocommit(false)
-            .sql("CREATE TABLE foo (name VARCHAR(50))")
-            .execute()
-            .sql("INSERT INTO foo (name) VALUES (?)")
-            .set("Jeff Lebowski")
-            .execute()
-            .set("Walter Sobchak")
-            .execute()
-            .commit();
-        final String name = new JdbcSession(source)
-            .sql("SELECT name FROM foo")
-            .select(new SingleHandler<String>(String.class));
-        MatcherAssert.assertThat(name, Matchers.startsWith("Jeff"));
+    public void returnsNullNoMatterWhatIsTheInput() throws Exception {
+        MatcherAssert.assertThat(
+            new VoidOutcome().handle(
+                Mockito.mock(ResultSet.class), Mockito.mock(Statement.class)
+            ),
+            Matchers.nullValue()
+        );
     }
 
 }

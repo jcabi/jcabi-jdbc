@@ -8,7 +8,7 @@ public class Main {
     Collection<String> names = new JdbcSession(source)
       .sql("SELECT name FROM employee WHERE salary > 35000")
       .select(
-        new JdbcSession.Handler<Collection<String>>() {
+        new JdbcSession.Outcome<Collection<String>>() {
           @Override
           public Collection<String> handle(ResultSet rset) throws SQLException {
             final Collection<String> names = new LinkedList<String>();
@@ -23,7 +23,7 @@ public class Main {
 }
 ```
 
-There is an off-the-shelf `SingleHandler` handler, which can be used
+There is an off-the-shelf `SingleOutcome` Outcome, which can be used
 if you interested in the first value of the first row of the `SELECT`
 query result set:
 
@@ -33,7 +33,7 @@ public class Main {
     String name = new JdbcSession(source)
       .sql("SELECT name FROM employee WHERE name = ?")
       .set("Jeff Bridges")
-      .select(new SingleHandler<String>(String.class));
+      .select(new SingleOutcome<String>(String.class));
   }
 }
 ```

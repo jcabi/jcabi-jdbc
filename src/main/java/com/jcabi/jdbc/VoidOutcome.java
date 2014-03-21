@@ -29,50 +29,36 @@
  */
 package com.jcabi.jdbc;
 
+import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
 import java.sql.ResultSet;
 import java.sql.Statement;
-import org.hamcrest.MatcherAssert;
-import org.hamcrest.Matchers;
-import org.junit.Test;
-import org.mockito.Mockito;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 
 /**
- * Test case for {@link NotEmptyHandler}.
+ * Outcome that does nothing (and always returns {@code null}).
+ *
+ * <p>Useful when you're not interested in the result:
+ *
+ * <pre> new JdbcSession(source)
+ *   .sql("INSERT INTO foo (name) VALUES (?)")
+ *   .set("Jeff Lebowski")
+ *   .insert(new VoidOutcome());</pre>
+ *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
+ * @since 0.1.8
  */
-public final class NotEmptyHandlerTest {
+@Immutable
+@ToString
+@EqualsAndHashCode
+public final class VoidOutcome implements JdbcSession.Outcome<Void> {
 
-    /**
-     * NotEmptyHandler can return TRUE if result set is not empty.
-     * @throws Exception If there is some problem inside
-     */
-    @Test
-    @SuppressWarnings("PMD.CloseResource")
-    public void returnsTrueIfResultSetIsNotEmpty() throws Exception {
-        final ResultSet rset = Mockito.mock(ResultSet.class);
-        final Statement stmt = Mockito.mock(Statement.class);
-        Mockito.doReturn(true).when(rset).next();
-        MatcherAssert.assertThat(
-            new NotEmptyHandler().handle(rset, stmt),
-            Matchers.is(true)
-        );
-    }
-
-    /**
-     * NotEmptyHandler can return FALSE if result set is empty.
-     * @throws Exception If there is some problem inside
-     */
-    @Test
-    @SuppressWarnings("PMD.CloseResource")
-    public void returnsFalseIfResultSetIsEmpty() throws Exception {
-        final ResultSet rset = Mockito.mock(ResultSet.class);
-        final Statement stmt = Mockito.mock(Statement.class);
-        Mockito.doReturn(false).when(rset).next();
-        MatcherAssert.assertThat(
-            new NotEmptyHandler().handle(rset, stmt),
-            Matchers.is(false)
-        );
+    @Override
+    @Loggable(Loggable.DEBUG)
+    public Void handle(final ResultSet rset, final Statement stmt) {
+        return null;
     }
 
 }

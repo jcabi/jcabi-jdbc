@@ -54,7 +54,7 @@ import lombok.ToString;
  *   .sql("SELECT name FROM foo WHERE id = ?")
  *   .set(123)
  *   .select(
- *     new JdbcSession.Handler&lt;String&gt;() {
+ *     new JdbcSession.Outcome&lt;String&gt;() {
  *       &#64;Override
  *       public String handle(final ResultSet rset) throws SQLException {
  *         rset.next();
@@ -63,13 +63,13 @@ import lombok.ToString;
  *     }
  *   );</pre>
  *
- * <p>There are a number of convenient pre-defined handlers, like
- * {@link VoidHandler}, {@link NotEmptyHandler}, {@link SingleHandler}, etc.
+ * <p>There are a number of convenient pre-defined outcomes, like
+ * {@link VoidOutcome}, {@link NotEmptyOutcome}, {@link SingleOutcome}, etc.
  *
- * <p>Methods {@link #insert(JdbcSession.Handler)},
- * {@link #update(JdbcSession.Handler)},
+ * <p>Methods {@link #insert(JdbcSession.Outcome)},
+ * {@link #update(JdbcSession.Outcome)},
  * {@link #execute()}, and
- * {@link #select(JdbcSession.Handler)} clean the list of arguments pre-set by
+ * {@link #select(JdbcSession.Outcome)} clean the list of arguments pre-set by
  * {@link #set(Object)}. The class can be used for a complex transaction, when
  * it's necessary to perform a number of SQL statements in a group. For
  * example, the following construct will execute two SQL queries, in a single
@@ -174,7 +174,7 @@ public final class JdbcSession {
      *   .sql("INSERT INTO foo (id, name) VALUES (?, ?)")
      *   .set(556677)
      *   .set("Jeffrey Lebowski")
-     *   .insert(new VoidHandler());</pre>
+     *   .insert(new VoidOutcome());</pre>
      *
      * @param sql The SQL query to use
      * @return This object
@@ -191,8 +191,8 @@ public final class JdbcSession {
      * Shall we auto-commit?
      *
      * <p>By default this flag is set to TRUE, which means that methods
-     * {@link #insert(JdbcSession.Handler)}, {@link #execute()}, and
-     * {@link #select(JdbcSession.Handler)} will
+     * {@link #insert(JdbcSession.Outcome)}, {@link #execute()}, and
+     * {@link #select(JdbcSession.Outcome)} will
      * call {@link Connection#commit()} after
      * their successful execution.
      *
@@ -240,22 +240,22 @@ public final class JdbcSession {
     /**
      * Make SQL {@code INSERT} request.
      *
-     * <p>{@link JdbcSession.Handler} will receive
+     * <p>{@link JdbcSession.Outcome} will receive
      * a {@link ResultSet} of generated keys.
      *
      * <p>JDBC connection is opened and, optionally, closed by this method.
      *
-     * @param handler The handler or result
+     * @param outcome The outcome of the operation
      * @return The result
      * @param <T> Type of response
      * @throws SQLException If fails
      */
     public <T> T insert(
-        @NotNull(message = "handler can't be NULL")
-        final JdbcSession.Handler<T> handler)
+        @NotNull(message = "outcome can't be NULL")
+        final JdbcSession.Outcome<T> outcome)
         throws SQLException {
         return this.run(
-            handler,
+            outcome,
             new JdbcSession.Fetcher() {
                 @Override
                 public ResultSet fetch(final PreparedStatement stmt)
@@ -281,16 +281,16 @@ public final class JdbcSession {
      * <p>JDBC connection is opened and, optionally, closed by this method.
      *
      * @param <T> Type of result expected
-     * @param handler Handler of result
+     * @param outcome Outcome of the operation
      * @return This object
      * @throws SQLException If fails
      */
     public <T> T update(
-        @NotNull(message = "handler can't be NULL")
-        final JdbcSession.Handler<T> handler)
+        @NotNull(message = "outcome can't be NULL")
+        final JdbcSession.Outcome<T> outcome)
         throws SQLException {
         return this.run(
-            handler,
+            outcome,
             new JdbcSession.Fetcher() {
                 @Override
                 public ResultSet fetch(final PreparedStatement stmt)
@@ -328,7 +328,7 @@ public final class JdbcSession {
      */
     public JdbcSession execute() throws SQLException {
         this.run(
-            new VoidHandler(),
+            new VoidOutcome(),
             new JdbcSession.Fetcher() {
                 @Override
                 public ResultSet fetch(final PreparedStatement stmt)
@@ -351,17 +351,17 @@ public final class JdbcSession {
      *
      * <p>JDBC connection is opened and, optionally, closed by this method.
      *
-     * @param handler The handler or result
+     * @param outcome The outcome of the operaton
      * @return The result
      * @param <T> Type of response
      * @throws SQLException If fails
      */
     public <T> T select(
-        @NotNull(message = "handler can't be NULL")
-        final JdbcSession.Handler<T> handler)
+        @NotNull(message = "outcome can't be NULL")
+        final JdbcSession.Outcome<T> outcome)
         throws SQLException {
         return this.run(
-            handler,
+            outcome,
             new JdbcSession.Fetcher() {
                 @Override
                 public ResultSet fetch(final PreparedStatement stmt)
@@ -378,15 +378,15 @@ public final class JdbcSession {
     }
 
     /**
-     * Run this handler, and this fetcher.
-     * @param handler The handler or result
+     * Run with this outcome, and this fetcher.
+     * @param outcome The outcome of the operation
      * @param fetcher Fetcher of result set
      * @return The result
      * @param <T> Type of response
      * @throws SQLException If fails
      * @checkstyle ExecutableStatementCount (100 lines)
      */
-    private <T> T run(final JdbcSession.Handler<T> handler,
+    private <T> T run(final JdbcSession.Outcome<T> outcome,
         final JdbcSession.Fetcher fetcher)
         throws SQLException {
         if (this.query == null) {
@@ -402,7 +402,7 @@ public final class JdbcSession {
                 final ResultSet rset = fetcher.fetch(stmt);
                 // @checkstyle NestedTryDepth (5 lines)
                 try {
-                    result = handler.handle(rset, stmt);
+                    result = outcome.handle(rset, stmt);
                 } finally {
                     if (rset != null) {
                         rset.close();
@@ -482,10 +482,10 @@ public final class JdbcSession {
     }
 
     /**
-     * Handler or ResultSet.
+     * Outcome of ResultSet.
      * @param <T> Type of expected result
      */
-    public interface Handler<T> {
+    public interface Outcome<T> {
         /**
          * Process the result set and return some value.
          * @param rset The result set to process

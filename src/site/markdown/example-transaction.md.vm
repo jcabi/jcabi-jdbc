@@ -15,7 +15,7 @@ public class Main {
       .update()
       .sql("INSERT INTO employee VALUES (?)")
       .set("Walter Sobchak")
-      .insert(new VoidHandler())
+      .insert(new VoidOutcome())
       .commit();
   }
 }
