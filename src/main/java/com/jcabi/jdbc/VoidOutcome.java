@@ -44,7 +44,10 @@ import lombok.ToString;
  * <pre> new JdbcSession(source)
  *   .sql("INSERT INTO foo (name) VALUES (?)")
  *   .set("Jeff Lebowski")
- *   .insert(new VoidOutcome());</pre>
+ *   .insert(VoidOutcome.INSTANCE);</pre>
+ *
+ * <p>Note that VoidOutcome is a Singleton, there is no need to make multiple
+ * instances of it.
  *
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
@@ -54,6 +57,17 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 public final class VoidOutcome implements Outcome<Void> {
+    /**
+     * Singleton instance of VoidOutcome.
+     */
+    public static final VoidOutcome INSTANCE = new VoidOutcome();
+
+    /**
+     * Private constructor.
+     */
+    private VoidOutcome() {
+        // VoidOutcome is a singleton and is not externally instantiable.
+    }
 
     @Override
     @Loggable(Loggable.DEBUG)

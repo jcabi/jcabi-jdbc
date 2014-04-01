@@ -174,7 +174,7 @@ public final class JdbcSession {
      *   .sql("INSERT INTO foo (id, name) VALUES (?, ?)")
      *   .set(556677)
      *   .set("Jeffrey Lebowski")
-     *   .insert(new VoidOutcome());</pre>
+     *   .insert(VoidOutcome.INSTANCE);</pre>
      *
      * @param sql The SQL query to use
      * @return This object
@@ -328,7 +328,7 @@ public final class JdbcSession {
      */
     public JdbcSession execute() throws SQLException {
         this.run(
-            new VoidOutcome(),
+            VoidOutcome.INSTANCE,
             new JdbcSession.Fetcher() {
                 @Override
                 public ResultSet fetch(final PreparedStatement stmt)

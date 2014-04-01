@@ -50,7 +50,7 @@ public final class VoidOutcomeTest {
     @Test
     public void returnsNullNoMatterWhatIsTheInput() throws Exception {
         MatcherAssert.assertThat(
-            new VoidOutcome().handle(
+            VoidOutcome.INSTANCE.handle(
                 Mockito.mock(ResultSet.class), Mockito.mock(Statement.class)
             ),
             Matchers.nullValue()
