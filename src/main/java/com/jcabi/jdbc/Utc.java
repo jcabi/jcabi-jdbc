@@ -52,7 +52,7 @@ import lombok.ToString;
  *   .sql("INSERT INTO payment (amount, date) VALUES (?, ?)")
  *   .set(500)
  *   .set(new Utc()) // current date to be set, in UTC timezone
- *   .insert(new VoidOutcome());</pre>
+ *   .insert(VoidOutcome.INSTANCE);</pre>
  *
  * <p>This class also helps during date/time retrieval:
  *

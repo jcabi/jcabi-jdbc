@@ -9,7 +9,7 @@ public class Main {
     new JdbcSession(source)
       .sql("UPDATE employee SET salary = 35000 WHERE name = ?")
       .set("Jeff Lebowski")
-      .update(new VoidOutcome());
+      .update(VoidOutcome.INSTANCE);
   }
 }
 ```
@@ -23,7 +23,7 @@ public class Main {
       .sql("CALL db.set_salary(?, ?)")
       .set("Jeff Lebowski")
       .set(35000)
-      .update(new VoidOutcome());
+      .update(VoidOutcome.INSTANCE);
   }
 }
 ```
