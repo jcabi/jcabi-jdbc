@@ -101,7 +101,17 @@ public final class SingleOutcome<T> implements Outcome<T> {
     public SingleOutcome(
         @NotNull(message = "type can't be NULL") final Class<T> tpe,
         final boolean slnt) {
-        this.type = tpe.getName();
+        //@checkstyle BooleanExpressionComplexity (3 lines)
+        if (tpe.equals(String.class) || tpe.equals(Long.class)
+            || tpe.equals(Boolean.class) || tpe.equals(Byte.class)
+            || tpe.equals(Date.class) || tpe.equals(Utc.class)
+        ) {
+            this.type = tpe.getName();
+        } else {
+            throw new IllegalArgumentException(
+                String.format("type %s is not supported", tpe.getName())
+            );
+        }
         this.silently = slnt;
     }
 
@@ -143,10 +153,8 @@ public final class SingleOutcome<T> implements Outcome<T> {
             } else if (tpe.equals(Utc.class)) {
                 result = new Utc(Utc.getTimestamp(rset, 1));
             } else {
-                throw new SQLException(
-                    String.format(
-                        "type %s is not supported", tpe.getName()
-                    )
+                throw new IllegalStateException(
+                    String.format("type %s is not allowed", tpe.getName())
                 );
             }
         } catch (final ClassNotFoundException ex) {
