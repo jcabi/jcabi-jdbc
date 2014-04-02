@@ -66,4 +66,14 @@ public final class SingleOutcomeTest {
         MatcherAssert.assertThat(name, Matchers.startsWith("Jeff"));
     }
 
+    /**
+     * SingleOutcome should fail immediately when initialized with an
+     * unsupported type.
+     * @throws Exception If an exception occurs
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void failsFast() throws Exception {
+        new SingleOutcome<Exception>(Exception.class);
+    }
+
 }
