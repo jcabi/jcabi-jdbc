@@ -30,6 +30,7 @@
 package com.jcabi.jdbc;
 
 import com.jcabi.aspects.Immutable;
+import com.jcabi.aspects.Loggable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -69,6 +70,7 @@ public final class UpdateCountOutcome implements Outcome<Integer> {
     }
 
     @Override
+    @Loggable(Loggable.DEBUG)
     public Integer handle(final ResultSet rset, final Statement stmt)
         throws SQLException {
         return stmt.getUpdateCount();
