@@ -64,7 +64,8 @@ import lombok.ToString;
  *   );</pre>
  *
  * <p>There are a number of convenient pre-defined outcomes, like
- * {@link VoidOutcome}, {@link NotEmptyOutcome}, {@link SingleOutcome}, etc.
+ * {@link Outcome#VOID}, {@link Outcome#NOT_EMPTY}, {@link Outcome#UPDATE_COUNT}
+ * {@link SingleOutcome}, etc.
  *
  * <p>Methods {@link #insert(Outcome)},
  * {@link #update(Outcome)},
@@ -174,7 +175,7 @@ public final class JdbcSession {
      *   .sql("INSERT INTO foo (id, name) VALUES (?, ?)")
      *   .set(556677)
      *   .set("Jeffrey Lebowski")
-     *   .insert(VoidOutcome.INSTANCE);</pre>
+     *   .insert(Outcome.VOID);</pre>
      *
      * @param sql The SQL query to use
      * @return This object
@@ -328,7 +329,7 @@ public final class JdbcSession {
      */
     public JdbcSession execute() throws SQLException {
         this.run(
-            VoidOutcome.INSTANCE,
+            Outcome.VOID,
             new JdbcSession.Fetcher() {
                 @Override
                 public ResultSet fetch(final PreparedStatement stmt)

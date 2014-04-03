@@ -169,7 +169,7 @@ public final class UtcTest {
         new JdbcSession(this.source)
             .sql("INSERT INTO foo VALUES (?) ")
             .set(new Utc(date))
-            .insert(VoidOutcome.INSTANCE);
+            .insert(Outcome.VOID);
         final Connection conn = this.source.getConnection();
         String saved;
         try {
