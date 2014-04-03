@@ -29,17 +29,80 @@
  */
 package com.jcabi.jdbc;
 
+import com.jcabi.aspects.Loggable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 /**
  * Outcome of ResultSet.
+ *
+ * <p>The following convenience implementations are provided:
+ * <ul>
+ *  <li>{@link Outcome#NOT_EMPTY} to check that at least one result row is
+ *      returned.
+ *  <li>{@link Outcome#VOID} for when you wish to disregard the result.
+ *  <li>{@link Outcome#UPDATE_COUNT} to check the number of updated rows.
+ * </ul>
  * @param <T> Type of expected result
  * @author Carlos Miranda (miranda.cma@gmail.com)
  * @version $Id$
  */
 public interface Outcome<T> {
+
+    /**
+     * Returns {@code TRUE} if at least one SQL record found in
+     * {@link ResultSet}.
+     *
+     * <p>The outcome returns the value of {@link ResultSet#next()} and throws
+     * {@link SQLException} in case of a problem.
+     */
+    Outcome<Boolean> NOT_EMPTY = new Outcome<Boolean>() {
+        @Override
+        @Loggable(Loggable.DEBUG)
+        public Boolean handle(final ResultSet rset, final Statement stmt)
+            throws SQLException {
+            return rset.next();
+        }
+    };
+
+    /**
+     * Outcome that does nothing (and always returns {@code null}).
+     *
+     * <p>Useful when you're not interested in the result:
+     *
+     * <pre> new JdbcSession(source)
+     *   .sql("INSERT INTO foo (name) VALUES (?)")
+     *   .set("Jeff Lebowski")
+     *   .insert(Outcome.VOID);</pre>
+     */
+    Outcome<Void> VOID = new Outcome<Void>() {
+        @Override
+        @Loggable(Loggable.DEBUG)
+        public Void handle(final ResultSet rset, final Statement stmt) {
+            return null;
+        }
+    };
+
+    /**
+     * Outcome that returns the number of updated rows.
+     *
+     * <p>Use it when you need to determine the number of rows updated:
+     *
+     * <pre> Integer count = new JdbcSession(source)
+     *   .sql("UPDATE employee SET salary = 35000 WHERE department = ?")
+     *   .set("Finance")
+     *   .update(UpdateCountOutcome.INSTANCE);</pre>
+     */
+    Outcome<Integer> UPDATE_COUNT = new Outcome<Integer>() {
+        @Override
+        @Loggable(Loggable.DEBUG)
+        public Integer handle(final ResultSet rset, final Statement stmt)
+            throws SQLException {
+            return stmt.getUpdateCount();
+        }
+    };
+
     /**
      * Process the result set and return some value.
      * @param rset The result set to process
