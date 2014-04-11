@@ -29,6 +29,7 @@
  */
 package com.jcabi.jdbc;
 
+import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -39,19 +40,19 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Handler that returns first column in the first row.
+ * Outcome that returns first column in the first row.
  *
  * <p>Use it when you need the first column in the first row:
  *
  * <pre> Long id = new JdbcSession(source)
  *   .sql("SELECT id FROM user WHERE name = ?")
  *   .set("Jeff Lebowski")
- *   .select(new SingleHandler&lt;Long&gt;(Long.class));</pre>
+ *   .select(new SingleOutcome&lt;Long&gt;(Long.class));</pre>
  *
  * <p>Supported types are: {@link String}, {@link Long}, {@link Boolean},
  * {@link Byte}, {@link Date}, and {@link Utc}.
  *
- * <p>By default, the handler throws {@link SQLException} if no records
+ * <p>By default, the outcome throws {@link SQLException} if no records
  * are found in the {@link ResultSet}. You can change this behavior by using
  * a two-arguments constructor ({@code null} will be returned if
  * {@link ResultSet} is empty):
@@ -59,7 +60,7 @@ import lombok.ToString;
  * <pre> String name = new JdbcSession(source)
  *   .sql("SELECT name FROM user WHERE id = ?")
  *   .set(555)
- *   .select(new SingleHandler&lt;Long&gt;(Long.class), true);
+ *   .select(new SingleOutcome&lt;Long&gt;(Long.class), true);
  * if (name == null) {
  *   // such a record wasn't found in the database
  * }</pre>
@@ -67,17 +68,16 @@ import lombok.ToString;
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1.8
- * @todo #143 This class should be @Immutable, but we can't do it at the
- *  moment, because "Class" type is mutable. Let's refactor somehow.
  */
+@Immutable
 @ToString
 @EqualsAndHashCode(of = { "type", "silently" })
-public final class SingleHandler<T> implements JdbcSession.Handler<T> {
+public final class SingleOutcome<T> implements Outcome<T> {
 
     /**
-     * The type.
+     * The type name.
      */
-    private final transient Class<T> type;
+    private final transient String type;
 
     /**
      * Silently return NULL if no row found.
@@ -88,7 +88,7 @@ public final class SingleHandler<T> implements JdbcSession.Handler<T> {
      * Public ctor.
      * @param tpe The type to convert to
      */
-    public SingleHandler(
+    public SingleOutcome(
         @NotNull(message = "type of result can't be NULL") final Class<T> tpe) {
         this(tpe, false);
     }
@@ -98,10 +98,20 @@ public final class SingleHandler<T> implements JdbcSession.Handler<T> {
      * @param tpe The type to convert to
      * @param slnt Silently return NULL if there is no row
      */
-    public SingleHandler(
+    public SingleOutcome(
         @NotNull(message = "type can't be NULL") final Class<T> tpe,
         final boolean slnt) {
-        this.type = tpe;
+        //@checkstyle BooleanExpressionComplexity (3 lines)
+        if (tpe.equals(String.class) || tpe.equals(Long.class)
+            || tpe.equals(Boolean.class) || tpe.equals(Byte.class)
+            || tpe.equals(Date.class) || tpe.equals(Utc.class)
+        ) {
+            this.type = tpe.getName();
+        } else {
+            throw new IllegalArgumentException(
+                String.format("type %s is not supported", tpe.getName())
+            );
+        }
         this.silently = slnt;
     }
 
@@ -124,26 +134,35 @@ public final class SingleHandler<T> implements JdbcSession.Handler<T> {
      * @return The result
      * @throws SQLException If some error inside
      */
+    @SuppressWarnings("unchecked")
     private T fetch(final ResultSet rset) throws SQLException {
         final Object result;
-        if (this.type.equals(String.class)) {
-            result = rset.getString(1);
-        } else if (this.type.equals(Long.class)) {
-            result = rset.getLong(1);
-        } else if (this.type.equals(Boolean.class)) {
-            result = rset.getBoolean(1);
-        } else if (this.type.equals(Byte.class)) {
-            result = rset.getByte(1);
-        } else if (this.type.equals(Date.class)) {
-            result = rset.getDate(1);
-        } else if (this.type.equals(Utc.class)) {
-            result = new Utc(Utc.getTimestamp(rset, 1));
-        } else {
-            throw new SQLException(
-                String.format("type %s is not supported", this.type.getName())
+        Class<T> tpe;
+        try {
+            tpe = (Class<T>) Class.forName(this.type);
+            if (tpe.equals(String.class)) {
+                result = rset.getString(1);
+            } else if (tpe.equals(Long.class)) {
+                result = rset.getLong(1);
+            } else if (tpe.equals(Boolean.class)) {
+                result = rset.getBoolean(1);
+            } else if (tpe.equals(Byte.class)) {
+                result = rset.getByte(1);
+            } else if (tpe.equals(Date.class)) {
+                result = rset.getDate(1);
+            } else if (tpe.equals(Utc.class)) {
+                result = new Utc(Utc.getTimestamp(rset, 1));
+            } else {
+                throw new IllegalStateException(
+                    String.format("type %s is not allowed", tpe.getName())
+                );
+            }
+        } catch (final ClassNotFoundException ex) {
+            throw new IllegalArgumentException(
+                String.format("Unknown type: %s", this.type), ex
             );
         }
-        return this.type.cast(result);
+        return tpe.cast(result);
     }
 
 }

@@ -9,7 +9,7 @@ public class Main {
       .sql("INSERT INTO employee (name, salary) VALUES (?, ?)")
       .set("Jeff Lebowski")
       .set(35000)
-      .update(new SingleHandler<Long>(Long.class));
+      .update(new SingleOutcome<Long>(Long.class));
   }
 }
 ```

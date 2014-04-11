@@ -29,36 +29,51 @@
  */
 package com.jcabi.jdbc;
 
-import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
+import com.jolbox.bonecp.BoneCPDataSource;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
+import org.junit.Test;
 
 /**
- * Handler that does nothing (and always returns {@code null}).
- *
- * <p>Useful handler when you're not interested in the result:
- *
- * <pre> new JdbcSession(source)
- *   .sql("INSERT INTO foo (name) VALUES (?)")
- *   .set("Jeff Lebowski")
- *   .insert(new VoidHandler());</pre>
- *
+ * Test case for {@link SingleOutcome}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
- * @since 0.1.8
  */
-@Immutable
-@ToString
-@EqualsAndHashCode
-public final class VoidHandler implements JdbcSession.Handler<Void> {
+public final class SingleOutcomeTest {
 
-    @Override
-    @Loggable(Loggable.DEBUG)
-    public Void handle(final ResultSet rset, final Statement stmt) {
-        return null;
+    /**
+     * SingleOutcome can return the first column of the first row.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void retrievesFirstRowFromTheFirstColumn() throws Exception {
+        final BoneCPDataSource source = new BoneCPDataSource();
+        source.setDriverClass("org.h2.Driver");
+        source.setJdbcUrl("jdbc:h2:mem:foo");
+        new JdbcSession(source)
+            .autocommit(false)
+            .sql("CREATE TABLE foo (name VARCHAR(50))")
+            .execute()
+            .sql("INSERT INTO foo (name) VALUES (?)")
+            .set("Jeff Lebowski")
+            .execute()
+            .set("Walter Sobchak")
+            .execute()
+            .commit();
+        final String name = new JdbcSession(source)
+            .sql("SELECT name FROM foo")
+            .select(new SingleOutcome<String>(String.class));
+        MatcherAssert.assertThat(name, Matchers.startsWith("Jeff"));
+    }
+
+    /**
+     * SingleOutcome should fail immediately when initialized with an
+     * unsupported type.
+     * @throws Exception If an exception occurs
+     */
+    @Test(expected = IllegalArgumentException.class)
+    public void failsFast() throws Exception {
+        new SingleOutcome<Exception>(Exception.class);
     }
 
 }
