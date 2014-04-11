@@ -32,7 +32,6 @@ package com.jcabi.jdbc;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.sql.SQLFeatureNotSupportedException;
 import java.util.logging.Logger;
 import javax.sql.DataSource;
 import lombok.EqualsAndHashCode;
@@ -69,43 +68,43 @@ final class StaticSource implements DataSource {
 
     @Override
     public Connection getConnection(final String username,
-        final String password) throws SQLException {
+        final String password) {
         return this.conn;
     }
 
     @Override
-    public PrintWriter getLogWriter() throws SQLException {
-        throw new UnsupportedOperationException();
+    public PrintWriter getLogWriter() {
+        throw new UnsupportedOperationException("#getLogWriter()");
     }
 
     @Override
-    public void setLogWriter(final PrintWriter out) throws SQLException {
-        throw new UnsupportedOperationException();
+    public void setLogWriter(final PrintWriter out) {
+        throw new UnsupportedOperationException("#setLogWriter()");
     }
 
     @Override
-    public void setLoginTimeout(final int seconds) throws SQLException {
-        throw new UnsupportedOperationException();
+    public void setLoginTimeout(final int seconds) {
+        throw new UnsupportedOperationException("#setLoginTimeout()");
     }
 
     @Override
-    public int getLoginTimeout() throws SQLException {
-        throw new UnsupportedOperationException();
+    public int getLoginTimeout() {
+        throw new UnsupportedOperationException("#getLoginTimeout()");
     }
 
     @Override
-    public Logger getParentLogger() throws SQLFeatureNotSupportedException {
-        throw new UnsupportedOperationException();
+    public Logger getParentLogger() {
+        throw new UnsupportedOperationException("#getParentLogger()");
     }
 
     @Override
-    public <T> T unwrap(final Class<T> iface) throws SQLException {
-        throw new UnsupportedOperationException();
+    public <T> T unwrap(final Class<T> iface) {
+        throw new UnsupportedOperationException("#unwrap()");
     }
 
     @Override
-    public boolean isWrapperFor(final Class<?> iface) throws SQLException {
-        throw new UnsupportedOperationException();
+    public boolean isWrapperFor(final Class<?> iface) {
+        throw new UnsupportedOperationException("#isWrapperFor()");
     }
 
 }
