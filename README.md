@@ -24,7 +24,7 @@ You need just this dependency:
 <dependency>
   <groupId>com.jcabi</groupId>
   <artifactId>jcabi-jdbc</artifactId>
-  <version>0.9</version>
+  <version>0.12</version>
 </dependency>
 ```
 
