@@ -33,14 +33,14 @@
     <skin>
         <groupId>com.jcabi</groupId>
         <artifactId>jcabi-maven-skin</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0</version>
     </skin>
     <bannerLeft>
         <name>jcabi</name>
-        <src>http://img.jcabi.com/logo.png</src>
+        <src>http://img.jcabi.com/logo-square.png</src>
         <href>http://www.jcabi.com/</href>
-        <width>200</width>
-        <height>48</height>
+        <width>64</width>
+        <height>64</height>
     </bannerLeft>
     <googleAnalyticsAccountId>UA-1963507-23</googleAnalyticsAccountId>
     <body>
@@ -53,7 +53,7 @@
             <item name="Introduction" href="index.html"/>
             <item name="API ${project.version} (JavaDoc)" href="./apidocs-${project.version}/index.html"/>
             <item name="Test coverage" href="./cobertura/index.html"/>
-            <item name="Release History" href="./changes-report.html"/>
+            <item name="Release History" href="https://github.com/jcabi/jcabi-jdbc/releases"/>
         </menu>
         <menu name="Examples">
             <item name="Select SQL rows" href="./example-select.html"/>
