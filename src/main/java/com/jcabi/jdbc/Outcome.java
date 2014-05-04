@@ -38,15 +38,18 @@ import java.sql.Statement;
  * Outcome of ResultSet.
  *
  * <p>The following convenience implementations are provided:
+ *
  * <ul>
  *  <li>{@link Outcome#NOT_EMPTY} to check that at least one result row is
  *      returned.
  *  <li>{@link Outcome#VOID} for when you wish to disregard the result.
  *  <li>{@link Outcome#UPDATE_COUNT} to check the number of updated rows.
  * </ul>
+ *
  * @param <T> Type of expected result
  * @author Carlos Miranda (miranda.cma@gmail.com)
  * @version $Id$
+ * @since 0.12
  */
 public interface Outcome<T> {
 

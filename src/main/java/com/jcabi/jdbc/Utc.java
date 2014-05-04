@@ -106,7 +106,7 @@ public final class Utc {
     }
 
     /**
-     * Get date that is incapsulated.
+     * Get date that is encapsulated.
      * @return The date
      */
     @Loggable(Loggable.DEBUG)
