@@ -32,7 +32,7 @@
  * JDBC wrapper.
  *
  * <p>The only dependency you need is (check our latest version available
- * at <a href="http://www.jcabi.com">www.jcabi.com</a>):
+ * at <a href="http://jdbc.jcabi.com">jdbc.jcabi.com</a>):
  *
  * <pre>&lt;depedency&gt;
  *   &lt;groupId&gt;com.jcabi&lt;/groupId&gt;
@@ -42,6 +42,6 @@
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.1.8
- * @see <a href="http://www.jcabi.com/jcabi-jdbc">project website</a>
+ * @see <a href="http://jdbc.jcabi.com/">project website</a>
  */
 package com.jcabi.jdbc;

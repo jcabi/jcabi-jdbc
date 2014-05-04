@@ -59,6 +59,8 @@ public interface Outcome<T> {
      *
      * <p>The outcome returns the value of {@link ResultSet#next()} and throws
      * {@link SQLException} in case of a problem.
+     *
+     * @since 0.12
      */
     Outcome<Boolean> NOT_EMPTY = new Outcome<Boolean>() {
         @Override
@@ -78,6 +80,8 @@ public interface Outcome<T> {
      *   .sql("INSERT INTO foo (name) VALUES (?)")
      *   .set("Jeff Lebowski")
      *   .insert(Outcome.VOID);</pre>
+     *
+     * @since 0.12
      */
     Outcome<Void> VOID = new Outcome<Void>() {
         @Override
@@ -96,6 +100,8 @@ public interface Outcome<T> {
      *   .sql("UPDATE employee SET salary = 35000 WHERE department = ?")
      *   .set("Finance")
      *   .update(UpdateCountOutcome.INSTANCE);</pre>
+     *
+     * @since 0.12
      */
     Outcome<Integer> UPDATE_COUNT = new Outcome<Integer>() {
         @Override
@@ -114,4 +120,5 @@ public interface Outcome<T> {
      * @throws SQLException If something goes wrong inside
      */
     T handle(ResultSet rset, Statement stmt) throws SQLException;
+
 }
