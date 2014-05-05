@@ -54,12 +54,6 @@ public final class JdbcSessionITCase {
         System.getProperty("failsafe.pgsql.user");
 
     /**
-     * JDBC password.
-     */
-    private static final String PASSWORD =
-        System.getProperty("failsafe.pgsql.password");
-
-    /**
      * JdbcSession can do PostgreSQL manipulations.
      * @throws Exception If there is some problem inside
      */

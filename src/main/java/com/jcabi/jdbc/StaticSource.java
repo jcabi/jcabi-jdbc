@@ -78,7 +78,7 @@ final class StaticSource implements DataSource {
     }
 
     @Override
-    public void setLogWriter(final PrintWriter out) {
+    public void setLogWriter(final PrintWriter writer) {
         throw new UnsupportedOperationException("#setLogWriter()");
     }
 
