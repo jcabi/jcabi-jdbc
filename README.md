@@ -1,6 +1,7 @@
 <img src="http://img.jcabi.com/logo-square.png" width="64px" height="64px" />
  
 [![Build Status](https://travis-ci.org/jcabi/jcabi-jdbc.svg?branch=master)](https://travis-ci.org/jcabi/jcabi-jdbc)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.jcabi/jcabi-jdbc/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.jcabi/jcabi-jdbc)
 
 More details are here: [jdbc.jcabi.com](http://jdbc.jcabi.com/index.html)
 
@@ -16,16 +17,6 @@ public class Main {
       .select(new SingleOutcome<String>(String.class));
   }
 }
-```
-
-You need just this dependency:
-
-```xml
-<dependency>
-  <groupId>com.jcabi</groupId>
-  <artifactId>jcabi-jdbc</artifactId>
-  <version>0.12</version>
-</dependency>
 ```
 
 ## Questions?
