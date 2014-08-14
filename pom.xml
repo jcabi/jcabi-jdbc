@@ -45,8 +45,8 @@
         <url>https://github.com/jcabi/jcabi-jdbc/issues</url>
     </issueManagement>
     <ciManagement>
-        <system>rultor</system>
-        <url>http://www.rultor.com/s/jcabi</url>
+        <system>Travis</system>
+        <url>https://travis-ci.org/jcabi/jcabi-jdbc</url>
     </ciManagement>
     <scm>
         <connection>scm:git:github.com:jcabi/jcabi-jdbc.git</connection>
