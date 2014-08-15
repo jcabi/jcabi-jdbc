@@ -9,16 +9,18 @@ env:
 
 install:
   - "gem install pdd"
+  - "sudo adduser --disabled-password --gecos '' tester"
+  - "chown -R tester ."
 
 merge:
   script:
-    - "mvn clean install -Pqulice --errors --settings ../settings.xml"
+    - "su tester mvn clean install -Pqulice --errors --settings ../settings.xml"
     - "mvn clean"
     - "pdd --source=$(pwd) --verbose --file=/dev/null"
 
 deploy:
   script:
-    - "mvn clean deploy -Pqulice --errors --settings ../settings.xml"
+    - "su tester mvn clean deploy -Pqulice --errors --settings ../settings.xml"
     - "mvn clean"
     - "pdd --source=$(pwd) --verbose --file=jcabi-jdbc.xml"
     - "s3cmd --no-progress put jcabi-jdbc.xml --config=../s3cfg s3://pdd.teamed.io/jcabi-jdbc.xml"
@@ -27,5 +29,5 @@ release:
   script:
     - "mvn versions:set \"-DnewVersion=${tag}\""
     - "git commit -am \"${tag}\""
-    - "mvn clean deploy -Pqulice -Psonatype -Pjcabi --errors --settings ../settings.xml"
-    - "mvn clean site-deploy -Psite --errors --settings ../settings.xml"
+    - "su tester mvn clean deploy -Pqulice -Psonatype -Pjcabi --errors --settings ../settings.xml"
+    - "su tester mvn clean site-deploy -Psite --errors --settings ../settings.xml"
