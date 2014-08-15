@@ -9,6 +9,7 @@ env:
 
 install:
   - "gem install pdd"
+  - "home=$(pwd)"
   - "sudo adduser --disabled-password --gecos '' tester"
   - "cp -R . /tmp/tester"
   - "chown -R tester /tmp/tester"
@@ -16,23 +17,23 @@ install:
 
 merge:
   script:
-    - "su tester -c 'mvn clean install -Pqulice --errors --settings ../settings.xml'"
+    - "su tester -c 'mvn clean install -Pqulice --errors --settings ${home}/../settings.xml'"
     - "su tester -c 'mvn clean'"
     - "pdd --source=$(pwd) --verbose --file=/dev/null"
 
 deploy:
   script:
-    - "su tester -c 'mvn clean deploy -Pqulice --errors --settings ../settings.xml'"
+    - "su tester -c \"mvn clean deploy -Pqulice --errors --settings ${home}/../settings.xml\""
     - "su tester -c 'mvn clean'"
     - "pdd --source=$(pwd) --verbose --file=jcabi-jdbc.xml"
-    - "s3cmd --no-progress put jcabi-jdbc.xml --config=../s3cfg s3://pdd.teamed.io/jcabi-jdbc.xml"
+    - "s3cmd --no-progress put jcabi-jdbc.xml --config=${home}/../s3cfg s3://pdd.teamed.io/jcabi-jdbc.xml"
 
 release:
   script:
     - "mvn versions:set \"-DnewVersion=${tag}\"'"
     - "git commit -am \"${tag}\"'"
-    - "su tester -c 'mvn clean deploy -Pqulice -Psonatype -Pjcabi --errors --settings ../settings.xml'"
-    - "su tester -c 'mvn clean site-deploy -Psite --errors --settings ../settings.xml'"
-    - "cd /main/repo"
+    - "su tester -c \"mvn clean deploy -Pqulice -Psonatype -Pjcabi --errors --settings ${home}/../settings.xml\""
+    - "su tester -c \"mvn clean site-deploy -Psite --errors --settings ${home}/../settings.xml\""
+    - "cd ${home}"
     - "mvn versions:set \"-DnewVersion=${tag}\"'"
     - "git commit -am \"${tag}\"'"
