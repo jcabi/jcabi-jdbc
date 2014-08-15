@@ -14,20 +14,20 @@ install:
 
 merge:
   script:
-    - "su tester mvn clean install -Pqulice --errors --settings ../settings.xml"
-    - "mvn clean"
+    - "su tester -c 'mvn clean install -Pqulice --errors --settings ../settings.xml'"
+    - "su tester -c 'mvn clean'"
     - "pdd --source=$(pwd) --verbose --file=/dev/null"
 
 deploy:
   script:
-    - "su tester mvn clean deploy -Pqulice --errors --settings ../settings.xml"
-    - "mvn clean"
+    - "su tester -c 'mvn clean deploy -Pqulice --errors --settings ../settings.xml'"
+    - "su tester -c 'mvn clean'"
     - "pdd --source=$(pwd) --verbose --file=jcabi-jdbc.xml"
     - "s3cmd --no-progress put jcabi-jdbc.xml --config=../s3cfg s3://pdd.teamed.io/jcabi-jdbc.xml"
 
 release:
   script:
-    - "mvn versions:set \"-DnewVersion=${tag}\""
-    - "git commit -am \"${tag}\""
-    - "su tester mvn clean deploy -Pqulice -Psonatype -Pjcabi --errors --settings ../settings.xml"
-    - "su tester mvn clean site-deploy -Psite --errors --settings ../settings.xml"
+    - "su tester -c 'mvn versions:set \"-DnewVersion=${tag}\"'"
+    - "su tester -c 'git commit -am \"${tag}\"'"
+    - "su tester -c 'mvn clean deploy -Pqulice -Psonatype -Pjcabi --errors --settings ../settings.xml'"
+    - "su tester -c 'mvn clean site-deploy -Psite --errors --settings ../settings.xml'"
