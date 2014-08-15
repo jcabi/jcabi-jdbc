@@ -10,7 +10,9 @@ env:
 install:
   - "gem install pdd"
   - "sudo adduser --disabled-password --gecos '' tester"
-  - "chown -R tester ."
+  - "cp -R . /tmp/tester"
+  - "chown -R tester /tmp/tester"
+  - "cd /tmp/tester"
 
 merge:
   script:
@@ -27,7 +29,10 @@ deploy:
 
 release:
   script:
-    - "su tester -c 'mvn versions:set \"-DnewVersion=${tag}\"'"
-    - "su tester -c 'git commit -am \"${tag}\"'"
+    - "mvn versions:set \"-DnewVersion=${tag}\"'"
+    - "git commit -am \"${tag}\"'"
     - "su tester -c 'mvn clean deploy -Pqulice -Psonatype -Pjcabi --errors --settings ../settings.xml'"
     - "su tester -c 'mvn clean site-deploy -Psite --errors --settings ../settings.xml'"
+    - "cd /main/repo"
+    - "mvn versions:set \"-DnewVersion=${tag}\"'"
+    - "git commit -am \"${tag}\"'"
