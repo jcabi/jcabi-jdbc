@@ -295,7 +295,7 @@ public final class JdbcSession {
                 public ResultSet fetch(final PreparedStatement stmt)
                     throws SQLException {
                     stmt.executeUpdate();
-                    return null;
+                    return stmt.getGeneratedKeys();
                 }
                 @Override
                 public PreparedStatement statement(final Connection conn)

@@ -99,7 +99,7 @@ public interface Outcome<T> {
      * <pre> Integer count = new JdbcSession(source)
      *   .sql("UPDATE employee SET salary = 35000 WHERE department = ?")
      *   .set("Finance")
-     *   .update(UpdateCountOutcome.INSTANCE);</pre>
+     *   .update(Outcome.UPDATE_COUNT);</pre>
      *
      * @since 0.12
      */
@@ -109,6 +109,30 @@ public interface Outcome<T> {
         public Integer handle(final ResultSet rset, final Statement stmt)
             throws SQLException {
             return stmt.getUpdateCount();
+        }
+    };
+
+    /**
+     * Outcome that returns last insert ID.
+     *
+     * <p>Use it when you need to get last insert ID from INSERT:
+     *
+     * <pre> long id = new JdbcSession(source)
+     *   .sql("INSERT INTO employee (name) VALUES (?)")
+     *   .set("Jeffrey")
+     *   .insert(Outcome.LAST_INSERT_ID);</pre>
+     *
+     * @since 0.13
+     */
+    Outcome<Long> LAST_INSERT_ID = new Outcome<Long>() {
+        @Override
+        @Loggable(Loggable.DEBUG)
+        public Long handle(final ResultSet rset, final Statement stmt)
+            throws SQLException {
+            if (!rset.next()) {
+                throw new SQLException("no last_insert_id() available");
+            }
+            return rset.getLong(1);
         }
     };
 
