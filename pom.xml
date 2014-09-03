@@ -382,6 +382,7 @@
                         <configuration>
                             <excludes>
                                 <exclude>findbugs:.*</exclude>
+                                <exclude>enforcer:.*</exclude>
                             </excludes>
                         </configuration>
                     </plugin>
