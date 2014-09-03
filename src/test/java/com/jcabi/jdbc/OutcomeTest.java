@@ -29,7 +29,6 @@
  */
 package com.jcabi.jdbc;
 
-import com.jolbox.bonecp.BoneCPDataSource;
 import javax.sql.DataSource;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -49,7 +48,7 @@ public final class OutcomeTest {
      */
     @Test
     public void fetchesLastInsertId() throws Exception {
-        final DataSource source = OutcomeTest.source();
+        final DataSource source = new H2Source("trrto98");
         final long num = new JdbcSession(source)
             .sql("CREATE TABLE foo (id INT auto_increment, name VARCHAR(50))")
             .execute()
@@ -57,17 +56,6 @@ public final class OutcomeTest {
             .set("Jeff Lebowski")
             .update(Outcome.LAST_INSERT_ID);
         MatcherAssert.assertThat(num, Matchers.equalTo(1L));
-    }
-
-    /**
-     * Get data source.
-     * @return Source
-     */
-    private static DataSource source() {
-        final BoneCPDataSource source = new BoneCPDataSource();
-        source.setDriverClass("org.h2.Driver");
-        source.setJdbcUrl(String.format("jdbc:h2:mem:x%d", System.nanoTime()));
-        return source;
     }
 
 }

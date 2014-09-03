@@ -31,11 +31,9 @@ package com.jcabi.jdbc;
 
 import com.jcabi.aspects.Parallel;
 import com.jcabi.aspects.Tv;
-import com.jolbox.bonecp.BoneCPDataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.concurrent.TimeUnit;
 import javax.sql.DataSource;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -54,7 +52,7 @@ public final class JdbcSessionTest {
      */
     @Test
     public void sendsSqlManipulationsToJdbcDriver() throws Exception {
-        final DataSource source = JdbcSessionTest.source();
+        final DataSource source = new H2Source("tiu78");
         new JdbcSession(source)
             .autocommit(false)
             .sql("CREATE TABLE foo (name VARCHAR(50))")
@@ -86,7 +84,8 @@ public final class JdbcSessionTest {
      */
     @Test
     public void executesSql() throws Exception {
-        new JdbcSession(JdbcSessionTest.source())
+        final DataSource source = new H2Source("tpl98");
+        new JdbcSession(source)
             .autocommit(false)
             .sql("CREATE TABLE foo5 (name VARCHAR(30))")
             .execute()
@@ -101,7 +100,7 @@ public final class JdbcSessionTest {
      */
     @Test
     public void automaticallyCommitsByDefault() throws Exception {
-        final DataSource source = JdbcSessionTest.source();
+        final DataSource source = new H2Source("tt8u");
         new JdbcSession(source)
             .sql("CREATE TABLE foo16 (name VARCHAR(50))")
             .execute()
@@ -132,12 +131,12 @@ public final class JdbcSessionTest {
     @Test
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     public void releasesConnectionsFromThePool() throws Exception {
-        final DataSource src = JdbcSessionTest.source();
-        new JdbcSession(src)
+        final DataSource source = new H2Source("t445p");
+        new JdbcSession(source)
             .sql("CREATE TABLE foo776 (name VARCHAR(30))")
             .execute();
         for (int idx = 0; idx < Tv.TEN; ++idx) {
-            new JdbcSession(src)
+            new JdbcSession(source)
                 .sql("INSERT INTO foo776 VALUES ('hello, world!')")
                 .execute();
         }
@@ -150,11 +149,11 @@ public final class JdbcSessionTest {
      */
     @Test
     public void executesSqlInParallelThreads() throws Exception {
-        final DataSource src = JdbcSessionTest.source();
-        new JdbcSession(src)
+        final DataSource source = new H2Source("til87");
+        new JdbcSession(source)
             .sql("CREATE TABLE foo99 (name VARCHAR(30))")
             .execute();
-        this.insert(src, "foo99");
+        this.insert(source, "foo99");
     }
 
     /**
@@ -170,20 +169,6 @@ public final class JdbcSessionTest {
         new JdbcSession(src)
             .sql(String.format("INSERT INTO %s VALUES ('hey')", table))
             .execute();
-    }
-
-    /**
-     * Get data source.
-     * @return Source
-     */
-    private static DataSource source() {
-        final BoneCPDataSource source = new BoneCPDataSource();
-        source.setDriverClass("org.h2.Driver");
-        source.setJdbcUrl(String.format("jdbc:h2:mem:x%d", System.nanoTime()));
-        source.setConnectionTimeout((long) Tv.TEN, TimeUnit.SECONDS);
-        source.setMaxConnectionsPerPartition(Tv.THREE);
-        source.setPartitionCount(1);
-        return source;
     }
 
 }

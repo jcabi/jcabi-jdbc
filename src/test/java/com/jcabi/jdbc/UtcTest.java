@@ -29,7 +29,6 @@
  */
 package com.jcabi.jdbc;
 
-import com.jolbox.bonecp.BoneCPDataSource;
 import java.security.SecureRandom;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -39,7 +38,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
+import java.util.Random;
 import java.util.TimeZone;
+import javax.sql.DataSource;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -54,6 +55,11 @@ import org.junit.Test;
 public final class UtcTest {
 
     /**
+     * Randomizer.
+     */
+    private static final Random RND = new SecureRandom();
+
+    /**
      * Format to use in tests.
      */
     private transient DateFormat fmt;
@@ -61,7 +67,7 @@ public final class UtcTest {
     /**
      * Data source.
      */
-    private transient BoneCPDataSource source;
+    private transient DataSource source;
 
     /**
      * Prepare this test case.
@@ -69,10 +75,8 @@ public final class UtcTest {
      */
     @Before
     public void prepare() throws Exception {
-        this.source = new BoneCPDataSource();
-        this.source.setDriverClass("org.h2.Driver");
-        this.source.setJdbcUrl(
-            String.format("jdbc:h2:mem:%s", new SecureRandom().nextInt())
+        this.source = new H2Source(
+            String.format("xpo%d", UtcTest.RND.nextInt())
         );
         new JdbcSession(this.source)
             .sql("CREATE TABLE foo (date DATETIME)")

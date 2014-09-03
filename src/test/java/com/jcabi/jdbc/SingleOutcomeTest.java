@@ -29,7 +29,7 @@
  */
 package com.jcabi.jdbc;
 
-import com.jolbox.bonecp.BoneCPDataSource;
+import javax.sql.DataSource;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Test;
@@ -47,9 +47,7 @@ public final class SingleOutcomeTest {
      */
     @Test
     public void retrievesFirstRowFromTheFirstColumn() throws Exception {
-        final BoneCPDataSource source = new BoneCPDataSource();
-        source.setDriverClass("org.h2.Driver");
-        source.setJdbcUrl("jdbc:h2:mem:foo");
+        final DataSource source = new H2Source("ytt68");
         new JdbcSession(source)
             .autocommit(false)
             .sql("CREATE TABLE foo (name VARCHAR(50))")

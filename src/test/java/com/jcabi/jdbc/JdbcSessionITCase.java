@@ -32,6 +32,8 @@ package com.jcabi.jdbc;
 import com.jcabi.aspects.Tv;
 import com.jolbox.bonecp.BoneCPDataSource;
 import javax.sql.DataSource;
+import org.junit.Assume;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
@@ -52,6 +54,14 @@ public final class JdbcSessionITCase {
      */
     private static final String USER =
         System.getProperty("failsafe.pgsql.user");
+
+    /**
+     * Before every test.
+     */
+    @Before
+    public void before() {
+        Assume.assumeNotNull(JdbcSessionITCase.URL);
+    }
 
     /**
      * JdbcSession can do PostgreSQL manipulations.

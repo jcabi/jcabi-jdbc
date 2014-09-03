@@ -29,6 +29,8 @@
  */
 package com.jcabi.jdbc;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Collection;
 import javax.sql.DataSource;
 import org.hamcrest.MatcherAssert;
@@ -36,20 +38,20 @@ import org.hamcrest.Matchers;
 import org.junit.Test;
 
 /**
- * Test case for {@link ColumnOutcome}.
+ * Test case for {@link ListOutcome}.
  * @author Yegor Bugayenko (yegor@tpc2.com)
  * @version $Id$
  * @since 0.13
  */
-public final class ColumnOutcomeTest {
+public final class ListOutcomeTest {
 
     /**
-     * ColumnOutcome can return the first column.
+     * ListOutcome can return the full list.
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void retrievesFirstColumn() throws Exception {
-        final DataSource source = new H2Source("i8o98");
+    public void retrievesList() throws Exception {
+        final DataSource source = new H2Source("tto98");
         new JdbcSession(source)
             .autocommit(false)
             .sql("CREATE TABLE foo (name VARCHAR(50))")
@@ -62,20 +64,20 @@ public final class ColumnOutcomeTest {
             .commit();
         final Collection<String> names = new JdbcSession(source)
             .sql("SELECT name FROM foo")
-            .select(new ColumnOutcome<String>(String.class));
+            .select(
+                new ListOutcome<String>(
+                    new ListOutcome.Mapping<String>() {
+                        @Override
+                        public String map(final ResultSet rset)
+                            throws SQLException {
+                            return rset.getString(1);
+                        }
+                    }
+                )
+            );
         MatcherAssert.assertThat(
             names, Matchers.hasSize(2)
         );
-    }
-
-    /**
-     * SingleOutcome should fail immediately when initialized with an
-     * unsupported type.
-     * @throws Exception If an exception occurs
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void failsFast() throws Exception {
-        new SingleOutcome<Exception>(Exception.class);
     }
 
 }
