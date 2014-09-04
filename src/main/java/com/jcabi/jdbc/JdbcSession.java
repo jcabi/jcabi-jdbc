@@ -31,7 +31,6 @@ package com.jcabi.jdbc;
 
 import com.jcabi.aspects.Loggable;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -128,6 +127,13 @@ public final class JdbcSession {
         new CopyOnWriteArrayList<Object>();
 
     /**
+     * Arguments.
+     * @since 0.13
+     */
+    private final transient Collection<Preparation> preparations =
+        new CopyOnWriteArrayList<Preparation>();
+
+    /**
      * Connection currently open.
      */
     private final transient AtomicReference<Connection> connection =
@@ -150,6 +156,7 @@ public final class JdbcSession {
     public JdbcSession(
         @NotNull(message = "data source can't be NULL") final DataSource src) {
         this.source = src;
+        this.preparations.add(new PrepareArgs(this.args));
     }
 
     /**
@@ -157,9 +164,8 @@ public final class JdbcSession {
      * @param cnx Connection to use
      * @since 0.10
      */
-    public JdbcSession(
-        @NotNull(message = "connection can't be NULL") final Connection cnx) {
-        this.source = new StaticSource(cnx);
+    public JdbcSession(final Connection cnx) {
+        this(new StaticSource(cnx));
     }
 
     /**
@@ -208,7 +214,8 @@ public final class JdbcSession {
     /**
      * Set new parameter for the query.
      *
-     * <p>The following types are supported: {@link Boolean}, {@link Date},
+     * <p>The following types are supported: {@link Boolean},
+     * {@link java.sql.Date},
      * {@link Utc}, {@link Long}, {@link Integer}. All other types will be
      * converted to {@link String} using their {@code toString()} methods.
      *
@@ -217,6 +224,33 @@ public final class JdbcSession {
      */
     public JdbcSession set(final Object value) {
         this.args.add(value);
+        return this;
+    }
+
+    /**
+     * Run this preparation before executing the statement.
+     * @param prp Preparation
+     * @return This object
+     * @since 0.13
+     */
+    public JdbcSession prepare(final Preparation prp) {
+        synchronized (this.args) {
+            this.preparations.add(prp);
+        }
+        return this;
+    }
+
+    /**
+     * Clear all pre-set parameters (args, preparations, etc).
+     * @return This object
+     * @since 0.13
+     */
+    public JdbcSession clear() {
+        synchronized (this.args) {
+            this.args.clear();
+            this.preparations.clear();
+            this.preparations.add(new PrepareArgs(this.args));
+        }
         return this;
     }
 
@@ -397,7 +431,7 @@ public final class JdbcSession {
             conn.setAutoCommit(this.auto);
             final PreparedStatement stmt = fetcher.statement(conn);
             try {
-                this.parametrize(stmt);
+                this.configure(stmt);
                 final ResultSet rset = fetcher.fetch(stmt);
                 // @checkstyle NestedTryDepth (5 lines)
                 try {
@@ -420,7 +454,7 @@ public final class JdbcSession {
             if (this.auto) {
                 this.disconnect();
             }
-            this.args.clear();
+            this.clear();
         }
         return result;
     }
@@ -454,29 +488,13 @@ public final class JdbcSession {
     }
 
     /**
-     * Add params to the statement.
-     * @param stmt The statement to parametrize
-     * @throws SQLException If some problem
+     * Configure the statement.
+     * @param stmt Statement
+     * @throws SQLException If fails
      */
-    private void parametrize(final PreparedStatement stmt) throws SQLException {
-        int pos = 1;
-        for (final Object arg : this.args) {
-            if (arg == null) {
-                stmt.setString(pos, null);
-            } else if (arg instanceof Long) {
-                stmt.setLong(pos, Long.class.cast(arg));
-            } else if (arg instanceof Boolean) {
-                stmt.setBoolean(pos, Boolean.class.cast(arg));
-            } else if (arg instanceof Date) {
-                stmt.setDate(pos, Date.class.cast(arg));
-            } else if (arg instanceof Integer) {
-                stmt.setInt(pos, Integer.class.cast(arg));
-            } else if (arg instanceof Utc) {
-                Utc.class.cast(arg).setTimestamp(stmt, pos);
-            } else {
-                stmt.setString(pos, arg.toString());
-            }
-            ++pos;
+    private void configure(final PreparedStatement stmt) throws SQLException {
+        for (final Preparation prep : this.preparations) {
+            prep.prepare(stmt);
         }
     }
 

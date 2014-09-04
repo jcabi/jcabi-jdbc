@@ -31,6 +31,7 @@ package com.jcabi.jdbc;
 
 import com.jcabi.aspects.Parallel;
 import com.jcabi.aspects.Tv;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -105,7 +106,15 @@ public final class JdbcSessionTest {
             .sql("CREATE TABLE foo16 (name VARCHAR(50))")
             .execute()
             .sql("INSERT INTO foo16 (name) VALUES (?)")
-            .set("Walter")
+            .prepare(
+                new Preparation() {
+                    @Override
+                    public void prepare(final PreparedStatement stmt)
+                        throws SQLException {
+                        stmt.setString(1, "Walter");
+                    }
+                }
+            )
             .execute();
         final String name = new JdbcSession(source)
             .sql("SELECT name FROM foo16 WHERE name = 'Walter'")
