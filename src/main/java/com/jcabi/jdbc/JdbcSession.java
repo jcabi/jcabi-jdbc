@@ -34,7 +34,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.Collection;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicReference;
@@ -289,22 +288,8 @@ public final class JdbcSession {
         throws SQLException {
         return this.run(
             outcome,
-            new JdbcSession.Fetcher() {
-                @Override
-                public ResultSet fetch(final PreparedStatement stmt)
-                    throws SQLException {
-                    stmt.execute();
-                    return stmt.getGeneratedKeys();
-                }
-                @Override
-                public PreparedStatement statement(final Connection conn)
-                    throws SQLException {
-                    return conn.prepareStatement(
-                        JdbcSession.this.query,
-                        Statement.RETURN_GENERATED_KEYS
-                    );
-                }
-            }
+            new Connect.WithKeys(this.query),
+            Request.EXECUTE
         );
     }
 
@@ -324,22 +309,8 @@ public final class JdbcSession {
         throws SQLException {
         return this.run(
             outcome,
-            new JdbcSession.Fetcher() {
-                @Override
-                public ResultSet fetch(final PreparedStatement stmt)
-                    throws SQLException {
-                    stmt.executeUpdate();
-                    return stmt.getGeneratedKeys();
-                }
-                @Override
-                public PreparedStatement statement(final Connection conn)
-                    throws SQLException {
-                    return conn.prepareStatement(
-                        JdbcSession.this.query,
-                        Statement.RETURN_GENERATED_KEYS
-                    );
-                }
-            }
+            new Connect.WithKeys(this.query),
+            Request.EXECUTE_UPDATE
         );
     }
 
@@ -362,19 +333,8 @@ public final class JdbcSession {
     public JdbcSession execute() throws SQLException {
         this.run(
             Outcome.VOID,
-            new JdbcSession.Fetcher() {
-                @Override
-                public ResultSet fetch(final PreparedStatement stmt)
-                    throws SQLException {
-                    stmt.execute();
-                    return null;
-                }
-                @Override
-                public PreparedStatement statement(final Connection conn)
-                    throws SQLException {
-                    return conn.prepareStatement(JdbcSession.this.query);
-                }
-            }
+            new Connect.Plain(this.query),
+            Request.EXECUTE
         );
         return this;
     }
@@ -395,32 +355,23 @@ public final class JdbcSession {
         throws SQLException {
         return this.run(
             outcome,
-            new JdbcSession.Fetcher() {
-                @Override
-                public ResultSet fetch(final PreparedStatement stmt)
-                    throws SQLException {
-                    return stmt.executeQuery();
-                }
-                @Override
-                public PreparedStatement statement(final Connection conn)
-                    throws SQLException {
-                    return conn.prepareStatement(JdbcSession.this.query);
-                }
-            }
+            new Connect.Plain(this.query),
+            Request.EXECUTE_QUERY
         );
     }
 
     /**
      * Run with this outcome, and this fetcher.
      * @param outcome The outcome of the operation
-     * @param fetcher Fetcher of result set
+     * @param connect Connect
+     * @param request Request
      * @return The result
      * @param <T> Type of response
      * @throws SQLException If fails
      * @checkstyle ExecutableStatementCount (100 lines)
      */
     private <T> T run(final Outcome<T> outcome,
-        final JdbcSession.Fetcher fetcher)
+        final Connect connect, final Request request)
         throws SQLException {
         if (this.query == null) {
             throw new IllegalStateException("call #sql() first");
@@ -429,10 +380,10 @@ public final class JdbcSession {
         T result;
         try {
             conn.setAutoCommit(this.auto);
-            final PreparedStatement stmt = fetcher.statement(conn);
+            final PreparedStatement stmt = connect.open(conn);
             try {
                 this.configure(stmt);
-                final ResultSet rset = fetcher.fetch(stmt);
+                final ResultSet rset = request.fetch(stmt);
                 // @checkstyle NestedTryDepth (5 lines)
                 try {
                     result = outcome.handle(rset, stmt);
@@ -496,26 +447,6 @@ public final class JdbcSession {
         for (final Preparation prep : this.preparations) {
             prep.prepare(stmt);
         }
-    }
-
-    /**
-     * The fetcher.
-     */
-    public interface Fetcher {
-        /**
-         * Create prepare statement.
-         * @param conn Open connection
-         * @return The statement
-         * @throws SQLException If some problem
-         */
-        PreparedStatement statement(Connection conn) throws SQLException;
-        /**
-         * Fetch result set from statement.
-         * @param stmt The statement
-         * @return The result set
-         * @throws SQLException If some problem
-         */
-        ResultSet fetch(PreparedStatement stmt) throws SQLException;
     }
 
 }
