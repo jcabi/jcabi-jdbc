@@ -379,6 +379,7 @@
                     <plugin>
                         <groupId>com.qulice</groupId>
                         <artifactId>qulice-maven-plugin</artifactId>
+                        <version>0.11</version>
                         <configuration>
                             <excludes>
                                 <exclude>findbugs:.*</exclude>
