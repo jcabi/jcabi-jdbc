@@ -1,9 +1,17 @@
-# Updating SQL Records Through JDBC
+  ---
+  Updating SQL Records Through JDBC
+  ---
+  Yegor Bugayenko
+  ---
+  2014-11-02
+  ---
 
-`UPDATE` or any other data manipulation queries can be done
-through `JdbcSession`:
+Updating SQL Records Through JDBC
 
-```
+  <<<UPDATE>>> or any other data manipulation queries can be done
+  through <<<JdbcSession>>>:
+
++--
 public class Main {
   public static void main(String[] args) {
     new JdbcSession(source)
@@ -12,11 +20,11 @@ public class Main {
       .update(Outcome.VOID);
   }
 }
-```
++--
 
-You can also run a stored procedure (for example, in Oracle):
+  You can also run a stored procedure (for example, in Oracle):
 
-```
++--
 public class Main {
   public static void main(String[] args) {
     new JdbcSession(source)
@@ -26,11 +34,11 @@ public class Main {
       .update(Outcome.VOID);
   }
 }
-```
++--
 
-Since version 0.11 you can get a number of updated rows:
+  Since version 0.11 you can get a number of updated rows:
 
-```
++--
 public class Main {
   public static void main(String[] args) {
     int updated = new JdbcSession(source)
@@ -45,4 +53,4 @@ public class Main {
       );
   }
 }
-```
++--
