@@ -6,7 +6,8 @@
 [![Build Status](https://travis-ci.org/jcabi/jcabi-jdbc.svg?branch=master)](https://travis-ci.org/jcabi/jcabi-jdbc)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.jcabi/jcabi-jdbc/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.jcabi/jcabi-jdbc)
 
-More details are here: [jdbc.jcabi.com](http://jdbc.jcabi.com/index.html)
+More details are here: [jdbc.jcabi.com](http://jdbc.jcabi.com/index.html).
+Also, read this blog post: [Fluent JDBC Decorator](http://www.yegor256.com/2014/08/18/fluent-jdbc-decorator.html).
 
 `JdbcSession` is a convenient fluent wrapper around JDBC:
 
