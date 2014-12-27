@@ -17,13 +17,13 @@ public class Main {
     new JdbcSession(source)
       .autocommit(false)
       .sql("START TRANSACTION")
-      .update()
+      .execute()
       .sql("DELETE FROM employee WHERE name = ?")
       .set("Jeff Lebowski")
-      .update()
+      .execute()
       .sql("INSERT INTO employee VALUES (?)")
       .set("Walter Sobchak")
-      .insert(Outcome.VOID)
+      .execute()
       .commit();
   }
 }
