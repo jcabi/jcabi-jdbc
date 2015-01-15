@@ -148,7 +148,7 @@
             <plugin>
                 <groupId>com.github.adrianboimvaser</groupId>
                 <artifactId>postgresql-maven-plugin</artifactId>
-                <version>0.2-SNAPSHOT</version>
+                <version>0.2</version>
                 <configuration>
                     <pgsqlHome>${project.build.directory}/pgsql</pgsqlHome>
                     <dataDir>${project.build.directory}/data</dataDir>
