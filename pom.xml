@@ -156,6 +156,8 @@
                     <username>${failsafe.pgsql.user}</username>
                     <passwordFile>${project.build.directory}/test-classes/password.txt</passwordFile>
                     <port>${failsafe.pgsql.port}</port>
+                    <timeoutInSeconds>10</timeoutInSeconds>
+                    <logfile>${project.build.directory}/pgsql/log.file</logfile>
                 </configuration>
                 <executions>
                     <execution>
