@@ -39,3 +39,5 @@ Please run Maven build before submitting a pull request:
 ```
 $ mvn clean install -Pqulice
 ```
+
+Please make sure that you're doing so under user account without administrative rights, otherwise the build will fail (postgresql instance needed for tests can't be launched under admin/root account).
