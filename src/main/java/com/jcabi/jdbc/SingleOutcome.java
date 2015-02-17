@@ -105,7 +105,7 @@ public final class SingleOutcome<T> implements Outcome<T> {
         if (tpe.equals(String.class) || tpe.equals(Long.class)
             || tpe.equals(Boolean.class) || tpe.equals(Byte.class)
             || tpe.equals(Date.class) || tpe.equals(Utc.class)
-            || tpe.equals(byte[].class)
+            || byte[].class.equals(tpe)
         ) {
             this.type = tpe.getName();
         } else {
