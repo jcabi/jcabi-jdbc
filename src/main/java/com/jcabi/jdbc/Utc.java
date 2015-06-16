@@ -70,7 +70,7 @@ import lombok.ToString;
  * <p>{@link Timestamp} is used because {@link java.sql.Date}
  * supports only dates (without time).
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 0.1.8
  */

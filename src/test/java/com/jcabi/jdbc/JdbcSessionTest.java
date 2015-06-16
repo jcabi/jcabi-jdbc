@@ -42,7 +42,7 @@ import org.junit.Test;
 
 /**
  * Test case for {@link JdbcSession}.
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  */
 public final class JdbcSessionTest {

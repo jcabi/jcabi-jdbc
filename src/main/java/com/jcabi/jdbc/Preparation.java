@@ -36,7 +36,7 @@ import java.sql.SQLException;
 /**
  * Preparation of a {@link java.sql.PreparedStatement}.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 0.13
  */

@@ -65,7 +65,7 @@ import lombok.ToString;
  *   // such a record wasn't found in the database
  * }</pre>
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 0.1.8
  */

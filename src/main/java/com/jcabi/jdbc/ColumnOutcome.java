@@ -53,7 +53,7 @@ import lombok.ToString;
  * <p>Supported types are: {@link String}, {@link Long}, {@link Boolean},
  * {@link Byte}, {@link Date}, and {@link Utc}.
  *
- * @author Yegor Bugayenko (yegor@tpc2.com)
+ * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 0.13
  */
