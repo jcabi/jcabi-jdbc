@@ -1,6 +1,7 @@
 ## Puzzles
 
-There are 0 active puzzles (2 total), updated on 2015-12-09T11:50:43Z:
+There are 0 active puzzles (2 total):
 
-unknown ?
-&nbsp;143-957c5b96 src/main/java/com/jcabi/jdbc/SingleHandler.java:69-70
+
+<del>unknown</del> [`?`](../master/?)<br/>
+&nbsp;&nbsp;&nbsp;<del>143-957c5b96</del> [`SingleHandler.java:69-70`](../master/src/main/java/com/jcabi/jdbc/SingleHandler.java#L69-L70)<br/>
