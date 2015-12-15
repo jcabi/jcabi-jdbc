@@ -122,26 +122,23 @@ public final class JdbcSession {
     /**
      * Arguments.
      */
-    private final transient Collection<Object> args =
-        new CopyOnWriteArrayList<Object>();
+    private final transient Collection<Object> args;
 
     /**
      * Arguments.
      * @since 0.13
      */
-    private final transient Collection<Preparation> preparations =
-        new CopyOnWriteArrayList<Preparation>();
+    private final transient Collection<Preparation> preparations;
 
     /**
      * Connection currently open.
      */
-    private final transient AtomicReference<Connection> connection =
-        new AtomicReference<Connection>();
+    private final transient AtomicReference<Connection> connection;
 
     /**
      * Shall we close/autocommit automatically?
      */
-    private transient boolean auto = true;
+    private transient boolean auto;
 
     /**
      * The query to use.
@@ -154,6 +151,10 @@ public final class JdbcSession {
      */
     public JdbcSession(
         @NotNull(message = "data source can't be NULL") final DataSource src) {
+        this.args = new CopyOnWriteArrayList<Object>();
+        this.preparations = new CopyOnWriteArrayList<Preparation>();
+        this.connection = new AtomicReference<Connection>();
+        this.auto = true;
         this.source = src;
         this.preparations.add(new PrepareArgs(this.args));
     }

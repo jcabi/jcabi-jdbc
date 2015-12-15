@@ -61,6 +61,7 @@ import lombok.ToString;
  * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 0.13
+ * @param <T> Type of items
  */
 @Immutable
 @ToString
