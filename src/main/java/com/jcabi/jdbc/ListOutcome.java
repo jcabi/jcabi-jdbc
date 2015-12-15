@@ -36,7 +36,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.LinkedList;
 import java.util.List;
-import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -77,8 +76,7 @@ public final class ListOutcome<T> implements Outcome<List<T>> {
      * Public ctor.
      * @param mpg Mapping
      */
-    public ListOutcome(@NotNull(message = "mapping can't be NULL")
-        final ListOutcome.Mapping<T> mpg) {
+    public ListOutcome(final ListOutcome.Mapping<T> mpg) {
         this.mapping = mpg;
     }
 

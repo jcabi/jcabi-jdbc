@@ -37,7 +37,6 @@ import java.sql.Statement;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
-import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -72,8 +71,7 @@ public final class ColumnOutcome<T> implements Outcome<Collection<T>> {
      * Public ctor.
      * @param tpe The type to convert to
      */
-    public ColumnOutcome(@NotNull(message = "type can't be NULL")
-        final Class<T> tpe) {
+    public ColumnOutcome(final Class<T> tpe) {
         //@checkstyle BooleanExpressionComplexity (3 lines)
         if (tpe.equals(String.class) || tpe.equals(Long.class)
             || tpe.equals(Boolean.class) || tpe.equals(Byte.class)

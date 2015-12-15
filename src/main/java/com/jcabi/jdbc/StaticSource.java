@@ -62,7 +62,7 @@ final class StaticSource implements DataSource {
     }
 
     @Override
-    public Connection getConnection() throws SQLException {
+    public Connection getConnection() {
         return this.conn;
     }
 

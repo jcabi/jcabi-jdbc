@@ -35,7 +35,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
-import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -89,8 +88,7 @@ public final class SingleOutcome<T> implements Outcome<T> {
      * Public ctor.
      * @param tpe The type to convert to
      */
-    public SingleOutcome(
-        @NotNull(message = "type of result can't be NULL") final Class<T> tpe) {
+    public SingleOutcome(final Class<T> tpe) {
         this(tpe, false);
     }
 
@@ -99,9 +97,7 @@ public final class SingleOutcome<T> implements Outcome<T> {
      * @param tpe The type to convert to
      * @param slnt Silently return NULL if there is no row
      */
-    public SingleOutcome(
-        @NotNull(message = "type can't be NULL") final Class<T> tpe,
-        final boolean slnt) {
+    public SingleOutcome(final Class<T> tpe, final boolean slnt) {
         //@checkstyle BooleanExpressionComplexity (3 lines)
         if (tpe.equals(String.class) || tpe.equals(Long.class)
             || tpe.equals(Boolean.class) || tpe.equals(Byte.class)

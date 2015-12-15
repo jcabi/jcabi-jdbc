@@ -38,7 +38,6 @@ import java.util.Collection;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.sql.DataSource;
-import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -149,8 +148,7 @@ public final class JdbcSession {
      * Public ctor.
      * @param src Data source
      */
-    public JdbcSession(
-        @NotNull(message = "data source can't be NULL") final DataSource src) {
+    public JdbcSession(final DataSource src) {
         this.args = new CopyOnWriteArrayList<Object>();
         this.preparations = new CopyOnWriteArrayList<Preparation>();
         this.connection = new AtomicReference<Connection>();
@@ -184,8 +182,7 @@ public final class JdbcSession {
      * @param sql The SQL query to use
      * @return This object
      */
-    public JdbcSession sql(
-        @NotNull(message = "SQL query can't be NULL") final String sql) {
+    public JdbcSession sql(final String sql) {
         synchronized (this.args) {
             this.query = sql;
         }
@@ -283,9 +280,7 @@ public final class JdbcSession {
      * @param <T> Type of response
      * @throws SQLException If fails
      */
-    public <T> T insert(
-        @NotNull(message = "outcome can't be NULL")
-        final Outcome<T> outcome)
+    public <T> T insert(final Outcome<T> outcome)
         throws SQLException {
         return this.run(
             outcome,
@@ -304,9 +299,7 @@ public final class JdbcSession {
      * @return This object
      * @throws SQLException If fails
      */
-    public <T> T update(
-        @NotNull(message = "outcome can't be NULL")
-        final Outcome<T> outcome)
+    public <T> T update(final Outcome<T> outcome)
         throws SQLException {
         return this.run(
             outcome,
@@ -350,9 +343,7 @@ public final class JdbcSession {
      * @param <T> Type of response
      * @throws SQLException If fails
      */
-    public <T> T select(
-        @NotNull(message = "outcome can't be NULL")
-        final Outcome<T> outcome)
+    public <T> T select(final Outcome<T> outcome)
         throws SQLException {
         return this.run(
             outcome,

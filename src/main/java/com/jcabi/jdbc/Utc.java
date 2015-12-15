@@ -38,7 +38,6 @@ import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.SimpleTimeZone;
-import javax.validation.constraints.NotNull;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
@@ -101,7 +100,7 @@ public final class Utc {
      * Public ctor.
      * @param when The date to use.
      */
-    public Utc(@NotNull(message = "date can't be NULL") final Date when) {
+    public Utc(final Date when) {
         this.date = when.getTime();
     }
 
