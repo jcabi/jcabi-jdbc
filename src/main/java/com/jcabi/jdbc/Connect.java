@@ -56,7 +56,6 @@ interface Connect {
     /**
      * Connect which opens a <b>CallableStatement</b>, which
      * is used for calling stored procedures.
-     *
      */
     final class Call implements Connect {
 
