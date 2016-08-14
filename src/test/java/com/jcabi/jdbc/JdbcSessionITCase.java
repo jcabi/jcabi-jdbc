@@ -31,7 +31,13 @@ package com.jcabi.jdbc;
 
 import com.jcabi.aspects.Tv;
 import com.jolbox.bonecp.BoneCPDataSource;
+import java.sql.CallableStatement;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Types;
 import javax.sql.DataSource;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,6 +46,7 @@ import org.junit.Test;
  * Integration case for {@link JdbcSession}.
  * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
+ * @checkstyle StringLiteralsConcatenationCheck (300 lines)
  */
 public final class JdbcSessionITCase {
 
@@ -88,6 +95,82 @@ public final class JdbcSessionITCase {
     public void changesTransactionIsolationLevel() throws Exception {
         final DataSource source = JdbcSessionITCase.source();
         new JdbcSession(source).sql("VACUUM").execute();
+    }
+
+    /**
+     * JdbcSession can run a function (stored procedure) with
+     * output parameters.
+     * @throws Exception If something goes wrong
+     */
+    @Test
+    public void callsFunctionWithOutParam() throws Exception {
+        final DataSource dsrc = JdbcSessionITCase.source();
+        new JdbcSession(dsrc).autocommit(false).sql(
+            "CREATE TABLE IF NOT EXISTS users (name VARCHAR(50))"
+        ).execute().sql("INSERT INTO users (name) VALUES (?)")
+        .set("Jeff Charles").execute().sql(
+            "CREATE OR REPLACE FUNCTION getUser(username OUT text)"
+            + " AS $$ BEGIN SELECT name INTO username from  users; END;"
+            + " $$ LANGUAGE plpgsql;"
+        ).execute().commit();
+        final Object[] result = new JdbcSession(dsrc)
+            .sql("{call getUser(?)}")
+            .prepare(
+                new Preparation() {
+                    @Override
+                    public void prepare(
+                        final PreparedStatement stmt
+                    ) throws SQLException {
+                        ((CallableStatement) stmt)
+                            .registerOutParameter(1, Types.VARCHAR);
+                    }
+                }
+             )
+            .call(new StoredProcedureOutcome<Object[]>(1));
+        MatcherAssert.assertThat(result.length, Matchers.is(1));
+        MatcherAssert.assertThat(
+            result[0].toString(),
+            Matchers.containsString("Charles")
+        );
+    }
+
+    /**
+     * JdbcSession can run a function (stored procedure) with
+     * input and output parameters.
+     * @throws Exception If something goes wrong
+     */
+    @Test
+    public void callsFunctionWithInOutParam() throws Exception {
+        final DataSource dsrc = JdbcSessionITCase.source();
+        new JdbcSession(dsrc).autocommit(false).sql(
+            "CREATE TABLE IF NOT EXISTS usersid (id INTEGER, name VARCHAR(50))"
+        ).execute().sql("INSERT INTO usersid (id, name) VALUES (?, ?)")
+        .set(1).set("Marco Polo").execute().sql(
+            "CREATE OR REPLACE FUNCTION getUserById(uid IN INTEGER,"
+            + " usrnm OUT text) AS $$ BEGIN"
+            + " SELECT name INTO usrnm FROM  usersid WHERE id=uid;"
+            + " END; $$ LANGUAGE plpgsql;"
+        ).execute().commit();
+        final Object[] result = new JdbcSession(dsrc)
+            .sql("{call getUserById(?, ?)}")
+            .set(1)
+            .prepare(
+                new Preparation() {
+                    @Override
+                    public void prepare(
+                        final PreparedStatement stmt
+                    ) throws SQLException {
+                        ((CallableStatement) stmt)
+                            .registerOutParameter(2, Types.VARCHAR);
+                    }
+                }
+             )
+            .call(new StoredProcedureOutcome<Object[]>(new int[] {2}));
+        MatcherAssert.assertThat(result.length, Matchers.is(1));
+        MatcherAssert.assertThat(
+            result[0].toString(),
+            Matchers.containsString("Polo")
+        );
     }
 
     /**

@@ -106,6 +106,7 @@ import lombok.ToString;
  * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 0.1.8
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  */
 @ToString
 @EqualsAndHashCode(of = { "source", "connection", "args", "auto", "query" })
@@ -304,6 +305,25 @@ public final class JdbcSession {
         return this.run(
             outcome,
             new Connect.WithKeys(this.query),
+            Request.EXECUTE_UPDATE
+        );
+    }
+
+    /**
+     * Call an SQL stored procedure.
+     *
+     * <p>JDBC connection is opened and, optionally, closed by this method.
+     *
+     * @param <T> Type of result expected
+     * @param outcome Outcome of the operation
+     * @return This object
+     * @throws SQLException If fails
+     */
+    public <T> T call(final Outcome<T> outcome)
+        throws SQLException {
+        return this.run(
+            outcome,
+            new Connect.Call(this.query),
             Request.EXECUTE_UPDATE
         );
     }
