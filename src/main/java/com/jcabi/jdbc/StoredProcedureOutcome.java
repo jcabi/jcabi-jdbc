@@ -81,7 +81,7 @@ public final class StoredProcedureOutcome<T> implements Outcome<T> {
     public StoredProcedureOutcome(final int... opidx) {
         if (opidx == null || opidx.length == 0) {
             throw new IllegalArgumentException(
-                "At least 1 OUT param's index nees to be specified!"
+                "At least 1 OUT param's index needs to be specified!"
             );
         }
         final int size = opidx.length;
