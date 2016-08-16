@@ -47,7 +47,6 @@ import org.junit.Test;
  * Integration case for {@link JdbcSession}.
  * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
- * @checkstyle StringLiteralsConcatenationCheck (300 lines)
  */
 public final class JdbcSessionITCase {
 
