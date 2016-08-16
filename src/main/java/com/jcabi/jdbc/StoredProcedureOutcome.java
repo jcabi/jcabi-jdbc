@@ -41,35 +41,35 @@ import lombok.ToString;
  * Outcome of a stored procedure with OUT parameters.
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
- * @since 0.7
+ * @since 0.17
  * @param <T> Type of items
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = { "outpidx" })
+@EqualsAndHashCode(of = "indexes")
 public final class StoredProcedureOutcome<T> implements Outcome<T> {
 
     /**
-     * Indexes of the OUT params.
+     * OUT parameters' indexes.
      */
     @Immutable.Array
-    private final transient int[] outpidx;
+    private final transient int[] indexes;
 
     /**
      * Ctor.
-     * @param nrop Number of OUT params. Has to be > 0.
+     * @param nrofparams Number of OUT params. Has to be > 0.
      *  If this ctor is used, it is assumed that the OUT parameters
      *  are from index 1 to including nrop.
      */
-    public StoredProcedureOutcome(final int nrop) {
-        if (nrop <= 0) {
+    public StoredProcedureOutcome(final int nrofparams) {
+        if (nrofparams <= 0) {
             throw new IllegalArgumentException(
                 "Nr of out params has to be a positive int!"
             );
         }
-        this.outpidx = new int[nrop];
-        for (int idx = 0; idx < nrop; ++idx) {
-            this.outpidx[idx] = idx + 1;
+        this.indexes = new int[nrofparams];
+        for (int idx = 0; idx < nrofparams; ++idx) {
+            this.indexes[idx] = idx + 1;
         }
     }
 
@@ -79,29 +79,28 @@ public final class StoredProcedureOutcome<T> implements Outcome<T> {
      *  <b>Index count starts from 1</b>.
      */
     public StoredProcedureOutcome(final int... opidx) {
-        if (opidx == null || opidx.length == 0) {
+        if (opidx.length == 0) {
             throw new IllegalArgumentException(
                 "At least 1 OUT param's index needs to be specified!"
             );
         }
         final int size = opidx.length;
-        this.outpidx = new int[size];
+        this.indexes = new int[size];
         for (int idx = 0; idx < size; ++idx) {
-            this.outpidx[idx] = opidx[idx];
+            this.indexes[idx] = opidx[idx];
         }
     }
 
     @Override
     @SuppressWarnings("unchecked")
     public T handle(
-        final ResultSet rset, final Statement stmt
-    ) throws SQLException {
-        final int nrop = this.outpidx.length;
-        final Object[] outs = new Object[nrop];
+        final ResultSet rset, final Statement stmt) throws SQLException {
+        final int nroutparams = this.indexes.length;
+        final Object[] outs = new Object[nroutparams];
         if (stmt instanceof CallableStatement) {
-            for (int idx = 0; idx < nrop; ++idx) {
+            for (int idx = 0; idx < nroutparams; ++idx) {
                 outs[idx] = ((CallableStatement) stmt).getObject(
-                    this.outpidx[idx]
+                    this.indexes[idx]
                 );
             }
         }

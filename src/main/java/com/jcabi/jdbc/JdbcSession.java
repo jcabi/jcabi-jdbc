@@ -107,6 +107,8 @@ import lombok.ToString;
  * @version $Id$
  * @since 0.1.8
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
+ * @todo #51:1h Refactor this class to avoid too much coupling.
+ *  For instance, CRUD operations could be performed by another class.
  */
 @ToString
 @EqualsAndHashCode(of = { "source", "connection", "args", "auto", "query" })
@@ -316,15 +318,13 @@ public final class JdbcSession {
      *
      * @param <T> Type of result expected
      * @param outcome Outcome of the operation
-     * @return This object
+     * @return Result of type T
      * @throws SQLException If fails
      */
     public <T> T call(final Outcome<T> outcome)
         throws SQLException {
         return this.run(
-            outcome,
-            new Connect.Call(this.query),
-            Request.EXECUTE_UPDATE
+            outcome, new Connect.Call(this.query), Request.EXECUTE_UPDATE
         );
     }
 

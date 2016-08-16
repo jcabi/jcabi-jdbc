@@ -36,6 +36,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
 import javax.sql.DataSource;
+import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assume;
@@ -109,9 +110,11 @@ public final class JdbcSessionITCase {
             "CREATE TABLE IF NOT EXISTS users (name VARCHAR(50))"
         ).execute().sql("INSERT INTO users (name) VALUES (?)")
         .set("Jeff Charles").execute().sql(
-            "CREATE OR REPLACE FUNCTION getUser(username OUT text)"
-            + " AS $$ BEGIN SELECT name INTO username from  users; END;"
-            + " $$ LANGUAGE plpgsql;"
+            StringUtils.join(
+                "CREATE OR REPLACE FUNCTION getUser(username OUT text)",
+                " AS $$ BEGIN SELECT name INTO username from  users; END;",
+                " $$ LANGUAGE plpgsql;"
+            )
         ).execute().commit();
         final Object[] result = new JdbcSession(dsrc)
             .sql("{call getUser(?)}")
@@ -119,8 +122,7 @@ public final class JdbcSessionITCase {
                 new Preparation() {
                     @Override
                     public void prepare(
-                        final PreparedStatement stmt
-                    ) throws SQLException {
+                        final PreparedStatement stmt) throws SQLException {
                         ((CallableStatement) stmt)
                             .registerOutParameter(1, Types.VARCHAR);
                     }
@@ -146,10 +148,12 @@ public final class JdbcSessionITCase {
             "CREATE TABLE IF NOT EXISTS usersid (id INTEGER, name VARCHAR(50))"
         ).execute().sql("INSERT INTO usersid (id, name) VALUES (?, ?)")
         .set(1).set("Marco Polo").execute().sql(
-            "CREATE OR REPLACE FUNCTION getUserById(uid IN INTEGER,"
-            + " usrnm OUT text) AS $$ BEGIN"
-            + " SELECT name INTO usrnm FROM  usersid WHERE id=uid;"
-            + " END; $$ LANGUAGE plpgsql;"
+            StringUtils.join(
+                "CREATE OR REPLACE FUNCTION getUserById(uid IN INTEGER,",
+                " usrnm OUT text) AS $$ BEGIN",
+                " SELECT name INTO usrnm FROM  usersid WHERE id=uid;",
+                " END; $$ LANGUAGE plpgsql;"
+            )
         ).execute().commit();
         final Object[] result = new JdbcSession(dsrc)
             .sql("{call getUserById(?, ?)}")
@@ -158,8 +162,7 @@ public final class JdbcSessionITCase {
                 new Preparation() {
                     @Override
                     public void prepare(
-                        final PreparedStatement stmt
-                    ) throws SQLException {
+                        final PreparedStatement stmt) throws SQLException {
                         ((CallableStatement) stmt)
                             .registerOutParameter(2, Types.VARCHAR);
                     }
