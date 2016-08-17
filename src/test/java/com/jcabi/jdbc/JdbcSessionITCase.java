@@ -110,13 +110,13 @@ public final class JdbcSessionITCase {
         ).execute().sql("INSERT INTO users (name) VALUES (?)")
         .set("Jeff Charles").execute().sql(
             StringUtils.join(
-                "CREATE OR REPLACE FUNCTION user(username OUT text)",
+                "CREATE OR REPLACE FUNCTION fetchUser(username OUT text)",
                 " AS $$ BEGIN SELECT name INTO username from  users; END;",
                 " $$ LANGUAGE plpgsql;"
             )
         ).execute().commit();
         final Object[] result = new JdbcSession(dsrc)
-            .sql("{call user(?)}")
+            .sql("{call fetchUser(?)}")
             .prepare(
                 new Preparation() {
                     @Override
@@ -148,14 +148,14 @@ public final class JdbcSessionITCase {
         ).execute().sql("INSERT INTO usersid (id, name) VALUES (?, ?)")
         .set(1).set("Marco Polo").execute().sql(
             StringUtils.join(
-                "CREATE OR REPLACE FUNCTION userById(uid IN INTEGER,",
+                "CREATE OR REPLACE FUNCTION fetchUserById(uid IN INTEGER,",
                 " usrnm OUT text) AS $$ BEGIN",
                 " SELECT name INTO usrnm FROM  usersid WHERE id=uid;",
                 " END; $$ LANGUAGE plpgsql;"
             )
         ).execute().commit();
         final Object[] result = new JdbcSession(dsrc)
-            .sql("{call userById(?, ?)}")
+            .sql("{call fetchUserById(?, ?)}")
             .set(1)
             .prepare(
                 new Preparation() {
