@@ -107,8 +107,9 @@ import lombok.ToString;
  * @version $Id$
  * @since 0.1.8
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
- * @todo #51:1h Refactor this class to avoid too much coupling.
+ * @todo #51:30min Refactor this class to avoid too much coupling.
  *  For instance, CRUD operations could be performed by another class.
+ *  Don't forget to remove the suppressions that become obsolete afterwards.
  */
 @ToString
 @EqualsAndHashCode(of = { "source", "connection", "args", "auto", "query" })

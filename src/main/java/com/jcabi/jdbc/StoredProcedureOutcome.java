@@ -57,37 +57,37 @@ public final class StoredProcedureOutcome<T> implements Outcome<T> {
 
     /**
      * Ctor.
-     * @param nrofparams Number of OUT params. Has to be > 0.
+     * @param params Number of OUT params. Has to be > 0.
      *  If this ctor is used, it is assumed that the OUT parameters
      *  are from index 1 to including nrop.
      */
-    public StoredProcedureOutcome(final int nrofparams) {
-        if (nrofparams <= 0) {
+    public StoredProcedureOutcome(final int params) {
+        if (params <= 0) {
             throw new IllegalArgumentException(
                 "Nr of out params has to be a positive int!"
             );
         }
-        this.indexes = new int[nrofparams];
-        for (int idx = 0; idx < nrofparams; ++idx) {
+        this.indexes = new int[params];
+        for (int idx = 0; idx < params; ++idx) {
             this.indexes[idx] = idx + 1;
         }
     }
 
     /**
      * Ctor.
-     * @param opidx Indexes of the OUT params.
+     * @param indexes Indexes of the OUT params.
      *  <b>Index count starts from 1</b>.
      */
-    public StoredProcedureOutcome(final int... opidx) {
-        if (opidx.length == 0) {
+    public StoredProcedureOutcome(final int... indexes) {
+        if (indexes.length == 0) {
             throw new IllegalArgumentException(
                 "At least 1 OUT param's index needs to be specified!"
             );
         }
-        final int size = opidx.length;
+        final int size = indexes.length;
         this.indexes = new int[size];
         for (int idx = 0; idx < size; ++idx) {
-            this.indexes[idx] = opidx[idx];
+            this.indexes[idx] = indexes[idx];
         }
     }
 
@@ -95,10 +95,10 @@ public final class StoredProcedureOutcome<T> implements Outcome<T> {
     @SuppressWarnings("unchecked")
     public T handle(
         final ResultSet rset, final Statement stmt) throws SQLException {
-        final int nroutparams = this.indexes.length;
-        final Object[] outs = new Object[nroutparams];
+        final int params = this.indexes.length;
+        final Object[] outs = new Object[params];
         if (stmt instanceof CallableStatement) {
-            for (int idx = 0; idx < nroutparams; ++idx) {
+            for (int idx = 0; idx < params; ++idx) {
                 outs[idx] = ((CallableStatement) stmt).getObject(
                     this.indexes[idx]
                 );
