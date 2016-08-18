@@ -42,7 +42,7 @@ import lombok.ToString;
  * @author Mihai Andronache (amihaiemil@gmail.com)
  * @version $Id$
  * @since 0.17
- * @param <T> Type of items
+ * @param <T> Type of the returned result, which <b>has to be</b> Object[]
  */
 @Immutable
 @ToString
@@ -91,6 +91,10 @@ public final class StoredProcedureOutcome<T> implements Outcome<T> {
         }
     }
 
+    /**
+     * Handles the OUT parameter(s) of a stored procedure call and returns
+     * them as <b>Object[]</b>. Therefore, T has to be <b>Object[]</b>.
+     */
     @Override
     @SuppressWarnings("unchecked")
     public T handle(

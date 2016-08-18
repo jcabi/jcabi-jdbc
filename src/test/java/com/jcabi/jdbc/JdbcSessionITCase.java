@@ -35,6 +35,7 @@ import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
+import java.util.Date;
 import javax.sql.DataSource;
 import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.MatcherAssert;
@@ -104,34 +105,41 @@ public final class JdbcSessionITCase {
      */
     @Test
     public void callsFunctionWithOutParam() throws Exception {
-        final DataSource dsrc = JdbcSessionITCase.source();
-        new JdbcSession(dsrc).autocommit(false).sql(
+        final DataSource source = JdbcSessionITCase.source();
+        new JdbcSession(source).autocommit(false).sql(
             "CREATE TABLE IF NOT EXISTS users (name VARCHAR(50))"
         ).execute().sql("INSERT INTO users (name) VALUES (?)")
         .set("Jeff Charles").execute().sql(
             StringUtils.join(
-                "CREATE OR REPLACE FUNCTION fetchUser(username OUT text)",
-                " AS $$ BEGIN SELECT name INTO username from  users; END;",
-                " $$ LANGUAGE plpgsql;"
+                "CREATE OR REPLACE FUNCTION fetchUser(username OUT text,",
+                " day OUT date)",
+                " AS $$ BEGIN SELECT name, CURRENT_DATE INTO username, day",
+                " FROM  users; END; $$ LANGUAGE plpgsql;"
             )
         ).execute().commit();
-        final Object[] result = new JdbcSession(dsrc)
-            .sql("{call fetchUser(?)}")
+        final Object[] result = new JdbcSession(source)
+            .sql("{call fetchUser(?, ?)}")
             .prepare(
                 new Preparation() {
                     @Override
                     public void prepare(
                         final PreparedStatement stmt) throws SQLException {
-                        ((CallableStatement) stmt)
-                            .registerOutParameter(1, Types.VARCHAR);
+                            final CallableStatement cstmt =
+                                (CallableStatement) stmt;
+                            cstmt.registerOutParameter(1, Types.VARCHAR);
+                            cstmt.registerOutParameter(2, Types.DATE);
                     }
                 }
              )
-            .call(new StoredProcedureOutcome<Object[]>(1));
-        MatcherAssert.assertThat(result.length, Matchers.is(1));
+            .call(new StoredProcedureOutcome<Object[]>(2));
+        MatcherAssert.assertThat(result.length, Matchers.is(2));
         MatcherAssert.assertThat(
             result[0].toString(),
             Matchers.containsString("Charles")
+        );
+        MatcherAssert.assertThat(
+            (Date) result[1],
+            Matchers.notNullValue()
         );
     }
 
@@ -142,8 +150,8 @@ public final class JdbcSessionITCase {
      */
     @Test
     public void callsFunctionWithInOutParam() throws Exception {
-        final DataSource dsrc = JdbcSessionITCase.source();
-        new JdbcSession(dsrc).autocommit(false).sql(
+        final DataSource source = JdbcSessionITCase.source();
+        new JdbcSession(source).autocommit(false).sql(
             "CREATE TABLE IF NOT EXISTS usersid (id INTEGER, name VARCHAR(50))"
         ).execute().sql("INSERT INTO usersid (id, name) VALUES (?, ?)")
         .set(1).set("Marco Polo").execute().sql(
@@ -154,7 +162,7 @@ public final class JdbcSessionITCase {
                 " END; $$ LANGUAGE plpgsql;"
             )
         ).execute().commit();
-        final Object[] result = new JdbcSession(dsrc)
+        final Object[] result = new JdbcSession(source)
             .sql("{call fetchUserById(?, ?)}")
             .set(1)
             .prepare(
