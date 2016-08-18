@@ -315,7 +315,10 @@ public final class JdbcSession {
     /**
      * Call an SQL stored procedure.
      *
-     * <p>JDBC connection is opened and, optionally, closed by this method.
+     * <p>JDBC connection is opened and, optionally, commited by this
+     * method, depending on the <b>autocommit</b> class attribute:
+     * if it's value is true, the connection will be commited after
+     * this call.
      *
      * @param <T> Type of result expected
      * @param outcome Outcome of the operation
