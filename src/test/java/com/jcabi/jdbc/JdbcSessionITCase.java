@@ -122,8 +122,9 @@ public final class JdbcSessionITCase {
             .prepare(
                 new Preparation() {
                     @Override
-                    public void prepare(
-                        final PreparedStatement stmt) throws SQLException {
+                    public void
+                        prepare(final PreparedStatement stmt)
+                        throws SQLException {
                             final CallableStatement cstmt =
                                 (CallableStatement) stmt;
                             cstmt.registerOutParameter(1, Types.VARCHAR);
@@ -168,10 +169,11 @@ public final class JdbcSessionITCase {
             .prepare(
                 new Preparation() {
                     @Override
-                    public void prepare(
-                        final PreparedStatement stmt) throws SQLException {
-                        ((CallableStatement) stmt)
-                            .registerOutParameter(2, Types.VARCHAR);
+                    public void
+                        prepare(final PreparedStatement stmt)
+                        throws SQLException {
+                            ((CallableStatement) stmt)
+                                .registerOutParameter(2, Types.VARCHAR);
                     }
                 }
              )

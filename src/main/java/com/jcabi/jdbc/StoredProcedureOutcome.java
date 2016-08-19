@@ -91,10 +91,6 @@ public final class StoredProcedureOutcome<T> implements Outcome<T> {
         }
     }
 
-    /**
-     * Handles the OUT parameter(s) of a stored procedure call and returns
-     * them as <b>Object[]</b>. Therefore, T has to be <b>Object[]</b>.
-     */
     @Override
     @SuppressWarnings("unchecked")
     public T handle(
