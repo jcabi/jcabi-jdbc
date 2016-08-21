@@ -57,24 +57,6 @@ public final class StoredProcedureOutcome<T> implements Outcome<T> {
 
     /**
      * Ctor.
-     * @param params Number of OUT params. Has to be > 0.
-     *  If this ctor is used, it is assumed that the OUT parameters
-     *  are from index 1 to including nrop.
-     */
-    public StoredProcedureOutcome(final int params) {
-        if (params <= 0) {
-            throw new IllegalArgumentException(
-                "Nr of out params has to be a positive int!"
-            );
-        }
-        this.indexes = new int[params];
-        for (int idx = 0; idx < params; ++idx) {
-            this.indexes[idx] = idx + 1;
-        }
-    }
-
-    /**
-     * Ctor.
      * @param indexes Indexes of the OUT params.
      *  <b>Index count starts from 1</b>.
      */
@@ -93,8 +75,8 @@ public final class StoredProcedureOutcome<T> implements Outcome<T> {
 
     @Override
     @SuppressWarnings("unchecked")
-    public T handle(
-        final ResultSet rset, final Statement stmt) throws SQLException {
+    public T handle(final ResultSet rset, final Statement stmt)
+        throws SQLException {
         final int params = this.indexes.length;
         final Object[] outs = new Object[params];
         if (stmt instanceof CallableStatement) {

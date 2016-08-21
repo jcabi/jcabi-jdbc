@@ -114,7 +114,7 @@ public final class JdbcSessionITCase {
                 "CREATE OR REPLACE FUNCTION fetchUser(username OUT text,",
                 " day OUT date)",
                 " AS $$ BEGIN SELECT name, CURRENT_DATE INTO username, day",
-                " FROM  users; END; $$ LANGUAGE plpgsql;"
+                " FROM users; END; $$ LANGUAGE plpgsql;"
             )
         ).execute().commit();
         final Object[] result = new JdbcSession(source)
@@ -132,7 +132,7 @@ public final class JdbcSessionITCase {
                     }
                 }
              )
-            .call(new StoredProcedureOutcome<Object[]>(2));
+            .call(new StoredProcedureOutcome<Object[]>(1, 2));
         MatcherAssert.assertThat(result.length, Matchers.is(2));
         MatcherAssert.assertThat(
             result[0].toString(),
@@ -153,13 +153,13 @@ public final class JdbcSessionITCase {
     public void callsFunctionWithInOutParam() throws Exception {
         final DataSource source = JdbcSessionITCase.source();
         new JdbcSession(source).autocommit(false).sql(
-            "CREATE TABLE IF NOT EXISTS usersid (id INTEGER, name VARCHAR(50))"
-        ).execute().sql("INSERT INTO usersid (id, name) VALUES (?, ?)")
+            "CREATE TABLE IF NOT EXISTS usersids (id INTEGER, name VARCHAR(50))"
+        ).execute().sql("INSERT INTO usersids (id, name) VALUES (?, ?)")
         .set(1).set("Marco Polo").execute().sql(
             StringUtils.join(
                 "CREATE OR REPLACE FUNCTION fetchUserById(uid IN INTEGER,",
                 " usrnm OUT text) AS $$ BEGIN",
-                " SELECT name INTO usrnm FROM  usersid WHERE id=uid;",
+                " SELECT name INTO usrnm FROM  usersids WHERE id=uid;",
                 " END; $$ LANGUAGE plpgsql;"
             )
         ).execute().commit();
@@ -177,7 +177,7 @@ public final class JdbcSessionITCase {
                     }
                 }
              )
-            .call(new StoredProcedureOutcome<Object[]>(new int[] {2}));
+            .call(new StoredProcedureOutcome<Object[]>(2));
         MatcherAssert.assertThat(result.length, Matchers.is(1));
         MatcherAssert.assertThat(
             result[0].toString(),
