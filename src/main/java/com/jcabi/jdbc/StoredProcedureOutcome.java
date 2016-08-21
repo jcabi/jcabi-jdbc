@@ -46,7 +46,7 @@ import lombok.ToString;
  */
 @Immutable
 @ToString
-@EqualsAndHashCode(of = "indexes")
+@EqualsAndHashCode
 public final class StoredProcedureOutcome<T> implements Outcome<T> {
 
     /**

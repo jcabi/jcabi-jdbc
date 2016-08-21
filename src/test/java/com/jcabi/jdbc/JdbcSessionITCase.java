@@ -159,7 +159,7 @@ public final class JdbcSessionITCase {
             StringUtils.join(
                 "CREATE OR REPLACE FUNCTION fetchUserById(uid IN INTEGER,",
                 " usrnm OUT text) AS $$ BEGIN",
-                " SELECT name INTO usrnm FROM  usersids WHERE id=uid;",
+                " SELECT name INTO usrnm FROM usersids WHERE id=uid;",
                 " END; $$ LANGUAGE plpgsql;"
             )
         ).execute().commit();
