@@ -10,7 +10,7 @@ assets:
   s3cfg: yegor256/home#assets/s3cfg
 merge:
   script: |-
-    mvn clean install site -Psite -Pqulice --errors --settings ../settings.xml
+    mvn clean install site -Psite -P!coveralls -Pqulice --errors --settings ../settings.xml
     mvn clean
     pdd --source=$(pwd) --verbose --file=/dev/null
   commanders:
