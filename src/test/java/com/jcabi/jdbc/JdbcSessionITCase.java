@@ -31,7 +31,15 @@ package com.jcabi.jdbc;
 
 import com.jcabi.aspects.Tv;
 import com.jolbox.bonecp.BoneCPDataSource;
+import java.sql.CallableStatement;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.sql.Types;
+import java.util.Date;
 import javax.sql.DataSource;
+import org.apache.commons.lang3.StringUtils;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.Assume;
 import org.junit.Before;
 import org.junit.Test;
@@ -88,6 +96,93 @@ public final class JdbcSessionITCase {
     public void changesTransactionIsolationLevel() throws Exception {
         final DataSource source = JdbcSessionITCase.source();
         new JdbcSession(source).sql("VACUUM").execute();
+    }
+
+    /**
+     * JdbcSession can run a function (stored procedure) with
+     * output parameters.
+     * @throws Exception If something goes wrong
+     */
+    @Test
+    public void callsFunctionWithOutParam() throws Exception {
+        final DataSource source = JdbcSessionITCase.source();
+        new JdbcSession(source).autocommit(false).sql(
+            "CREATE TABLE IF NOT EXISTS users (name VARCHAR(50))"
+        ).execute().sql("INSERT INTO users (name) VALUES (?)")
+        .set("Jeff Charles").execute().sql(
+            StringUtils.join(
+                "CREATE OR REPLACE FUNCTION fetchUser(username OUT text,",
+                " day OUT date)",
+                " AS $$ BEGIN SELECT name, CURRENT_DATE INTO username, day",
+                " FROM users; END; $$ LANGUAGE plpgsql;"
+            )
+        ).execute().commit();
+        final Object[] result = new JdbcSession(source)
+            .sql("{call fetchUser(?, ?)}")
+            .prepare(
+                new Preparation() {
+                    @Override
+                    public void
+                        prepare(final PreparedStatement stmt)
+                        throws SQLException {
+                            final CallableStatement cstmt =
+                                (CallableStatement) stmt;
+                            cstmt.registerOutParameter(1, Types.VARCHAR);
+                            cstmt.registerOutParameter(2, Types.DATE);
+                    }
+                }
+             )
+            .call(new StoredProcedureOutcome<Object[]>(1, 2));
+        MatcherAssert.assertThat(result.length, Matchers.is(2));
+        MatcherAssert.assertThat(
+            result[0].toString(),
+            Matchers.containsString("Charles")
+        );
+        MatcherAssert.assertThat(
+            (Date) result[1],
+            Matchers.notNullValue()
+        );
+    }
+
+    /**
+     * JdbcSession can run a function (stored procedure) with
+     * input and output parameters.
+     * @throws Exception If something goes wrong
+     */
+    @Test
+    public void callsFunctionWithInOutParam() throws Exception {
+        final DataSource source = JdbcSessionITCase.source();
+        new JdbcSession(source).autocommit(false).sql(
+            "CREATE TABLE IF NOT EXISTS usersids (id INTEGER, name VARCHAR(50))"
+        ).execute().sql("INSERT INTO usersids (id, name) VALUES (?, ?)")
+        .set(1).set("Marco Polo").execute().sql(
+            StringUtils.join(
+                "CREATE OR REPLACE FUNCTION fetchUserById(uid IN INTEGER,",
+                " usrnm OUT text) AS $$ BEGIN",
+                " SELECT name INTO usrnm FROM usersids WHERE id=uid;",
+                " END; $$ LANGUAGE plpgsql;"
+            )
+        ).execute().commit();
+        final Object[] result = new JdbcSession(source)
+            .sql("{call fetchUserById(?, ?)}")
+            .set(1)
+            .prepare(
+                new Preparation() {
+                    @Override
+                    public void
+                        prepare(final PreparedStatement stmt)
+                        throws SQLException {
+                            ((CallableStatement) stmt)
+                                .registerOutParameter(2, Types.VARCHAR);
+                    }
+                }
+             )
+            .call(new StoredProcedureOutcome<Object[]>(2));
+        MatcherAssert.assertThat(result.length, Matchers.is(1));
+        MatcherAssert.assertThat(
+            result[0].toString(),
+            Matchers.containsString("Polo")
+        );
     }
 
     /**

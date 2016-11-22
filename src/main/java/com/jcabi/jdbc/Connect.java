@@ -54,14 +54,43 @@ interface Connect {
     PreparedStatement open(Connection conn) throws SQLException;
 
     /**
+     * Connect which opens a <b>CallableStatement</b>, which
+     * is used for calling stored procedures.
+     */
+    final class Call implements Connect {
+
+        /**
+         * SQL function call.
+         */
+        private final String sql;
+
+        /**
+         * Ctor.
+         * @param query Query
+         */
+        public Call(final String query) {
+            this.sql = query;
+        }
+
+        @Override
+        public PreparedStatement open(final Connection conn)
+            throws SQLException {
+            return conn.prepareCall(this.sql);
+        }
+
+    }
+
+    /**
      * Plain, without keys.
      */
     @Immutable
     final class Plain implements Connect {
+
         /**
          * SQL query.
          */
         private final transient String sql;
+
         /**
          * Ctor.
          * @param query Query
@@ -69,6 +98,7 @@ interface Connect {
         public Plain(final String query) {
             this.sql = query;
         }
+
         @Override
         public PreparedStatement open(final Connection conn)
             throws SQLException {
@@ -81,10 +111,12 @@ interface Connect {
      */
     @Immutable
     final class WithKeys implements Connect {
+
         /**
          * SQL query.
          */
         private final transient String sql;
+
         /**
          * Ctor.
          * @param query Query
@@ -92,6 +124,7 @@ interface Connect {
         public WithKeys(final String query) {
             this.sql = query;
         }
+
         @Override
         public PreparedStatement open(final Connection conn)
             throws SQLException {
@@ -100,6 +133,7 @@ interface Connect {
                 Statement.RETURN_GENERATED_KEYS
             );
         }
+
     }
 
 }

@@ -106,6 +106,10 @@ import lombok.ToString;
  * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
  * @since 0.1.8
+ * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
+ * @todo #51:30min Refactor this class to avoid too much coupling.
+ *  For instance, CRUD operations could be performed by another class.
+ *  Don't forget to remove the suppressions that become obsolete afterwards.
  */
 @ToString
 @EqualsAndHashCode(of = { "source", "connection", "args", "auto", "query" })
@@ -305,6 +309,26 @@ public final class JdbcSession {
             outcome,
             new Connect.WithKeys(this.query),
             Request.EXECUTE_UPDATE
+        );
+    }
+
+    /**
+     * Call an SQL stored procedure.
+     *
+     * <p>JDBC connection is opened and, optionally, commited by this
+     * method, depending on the <b>autocommit</b> class attribute:
+     * if it's value is true, the connection will be commited after
+     * this call.
+     *
+     * @param <T> Type of result expected
+     * @param outcome Outcome of the operation
+     * @return Result of type T
+     * @throws SQLException If fails
+     */
+    public <T> T call(final Outcome<T> outcome)
+        throws SQLException {
+        return this.run(
+            outcome, new Connect.Call(this.query), Request.EXECUTE_UPDATE
         );
     }
 
