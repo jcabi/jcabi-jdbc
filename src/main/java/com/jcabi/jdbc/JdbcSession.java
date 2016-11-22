@@ -100,7 +100,38 @@ import lombok.ToString;
  *   .autocommit(false)
  *   .sql("SHUTDOWN COMPACT")
  *   .execute();</pre>
- *
+ * 
+ * <b>IMPORTANT:</b>
+ * <p>If you rely on one specific {@link Connection} instance, be careful if
+ * you are using it in more places, especially if more references of this class
+ * use it - one of those references might close the connection if you forget
+ * to call {@link #autocommit(false)}
+ * </p>
+ * <b>E.g.</b>
+ * <pre>
+ * Connection connection = [...];
+ * DataSource ds = new StaticSource(connection);
+ * new JdbcSession(ds)
+ *  .sql("SQL STATEMENT")
+ *  .execute();
+ * new JdbcSession(ds)
+ *  .sql("SQL STATEMENT 2")
+ *  .execute();</pre>
+ * <p>The above example will <b>fail</b> because the first JdbcSession closes
+ * the connection, and the next one tries to work with it closed. In order to 
+ * not have this failure, the first session has to call
+ * {@link #autocommit(false)}, like this:
+ * </p>
+ * <pre>
+ * Connection connection = [...];
+ * DataSource ds = new StaticSource(connection);
+ * new JdbcSession(ds)
+ *  <b>.autocommit(false)</b>
+ *  .sql("SQL STATEMENT")
+ *  .execute();
+ * new JdbcSession(ds)
+ *  .sql("SQL STATEMENT 2")
+ *  .execute();</pre>
  * <p>This class is thread-safe.
  *
  * @author Yegor Bugayenko (yegor@teamed.io)
@@ -149,7 +180,11 @@ public final class JdbcSession {
     private transient String query;
 
     /**
-     * Public ctor.
+     * Public ctor.<br><br>
+     * If all you have is a {@link Connection}, wrap it inside our
+     * {@link StaticSource}, but make sure you understand the autocommit
+     * mechanism we have in place here. Read the class' javadoc (especially the
+     * last paragrapgh, marked with <b>IMPORTANT</b>).
      * @param src Data source
      */
     public JdbcSession(final DataSource src) {

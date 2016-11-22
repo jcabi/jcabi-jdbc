@@ -37,7 +37,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Static data source.
+ * Static data source which wraps a single {@link Connection}
  *
  * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$
@@ -45,7 +45,7 @@ import lombok.ToString;
  */
 @ToString
 @EqualsAndHashCode(of = "conn")
-final class StaticSource implements DataSource {
+public final class StaticSource implements DataSource {
 
     /**
      * The connection.
@@ -56,7 +56,7 @@ final class StaticSource implements DataSource {
      * Public ctor.
      * @param cnx Connection
      */
-    StaticSource(final Connection cnx) {
+    public StaticSource(final Connection cnx) {
         this.conn = cnx;
     }
 
