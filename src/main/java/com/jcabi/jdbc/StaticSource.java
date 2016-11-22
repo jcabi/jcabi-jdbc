@@ -37,7 +37,7 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 /**
- * Static data source which wraps a single {@link Connection}
+ * Static data source which wraps a single {@link Connection}.
  *
  * @author Yegor Bugayenko (yegor@teamed.io)
  * @version $Id$

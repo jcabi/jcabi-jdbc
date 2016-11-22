@@ -100,7 +100,7 @@ import lombok.ToString;
  *   .autocommit(false)
  *   .sql("SHUTDOWN COMPACT")
  *   .execute();</pre>
- * 
+ *
  * <b>IMPORTANT:</b>
  * <p>If you rely on one specific {@link Connection} instance, be careful if
  * you are using it in more places, especially if more references of this class
@@ -118,7 +118,7 @@ import lombok.ToString;
  *  .sql("SQL STATEMENT 2")
  *  .execute();</pre>
  * <p>The above example will <b>fail</b> because the first JdbcSession closes
- * the connection, and the next one tries to work with it closed. In order to 
+ * the connection, and the next one tries to work with it closed. In order to
  * not have this failure, the first session has to call
  * {@link #autocommit(false)}, like this:
  * </p>
