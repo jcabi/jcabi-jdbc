@@ -4,7 +4,7 @@
 [![DevOps By Rultor.com](http://www.rultor.com/b/jcabi/jcabi-jdbc)](http://www.rultor.com/p/jcabi/jcabi-jdbc)
 
 [![Build Status](https://travis-ci.org/jcabi/jcabi-jdbc.svg?branch=master)](https://travis-ci.org/jcabi/jcabi-jdbc)
-[![PDD status](http://www.0pdd.com/svg?name=jcabi/jcabi-jdbc)](http://www.0pdd.com/p?name=teamed/jcabi/jcabi-jdbc)
+[![PDD status](http://www.0pdd.com/svg?name=jcabi/jcabi-jdbc)](http://www.0pdd.com/p?name=jcabi/jcabi-jdbc)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.jcabi/jcabi-jdbc/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.jcabi/jcabi-jdbc)
 [![JavaDoc](https://img.shields.io/badge/javadoc-html-blue.svg)](http://www.javadoc.io/doc/com.jcabi/jcabi-jdbc)
 [![Coverage Status](https://coveralls.io/repos/jcabi/jcabi-jdbc/badge.svg?branch=__rultor&service=github)](https://coveralls.io/github/jcabi/jcabi-jdbc?branch=__rultor)
