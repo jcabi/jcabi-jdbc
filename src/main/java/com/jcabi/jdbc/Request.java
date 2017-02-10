@@ -51,8 +51,13 @@ interface Request {
         @Override
         public ResultSet fetch(final PreparedStatement stmt)
             throws SQLException {
-            stmt.execute();
-            return stmt.getGeneratedKeys();
+            boolean isResultSet = stmt.execute();
+            if (isResultSet || !isResultSet && stmt.getUpdateCount() > 0) {
+                return stmt.getGeneratedKeys();
+            }
+            else {
+                return new EmptyResultSet();
+            }
         }
     };
 
