@@ -64,6 +64,9 @@
     <properties>
         <failsafe.pgsql.user>test</failsafe.pgsql.user>
         <failsafe.pgsql.password>test</failsafe.pgsql.password>
+
+        <failsafe.mysql.user>root</failsafe.mysql.user>
+        <failsafe.mysql.pass>root</failsafe.mysql.pass>
     </properties>
     <dependencies>
         <dependency>
@@ -102,6 +105,12 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>6.0.5</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>com.jolbox</groupId>
             <artifactId>bonecp</artifactId>
             <version>0.8.0.RELEASE</version>
@@ -128,6 +137,7 @@
                         <configuration>
                             <portNames>
                                 <portName>failsafe.pgsql.port</portName>
+                                <portName>failsafe.mysql.port</portName>
                             </portNames>
                         </configuration>
                     </execution>
@@ -140,6 +150,10 @@
                         <failsafe.pgsql.jdbc>jdbc:postgresql://localhost:${failsafe.pgsql.port}/test</failsafe.pgsql.jdbc>
                         <failsafe.pgsql.user>${failsafe.pgsql.user}</failsafe.pgsql.user>
                         <failsafe.pgsql.password>${failsafe.pgsql.password}</failsafe.pgsql.password>
+
+                        <failsafe.mysql.jdbc>jdbc:mysql://localhost:${failsafe.mysql.port}/test</failsafe.mysql.jdbc>
+                        <failsafe.mysql.user>${failsafe.mysql.user}</failsafe.mysql.user>
+                        <failsafe.mysql.pass>${failsafe.mysql.pass}</failsafe.mysql.pass>
                     </systemPropertyVariables>
                 </configuration>
                 <executions>
@@ -181,6 +195,25 @@
                         <goals>
                             <goal>stop</goal>
                         </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>com.jcabi</groupId>
+                <artifactId>jcabi-mysql-maven-plugin</artifactId>
+                <version>0.8.2</version>
+                <executions>
+                    <execution>
+                        <id>mysql-test</id>
+                        <goals>
+                            <goal>classify</goal>
+                            <goal>start</goal>
+                            <goal>stop</goal>
+                        </goals>
+                        <configuration>
+                            <port>${failsafe.mysql.port}</port>
+                            <data>${project.build.directory}/mysql-data</data>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -277,6 +310,26 @@
                                     </artifactItems>
                                 </configuration>
                             </execution>
+                            <execution>
+                                <id>unpack-mysql-osx</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>com.jcabi</groupId>
+                                            <artifactId>mysql-dist</artifactId>
+                                            <version>5.6.21</version>
+                                            <classifier>${mysql.classifier}</classifier>
+                                            <type>zip</type>
+                                            <overWrite>true</overWrite>
+                                            <outputDirectory>${project.build.directory}/mysql-dist</outputDirectory>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
                         </executions>
                     </plugin>
                 </plugins>
@@ -311,6 +364,26 @@
                                             <type>${postgresql-dist.type}</type>
                                             <overWrite>true</overWrite>
                                             <outputDirectory>${project.build.directory}</outputDirectory>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>unpack-mysql-linux</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>com.jcabi</groupId>
+                                            <artifactId>mysql-dist</artifactId>
+                                            <version>5.6.21</version>
+                                            <classifier>${mysql.classifier}</classifier>
+                                            <type>zip</type>
+                                            <overWrite>true</overWrite>
+                                            <outputDirectory>${project.build.directory}/mysql-dist</outputDirectory>
                                         </artifactItem>
                                     </artifactItems>
                                 </configuration>
@@ -371,6 +444,26 @@
                                             <type>${postgresql-dist.type}</type>
                                             <overWrite>true</overWrite>
                                             <outputDirectory>${project.build.directory}</outputDirectory>
+                                        </artifactItem>
+                                    </artifactItems>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>unpack-mysql-windows</id>
+                                <phase>prepare-package</phase>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>com.jcabi</groupId>
+                                            <artifactId>mysql-dist</artifactId>
+                                            <version>5.6.21</version>
+                                            <classifier>${mysql.classifier}</classifier>
+                                            <type>zip</type>
+                                            <overWrite>true</overWrite>
+                                            <outputDirectory>${project.build.directory}/mysql-dist</outputDirectory>
                                         </artifactItem>
                                     </artifactItems>
                                 </configuration>
