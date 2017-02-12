@@ -51,13 +51,10 @@ interface Request {
         @Override
         public ResultSet fetch(final PreparedStatement stmt)
             throws SQLException {
-            boolean isResultSet = stmt.execute();
-            if (isResultSet || !isResultSet && stmt.getUpdateCount() > 0) {
-                return stmt.getGeneratedKeys();
-            }
-            else {
+            if (!stmt.execute() && stmt.getConnection().getMetaData().getDriverName().contains("MySQL")) {
                 return new EmptyResultSet();
             }
+            return stmt.getGeneratedKeys();
         }
     };
 
