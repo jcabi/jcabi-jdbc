@@ -1,22 +1,17 @@
 package com.jcabi.jdbc;
 
-import static org.junit.Assert.*;
-
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Date;
-
 import javax.sql.DataSource;
-
 import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Test;
-import org.junit.BeforeClass;
 import org.junit.AfterClass;
-
+import org.junit.BeforeClass;
+import org.junit.Test;
 import com.jcabi.aspects.Tv;
 import com.jolbox.bonecp.BoneCPDataSource;
 
@@ -60,10 +55,10 @@ public class JdbcSessionMySqlITCase {
             .prepare(
                 new Preparation() {
                     @Override
-                    public void 
-                        prepare(final PreparedStatement stmt) 
+                    public void
+                        prepare(final PreparedStatement stmt)
                         throws SQLException {
-                            final CallableStatement cstmt = 
+                            final CallableStatement cstmt =
                                 (CallableStatement) stmt;
                             cstmt.registerOutParameter(1, Types.VARCHAR);
                             cstmt.registerOutParameter(2, Types.DATE);
@@ -72,11 +67,11 @@ public class JdbcSessionMySqlITCase {
             ).call(new StoredProcedureOutcome<Object[]>(1, 2));
         MatcherAssert.assertThat(result.length, Matchers.is(2));
         MatcherAssert.assertThat(
-            result[0].toString(), 
+            result[0].toString(),
             Matchers.containsString("Charles")
         );
         MatcherAssert.assertThat(
-            (Date) result[1], 
+            (Date) result[1],
             Matchers.notNullValue()
         );
     }
