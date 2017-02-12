@@ -30,7 +30,6 @@
 package com.jcabi.jdbc;
 
 import java.math.BigDecimal;
-
 import javax.sql.DataSource;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -66,11 +65,14 @@ public final class SingleOutcomeTest {
         MatcherAssert.assertThat(name, Matchers.startsWith("Jeff"));
     }
 
-    /** Tests fetching of {@code SingleOutCome<BigDecimal>}. */
+    /** 
+     * Tests fetching of {@code SingleOutCome<BigDecimal>}.
+     * @throws Exception If an error occurs when connecting to the H2 database.
+     */
     @Test
     public void retrieveBigDecimalOutcome() throws Exception {
         final DataSource source = new H2Source("bdtdb");
-        BigDecimal result =
+        final BigDecimal result =
             new JdbcSession(source)
                 .autocommit(false)
                 .sql("CREATE TABLE bigDec (val DECIMAL)")
