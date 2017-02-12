@@ -31,6 +31,8 @@ package com.jcabi.jdbc;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
+
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -102,7 +104,7 @@ public final class SingleOutcome<T> implements Outcome<T> {
         if (tpe.equals(String.class) || tpe.equals(Long.class)
             || tpe.equals(Boolean.class) || tpe.equals(Byte.class)
             || tpe.equals(Date.class) || tpe.equals(Utc.class)
-            || byte[].class.equals(tpe)
+            || byte[].class.equals(tpe) || tpe.equals(BigDecimal.class)
         ) {
             this.type = tpe.getName();
         } else {
@@ -152,6 +154,8 @@ public final class SingleOutcome<T> implements Outcome<T> {
                 result = new Utc(Utc.getTimestamp(rset, 1));
             } else if (byte[].class.equals(tpe)) {
                 result = rset.getBytes(1);
+            } else if (tpe.equals(BigDecimal.class)) {
+                result = rset.getBigDecimal(1);
             } else {
                 throw new IllegalStateException(
                     String.format("type %s is not allowed", tpe.getName())

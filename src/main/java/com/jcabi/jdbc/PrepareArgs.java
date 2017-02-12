@@ -29,6 +29,7 @@
  */
 package com.jcabi.jdbc;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -75,6 +76,8 @@ final class PrepareArgs implements Preparation {
                 Utc.class.cast(arg).setTimestamp(stmt, pos);
             } else if (arg instanceof byte[]) {
                 stmt.setBytes(pos, byte[].class.cast(arg));
+            } else if (arg instanceof BigDecimal) {
+                stmt.setBigDecimal(pos, BigDecimal.class.cast(arg));
             } else {
                 stmt.setString(pos, arg.toString());
             }
