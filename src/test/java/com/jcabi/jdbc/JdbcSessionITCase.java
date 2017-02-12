@@ -42,6 +42,8 @@ import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.Assume;
 import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.AfterClass;
 import org.junit.Test;
 
 /**
@@ -50,6 +52,8 @@ import org.junit.Test;
  * @version $Id$
  */
 public final class JdbcSessionITCase {
+
+    private static DataSource db;
 
     /**
      * JDBC URL.
@@ -77,8 +81,7 @@ public final class JdbcSessionITCase {
      */
     @Test
     public void manipulatesPostgresql() throws Exception {
-        final DataSource source = JdbcSessionITCase.source();
-        new JdbcSession(source)
+        new JdbcSession(db)
             .autocommit(false)
             .sql("CREATE TABLE IF NOT EXISTS foo (name VARCHAR(50))")
             .execute()
@@ -94,8 +97,7 @@ public final class JdbcSessionITCase {
      */
     @Test
     public void changesTransactionIsolationLevel() throws Exception {
-        final DataSource source = JdbcSessionITCase.source();
-        new JdbcSession(source).sql("VACUUM").execute();
+        new JdbcSession(db).sql("VACUUM").execute();
     }
 
     /**
@@ -105,8 +107,7 @@ public final class JdbcSessionITCase {
      */
     @Test
     public void callsFunctionWithOutParam() throws Exception {
-        final DataSource source = JdbcSessionITCase.source();
-        new JdbcSession(source).autocommit(false).sql(
+        new JdbcSession(db).autocommit(false).sql(
             "CREATE TABLE IF NOT EXISTS users (name VARCHAR(50))"
         ).execute().sql("INSERT INTO users (name) VALUES (?)")
         .set("Jeff Charles").execute().sql(
@@ -117,7 +118,7 @@ public final class JdbcSessionITCase {
                 " FROM users; END; $$ LANGUAGE plpgsql;"
             )
         ).execute().commit();
-        final Object[] result = new JdbcSession(source)
+        final Object[] result = new JdbcSession(db)
             .sql("{call fetchUser(?, ?)}")
             .prepare(
                 new Preparation() {
@@ -151,8 +152,7 @@ public final class JdbcSessionITCase {
      */
     @Test
     public void callsFunctionWithInOutParam() throws Exception {
-        final DataSource source = JdbcSessionITCase.source();
-        new JdbcSession(source).autocommit(false).sql(
+        new JdbcSession(db).autocommit(false).sql(
             "CREATE TABLE IF NOT EXISTS usersids (id INTEGER, name VARCHAR(50))"
         ).execute().sql("INSERT INTO usersids (id, name) VALUES (?, ?)")
         .set(1).set("Marco Polo").execute().sql(
@@ -163,7 +163,7 @@ public final class JdbcSessionITCase {
                 " END; $$ LANGUAGE plpgsql;"
             )
         ).execute().commit();
-        final Object[] result = new JdbcSession(source)
+        final Object[] result = new JdbcSession(db)
             .sql("{call fetchUserById(?, ?)}")
             .set(1)
             .prepare(
@@ -185,13 +185,9 @@ public final class JdbcSessionITCase {
         );
     }
 
-    /**
-     * Get data source.
-     * @return Source
-     */
-    private static DataSource source() {
+    @BeforeClass
+    public static void openSource() {
         final BoneCPDataSource src = new BoneCPDataSource();
-        src.setDriverClass("org.postgresql.Driver");
         src.setJdbcUrl(JdbcSessionITCase.URL);
         src.setUser(JdbcSessionITCase.USER);
         src.setPassword(JdbcSessionITCase.USER);
@@ -200,7 +196,12 @@ public final class JdbcSessionITCase {
         src.setMinConnectionsPerPartition(1);
         src.setAcquireIncrement(1);
         src.setDisableConnectionTracking(true);
-        return src;
+        db = src;
+    }
+
+    @AfterClass
+    public static void closeSource() {
+        ((BoneCPDataSource) db).close();
     }
 
 }
