@@ -65,7 +65,7 @@ public final class SingleOutcomeTest {
         MatcherAssert.assertThat(name, Matchers.startsWith("Jeff"));
     }
 
-    /** 
+    /**
      * Tests fetching of {@code SingleOutCome<BigDecimal>}.
      * @throws Exception If an error occurs when connecting to the H2 database.
      */

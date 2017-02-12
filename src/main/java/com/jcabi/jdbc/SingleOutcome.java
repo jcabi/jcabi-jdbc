@@ -31,7 +31,6 @@ package com.jcabi.jdbc;
 
 import com.jcabi.aspects.Immutable;
 import com.jcabi.aspects.Loggable;
-
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
