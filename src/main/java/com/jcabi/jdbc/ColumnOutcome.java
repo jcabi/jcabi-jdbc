@@ -52,7 +52,7 @@ import lombok.ToString;
  * <p>Supported types are: {@link String}, {@link Long}, {@link Boolean},
  * {@link Byte}, {@link Date}, and {@link Utc}.
  *
- * @author Yegor Bugayenko (yegor@teamed.io)
+ * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
  * @since 0.13
  * @param <T> Type of items
