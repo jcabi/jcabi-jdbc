@@ -10,6 +10,8 @@
 [![Coverage Status](https://coveralls.io/repos/jcabi/jcabi-jdbc/badge.svg?branch=__rultor&service=github)](https://coveralls.io/github/jcabi/jcabi-jdbc?branch=__rultor)
 [![Dependencies](https://www.versioneye.com/user/projects/561ac40ea193340f28001102/badge.svg?style=flat)](https://www.versioneye.com/user/projects/561ac40ea193340f28001102)
 
+[![jpeek report](http://i.jpeek.org/com.jcabi/jcabi-jdbc/badge.svg)](http://i.jpeek.org/com.jcabi/jcabi-jdbc/)
+
 More details are here: [jdbc.jcabi.com](http://jdbc.jcabi.com/index.html).
 Also, read this blog post: [Fluent JDBC Decorator](http://www.yegor256.com/2014/08/18/fluent-jdbc-decorator.html).
 
