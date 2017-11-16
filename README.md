@@ -6,7 +6,7 @@
 [![Build Status](https://travis-ci.org/jcabi/jcabi-jdbc.svg?branch=master)](https://travis-ci.org/jcabi/jcabi-jdbc)
 [![PDD status](http://www.0pdd.com/svg?name=jcabi/jcabi-jdbc)](http://www.0pdd.com/p?name=jcabi/jcabi-jdbc)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.jcabi/jcabi-jdbc/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.jcabi/jcabi-jdbc)
-[![Javadoc](https://javadoc-emblem.rhcloud.com/doc/com.jcabi/jcabi-jdbc/badge.svg)](http://www.javadoc.io/doc/com.jcabi/jcabi-jdbc)
+[![Javadoc](https://javadoc.io/badge/com.jcabi/jcabi-jdbc.svg)](http://www.javadoc.io/doc/com.jcabi/jcabi-jdbc)
 [![Coverage Status](https://coveralls.io/repos/jcabi/jcabi-jdbc/badge.svg?branch=__rultor&service=github)](https://coveralls.io/github/jcabi/jcabi-jdbc?branch=__rultor)
 [![Dependencies](https://www.versioneye.com/user/projects/561ac40ea193340f28001102/badge.svg?style=flat)](https://www.versioneye.com/user/projects/561ac40ea193340f28001102)
 
