@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012-2017, jcabi.com
+ * Copyright (c) 2012-2018, jcabi.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,6 @@
  */
 package com.jcabi.jdbc;
 
-import com.jcabi.aspects.Immutable;
 import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -44,7 +43,6 @@ import lombok.ToString;
  * @since 0.17
  * @param <T> Type of the returned result, which <b>has to be</b> Object[]
  */
-@Immutable
 @ToString
 @EqualsAndHashCode
 public final class StoredProcedureOutcome<T> implements Outcome<T> {
@@ -52,7 +50,6 @@ public final class StoredProcedureOutcome<T> implements Outcome<T> {
     /**
      * OUT parameters' indexes.
      */
-    @Immutable.Array
     private final transient int[] indexes;
 
     /**
@@ -60,6 +57,7 @@ public final class StoredProcedureOutcome<T> implements Outcome<T> {
      * @param indexes Indexes of the OUT params.
      *  <b>Index count starts from 1</b>.
      */
+    @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
     public StoredProcedureOutcome(final int... indexes) {
         if (indexes.length == 0) {
             throw new IllegalArgumentException(

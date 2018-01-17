@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012-2017, jcabi.com
+ * Copyright (c) 2012-2018, jcabi.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,6 @@
  */
 package com.jcabi.jdbc;
 
-import com.jcabi.aspects.Loggable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -46,9 +45,9 @@ import java.sql.Statement;
  *  <li>{@link Outcome#UPDATE_COUNT} to check the number of updated rows.
  * </ul>
  *
- * @param <T> Type of expected result
  * @author Carlos Miranda (miranda.cma@gmail.com)
  * @version $Id$
+ * @param <T> Type of expected result
  * @since 0.12
  */
 public interface Outcome<T> {
@@ -64,7 +63,6 @@ public interface Outcome<T> {
      */
     Outcome<Boolean> NOT_EMPTY = new Outcome<Boolean>() {
         @Override
-        @Loggable(Loggable.DEBUG)
         public Boolean handle(final ResultSet rset, final Statement stmt)
             throws SQLException {
             return rset.next();
@@ -85,7 +83,6 @@ public interface Outcome<T> {
      */
     Outcome<Void> VOID = new Outcome<Void>() {
         @Override
-        @Loggable(Loggable.DEBUG)
         public Void handle(final ResultSet rset, final Statement stmt) {
             return null;
         }
@@ -105,7 +102,6 @@ public interface Outcome<T> {
      */
     Outcome<Integer> UPDATE_COUNT = new Outcome<Integer>() {
         @Override
-        @Loggable(Loggable.DEBUG)
         public Integer handle(final ResultSet rset, final Statement stmt)
             throws SQLException {
             return stmt.getUpdateCount();
@@ -126,7 +122,6 @@ public interface Outcome<T> {
      */
     Outcome<Long> LAST_INSERT_ID = new Outcome<Long>() {
         @Override
-        @Loggable(Loggable.DEBUG)
         public Long handle(final ResultSet rset, final Statement stmt)
             throws SQLException {
             if (!rset.next()) {

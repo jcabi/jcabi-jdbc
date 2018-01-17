@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012-2017, jcabi.com
+ * Copyright (c) 2012-2018, jcabi.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -50,6 +50,7 @@ import org.junit.Test;
  * Test case of {@link Utc}.
  * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
+ * @since 0.1
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 public final class UtcTest {
@@ -96,7 +97,7 @@ public final class UtcTest {
             new GregorianCalendar(TimeZone.getTimeZone("GMT-5"))
         );
         final Date date = this.fmt.parse("2008-05-24 05:06:07.000");
-        String saved;
+        final String saved;
         final Connection conn = this.source.getConnection();
         try {
             final PreparedStatement ustmt = conn.prepareStatement(
@@ -132,7 +133,7 @@ public final class UtcTest {
     @Test
     public void loadsDateWithUtcTimezone() throws Exception {
         final Connection conn = this.source.getConnection();
-        Date loaded;
+        final Date loaded;
         try {
             final PreparedStatement ustmt = conn.prepareStatement(
                 "INSERT INTO foo (date) VALUES (?) "
@@ -175,7 +176,7 @@ public final class UtcTest {
             .set(new Utc(date))
             .insert(Outcome.VOID);
         final Connection conn = this.source.getConnection();
-        String saved;
+        final String saved;
         try {
             final PreparedStatement stmt = conn.prepareStatement(
                 "SELECT date FROM foo  "

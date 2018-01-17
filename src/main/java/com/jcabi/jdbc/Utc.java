@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012-2017, jcabi.com
+ * Copyright (c) 2012-2018, jcabi.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,8 +29,6 @@
  */
 package com.jcabi.jdbc;
 
-import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -73,7 +71,6 @@ import lombok.ToString;
  * @version $Id$
  * @since 0.1.8
  */
-@Immutable
 @ToString
 @EqualsAndHashCode(of = "date")
 public final class Utc {
@@ -108,7 +105,6 @@ public final class Utc {
      * Get date that is encapsulated.
      * @return The date
      */
-    @Loggable(Loggable.DEBUG)
     public Date getDate() {
         return new Date(this.date);
     }
@@ -119,7 +115,6 @@ public final class Utc {
      * @param pos Position in the statement
      * @throws SQLException If some SQL problem inside
      */
-    @Loggable(Loggable.DEBUG)
     public void setTimestamp(final PreparedStatement stmt, final int pos)
         throws SQLException {
         stmt.setTimestamp(
@@ -136,7 +131,7 @@ public final class Utc {
      * @return The date
      * @throws SQLException If some SQL problem inside
      */
-    @Loggable(Loggable.DEBUG)
+    @SuppressWarnings("PMD.ProhibitPublicStaticMethods")
     public static Date getTimestamp(final ResultSet rset, final int pos)
         throws SQLException {
         final Timestamp stamp = rset.getTimestamp(pos, Utc.CALENDAR);

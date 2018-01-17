@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012-2017, jcabi.com
+ * Copyright (c) 2012-2018, jcabi.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,8 +29,6 @@
  */
 package com.jcabi.jdbc;
 
-import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -69,7 +67,6 @@ import lombok.ToString;
  * @since 0.1.8
  * @param <T> Type of items
  */
-@Immutable
 @ToString
 @EqualsAndHashCode(of = { "type", "silently" })
 public final class SingleOutcome<T> implements Outcome<T> {
@@ -97,6 +94,7 @@ public final class SingleOutcome<T> implements Outcome<T> {
      * @param tpe The type to convert to
      * @param slnt Silently return NULL if there is no row
      */
+    @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
     public SingleOutcome(final Class<T> tpe, final boolean slnt) {
         //@checkstyle BooleanExpressionComplexity (3 lines)
         if (tpe.equals(String.class) || tpe.equals(Long.class)
@@ -114,7 +112,6 @@ public final class SingleOutcome<T> implements Outcome<T> {
     }
 
     @Override
-    @Loggable(Loggable.DEBUG)
     public T handle(final ResultSet rset, final Statement stmt)
         throws SQLException {
         T result = null;
@@ -135,7 +132,7 @@ public final class SingleOutcome<T> implements Outcome<T> {
     @SuppressWarnings("unchecked")
     private T fetch(final ResultSet rset) throws SQLException {
         final Object result;
-        Class<T> tpe;
+        final Class<T> tpe;
         try {
             tpe = (Class<T>) Class.forName(this.type);
             if (tpe.equals(String.class)) {

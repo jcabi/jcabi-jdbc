@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012-2017, jcabi.com
+ * Copyright (c) 2012-2018, jcabi.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,6 @@
  */
 package com.jcabi.jdbc;
 
-import com.jcabi.aspects.Loggable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -144,7 +143,6 @@ import lombok.ToString;
  */
 @ToString
 @EqualsAndHashCode(of = { "source", "connection", "args", "auto", "query" })
-@Loggable(Loggable.DEBUG)
 @SuppressWarnings({ "PMD.TooManyMethods", "PMD.CloseResource" })
 public final class JdbcSession {
 
@@ -184,13 +182,14 @@ public final class JdbcSession {
      * If all you have is a {@link Connection}, wrap it inside our
      * {@link StaticSource}, but make sure you understand the autocommit
      * mechanism we have in place here. Read the class' javadoc (especially the
-     * last paragrapgh, marked with <b>IMPORTANT</b>).
+     * last paragraph, marked with <b>IMPORTANT</b>).
      * @param src Data source
      */
+    @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
     public JdbcSession(final DataSource src) {
-        this.args = new CopyOnWriteArrayList<Object>();
-        this.preparations = new CopyOnWriteArrayList<Preparation>();
-        this.connection = new AtomicReference<Connection>();
+        this.args = new CopyOnWriteArrayList<>();
+        this.preparations = new CopyOnWriteArrayList<>();
+        this.connection = new AtomicReference<>();
         this.auto = true;
         this.source = src;
         this.preparations.add(new PrepareArgs(this.args));
@@ -306,8 +305,8 @@ public final class JdbcSession {
      * <p>JDBC connection is opened and, optionally, closed by this method.
      *
      * @param outcome The outcome of the operation
-     * @return The result
      * @param <T> Type of response
+     * @return The result
      * @throws SQLException If fails
      */
     public <T> T insert(final Outcome<T> outcome)
@@ -389,8 +388,8 @@ public final class JdbcSession {
      * <p>JDBC connection is opened and, optionally, closed by this method.
      *
      * @param outcome The outcome of the operaton
-     * @return The result
      * @param <T> Type of response
+     * @return The result
      * @throws SQLException If fails
      */
     public <T> T select(final Outcome<T> outcome)
@@ -407,8 +406,8 @@ public final class JdbcSession {
      * @param outcome The outcome of the operation
      * @param connect Connect
      * @param request Request
-     * @return The result
      * @param <T> Type of response
+     * @return The result
      * @throws SQLException If fails
      * @checkstyle ExecutableStatementCount (100 lines)
      */
@@ -419,7 +418,7 @@ public final class JdbcSession {
             throw new IllegalStateException("call #sql() first");
         }
         final Connection conn = this.connect();
-        T result;
+        final T result;
         try {
             conn.setAutoCommit(this.auto);
             final PreparedStatement stmt = connect.open(conn);

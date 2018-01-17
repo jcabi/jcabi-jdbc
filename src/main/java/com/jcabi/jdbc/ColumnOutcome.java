@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012-2017, jcabi.com
+ * Copyright (c) 2012-2018, jcabi.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,8 +29,6 @@
  */
 package com.jcabi.jdbc;
 
-import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -57,7 +55,6 @@ import lombok.ToString;
  * @since 0.13
  * @param <T> Type of items
  */
-@Immutable
 @ToString
 @EqualsAndHashCode(of = "type")
 public final class ColumnOutcome<T> implements Outcome<Collection<T>> {
@@ -71,6 +68,7 @@ public final class ColumnOutcome<T> implements Outcome<Collection<T>> {
      * Public ctor.
      * @param tpe The type to convert to
      */
+    @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
     public ColumnOutcome(final Class<T> tpe) {
         //@checkstyle BooleanExpressionComplexity (3 lines)
         if (tpe.equals(String.class) || tpe.equals(Long.class)
@@ -87,10 +85,9 @@ public final class ColumnOutcome<T> implements Outcome<Collection<T>> {
     }
 
     @Override
-    @Loggable(Loggable.DEBUG)
     public Collection<T> handle(final ResultSet rset, final Statement stmt)
         throws SQLException {
-        final Collection<T> result = new LinkedList<T>();
+        final Collection<T> result = new LinkedList<>();
         while (rset.next()) {
             result.add(this.fetch(rset));
         }
@@ -106,7 +103,7 @@ public final class ColumnOutcome<T> implements Outcome<Collection<T>> {
     @SuppressWarnings("unchecked")
     private T fetch(final ResultSet rset) throws SQLException {
         final Object result;
-        Class<T> tpe;
+        final Class<T> tpe;
         try {
             tpe = (Class<T>) Class.forName(this.type);
             if (tpe.equals(String.class)) {

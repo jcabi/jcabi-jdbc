@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012-2017, jcabi.com
+ * Copyright (c) 2012-2018, jcabi.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,8 +29,6 @@
  */
 package com.jcabi.jdbc;
 
-import com.jcabi.aspects.Immutable;
-import com.jcabi.aspects.Loggable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -62,7 +60,6 @@ import lombok.ToString;
  * @since 0.13
  * @param <T> Type of items
  */
-@Immutable
 @ToString
 @EqualsAndHashCode(of = "mapping")
 public final class ListOutcome<T> implements Outcome<List<T>> {
@@ -81,10 +78,9 @@ public final class ListOutcome<T> implements Outcome<List<T>> {
     }
 
     @Override
-    @Loggable(Loggable.DEBUG)
     public List<T> handle(final ResultSet rset, final Statement stmt)
         throws SQLException {
-        final List<T> result = new LinkedList<T>();
+        final List<T> result = new LinkedList<>();
         while (rset.next()) {
             result.add(this.mapping.map(rset));
         }
@@ -93,8 +89,8 @@ public final class ListOutcome<T> implements Outcome<List<T>> {
 
     /**
      * Mapping.
+     * @param <T> Type of output
      */
-    @Immutable
     public interface Mapping<T> {
         /**
          * Map.

@@ -1,5 +1,5 @@
 /**
- * Copyright (c) 2012-2017, jcabi.com
+ * Copyright (c) 2012-2018, jcabi.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -29,7 +29,6 @@
  */
 package com.jcabi.jdbc;
 
-import com.jcabi.aspects.Immutable;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -40,14 +39,13 @@ import java.sql.SQLException;
  * @version $Id$
  * @since 0.13
  */
-@Immutable
 public interface Preparation {
 
     /**
      * Prepares this statement.
      * @param stmt Statement to modify/prepare
-     * @since 0.12
      * @throws SQLException If something goes wrong inside
+     * @since 0.12
      */
     void prepare(PreparedStatement stmt) throws SQLException;
 
