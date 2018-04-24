@@ -242,8 +242,9 @@ public final class JdbcSession {
      *
      * <p>The following types are supported: {@link Boolean},
      * {@link java.sql.Date},
-     * {@link Utc}, {@link Long}, {@link Integer}. All other types will be
-     * converted to {@link String} using their {@code toString()} methods.
+     * {@link Utc}, {@link Long}, {@link Float}, byte[], {@link Integer}.
+     * All other types will be converted to {@link String} using
+     * their {@code toString()} methods.
      *
      * @param value The value to add
      * @return This object

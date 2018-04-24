@@ -73,6 +73,8 @@ final class PrepareArgs implements Preparation {
                 stmt.setInt(pos, Integer.class.cast(arg));
             } else if (arg instanceof Utc) {
                 Utc.class.cast(arg).setTimestamp(stmt, pos);
+            } else if (arg instanceof Float) {
+                stmt.setFloat(pos, Float.class.cast(arg));
             } else if (arg instanceof byte[]) {
                 stmt.setBytes(pos, byte[].class.cast(arg));
             } else {
