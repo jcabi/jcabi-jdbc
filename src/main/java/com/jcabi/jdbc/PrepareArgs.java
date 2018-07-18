@@ -32,6 +32,7 @@ package com.jcabi.jdbc;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.sql.Types;
 import java.util.Collection;
 import java.util.Collections;
 
@@ -68,7 +69,7 @@ final class PrepareArgs implements Preparation {
         int pos = 1;
         for (final Object arg : this.args) {
             if (arg == null) {
-                stmt.setString(pos, null);
+                stmt.setNull(pos, Types.NULL);
             } else if (arg instanceof Long) {
                 stmt.setLong(pos, Long.class.cast(arg));
             } else if (arg instanceof Boolean) {
