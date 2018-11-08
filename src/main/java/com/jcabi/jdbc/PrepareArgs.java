@@ -85,7 +85,7 @@ final class PrepareArgs implements Preparation {
             } else if (arg instanceof byte[]) {
                 stmt.setBytes(pos, byte[].class.cast(arg));
             } else {
-                stmt.setString(pos, arg.toString());
+                stmt.setObject(pos, arg);
             }
             ++pos;
         }
