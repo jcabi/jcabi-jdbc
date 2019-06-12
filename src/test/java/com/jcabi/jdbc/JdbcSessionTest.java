@@ -167,6 +167,29 @@ public final class JdbcSessionTest {
     }
 
     /**
+     * JdbcSession can rollback transaction.
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    public void rollbacksTransaction() throws Exception {
+        final DataSource source = new H2Source("t228x");
+        new JdbcSession(source)
+            .sql("CREATE TABLE t228x (name VARCHAR(30))")
+            .execute()
+            .sql("INSERT INTO t228x VALUES ('foo')")
+            .execute();
+        new JdbcSession(source).autocommit(false)
+            .sql("INSERT INTO t228x VALUES ('bar')")
+            .execute()
+            .rollback();
+        MatcherAssert.assertThat(
+            new JdbcSession(source).sql("SELECT * FROM t228x")
+                .select(new ListOutcome<>(rset -> rset.getString("name"))),
+            Matchers.contains("foo")
+        );
+    }
+
+    /**
      * Insert a row into a table.
      * @param src Data source
      * @param table Name of the table to INSERT into
