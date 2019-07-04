@@ -142,7 +142,7 @@
 <a class="jxr_linenumber" name="L134" href="#L134">134</a> <em class="jxr_javadoccomment"> * &lt;p&gt;This class is thread-safe.</em>
 <a class="jxr_linenumber" name="L135" href="#L135">135</a> <em class="jxr_javadoccomment"> *</em>
 <a class="jxr_linenumber" name="L136" href="#L136">136</a> <em class="jxr_javadoccomment"> * @author Yegor Bugayenko (yegor256@gmail.com)</em>
-<a class="jxr_linenumber" name="L137" href="#L137">137</a> <em class="jxr_javadoccomment"> * @version $Id: 9dbc8695a8ebc48caaab26fdea319f2f98be6ea1 $</em>
+<a class="jxr_linenumber" name="L137" href="#L137">137</a> <em class="jxr_javadoccomment"> * @version $Id: d9e821dc85c7b9cc82d07b70d786859aa1433dd4 $</em>
 <a class="jxr_linenumber" name="L138" href="#L138">138</a> <em class="jxr_javadoccomment"> * @since 0.1.8</em>
 <a class="jxr_linenumber" name="L139" href="#L139">139</a> <em class="jxr_javadoccomment"> * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)</em>
 <a class="jxr_linenumber" name="L140" href="#L140">140</a> <em class="jxr_javadoccomment"> * @todo #51:30min Refactor this class to avoid too much coupling.</em>
@@ -306,200 +306,216 @@
 <a class="jxr_linenumber" name="L298" href="#L298">298</a>     }
 <a class="jxr_linenumber" name="L299" href="#L299">299</a> 
 <a class="jxr_linenumber" name="L300" href="#L300">300</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L301" href="#L301">301</a> <em class="jxr_javadoccomment">     * Make SQL {@code INSERT} request.</em>
-<a class="jxr_linenumber" name="L302" href="#L302">302</a> <em class="jxr_javadoccomment">     *</em>
-<a class="jxr_linenumber" name="L303" href="#L303">303</a> <em class="jxr_javadoccomment">     * &lt;p&gt;{@link Outcome} will receive</em>
-<a class="jxr_linenumber" name="L304" href="#L304">304</a> <em class="jxr_javadoccomment">     * a {@link ResultSet} of generated keys.</em>
-<a class="jxr_linenumber" name="L305" href="#L305">305</a> <em class="jxr_javadoccomment">     *</em>
-<a class="jxr_linenumber" name="L306" href="#L306">306</a> <em class="jxr_javadoccomment">     * &lt;p&gt;JDBC connection is opened and, optionally, closed by this method.</em>
-<a class="jxr_linenumber" name="L307" href="#L307">307</a> <em class="jxr_javadoccomment">     *</em>
-<a class="jxr_linenumber" name="L308" href="#L308">308</a> <em class="jxr_javadoccomment">     * @param outcome The outcome of the operation</em>
-<a class="jxr_linenumber" name="L309" href="#L309">309</a> <em class="jxr_javadoccomment">     * @param &lt;T&gt; Type of response</em>
-<a class="jxr_linenumber" name="L310" href="#L310">310</a> <em class="jxr_javadoccomment">     * @return The result</em>
-<a class="jxr_linenumber" name="L311" href="#L311">311</a> <em class="jxr_javadoccomment">     * @throws SQLException If fails</em>
-<a class="jxr_linenumber" name="L312" href="#L312">312</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L313" href="#L313">313</a>     <strong class="jxr_keyword">public</strong> &lt;T&gt; T insert(<strong class="jxr_keyword">final</strong> Outcome&lt;T&gt; outcome)
-<a class="jxr_linenumber" name="L314" href="#L314">314</a>         <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L315" href="#L315">315</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.run(
-<a class="jxr_linenumber" name="L316" href="#L316">316</a>             outcome,
-<a class="jxr_linenumber" name="L317" href="#L317">317</a>             <strong class="jxr_keyword">new</strong> Connect.WithKeys(<strong class="jxr_keyword">this</strong>.query),
-<a class="jxr_linenumber" name="L318" href="#L318">318</a>             Request.EXECUTE
-<a class="jxr_linenumber" name="L319" href="#L319">319</a>         );
-<a class="jxr_linenumber" name="L320" href="#L320">320</a>     }
-<a class="jxr_linenumber" name="L321" href="#L321">321</a> 
-<a class="jxr_linenumber" name="L322" href="#L322">322</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L323" href="#L323">323</a> <em class="jxr_javadoccomment">     * Make SQL {@code UPDATE} request.</em>
-<a class="jxr_linenumber" name="L324" href="#L324">324</a> <em class="jxr_javadoccomment">     *</em>
-<a class="jxr_linenumber" name="L325" href="#L325">325</a> <em class="jxr_javadoccomment">     * &lt;p&gt;JDBC connection is opened and, optionally, closed by this method.</em>
-<a class="jxr_linenumber" name="L326" href="#L326">326</a> <em class="jxr_javadoccomment">     *</em>
-<a class="jxr_linenumber" name="L327" href="#L327">327</a> <em class="jxr_javadoccomment">     * @param &lt;T&gt; Type of result expected</em>
-<a class="jxr_linenumber" name="L328" href="#L328">328</a> <em class="jxr_javadoccomment">     * @param outcome Outcome of the operation</em>
-<a class="jxr_linenumber" name="L329" href="#L329">329</a> <em class="jxr_javadoccomment">     * @return This object</em>
-<a class="jxr_linenumber" name="L330" href="#L330">330</a> <em class="jxr_javadoccomment">     * @throws SQLException If fails</em>
-<a class="jxr_linenumber" name="L331" href="#L331">331</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L332" href="#L332">332</a>     <strong class="jxr_keyword">public</strong> &lt;T&gt; T update(<strong class="jxr_keyword">final</strong> Outcome&lt;T&gt; outcome)
-<a class="jxr_linenumber" name="L333" href="#L333">333</a>         <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L334" href="#L334">334</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.run(
-<a class="jxr_linenumber" name="L335" href="#L335">335</a>             outcome,
-<a class="jxr_linenumber" name="L336" href="#L336">336</a>             <strong class="jxr_keyword">new</strong> Connect.WithKeys(<strong class="jxr_keyword">this</strong>.query),
-<a class="jxr_linenumber" name="L337" href="#L337">337</a>             Request.EXECUTE_UPDATE
-<a class="jxr_linenumber" name="L338" href="#L338">338</a>         );
-<a class="jxr_linenumber" name="L339" href="#L339">339</a>     }
-<a class="jxr_linenumber" name="L340" href="#L340">340</a> 
-<a class="jxr_linenumber" name="L341" href="#L341">341</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L342" href="#L342">342</a> <em class="jxr_javadoccomment">     * Call an SQL stored procedure.</em>
-<a class="jxr_linenumber" name="L343" href="#L343">343</a> <em class="jxr_javadoccomment">     *</em>
-<a class="jxr_linenumber" name="L344" href="#L344">344</a> <em class="jxr_javadoccomment">     * &lt;p&gt;JDBC connection is opened and, optionally, commited by this</em>
-<a class="jxr_linenumber" name="L345" href="#L345">345</a> <em class="jxr_javadoccomment">     * method, depending on the &lt;b&gt;autocommit&lt;/b&gt; class attribute:</em>
-<a class="jxr_linenumber" name="L346" href="#L346">346</a> <em class="jxr_javadoccomment">     * if it's value is true, the connection will be commited after</em>
-<a class="jxr_linenumber" name="L347" href="#L347">347</a> <em class="jxr_javadoccomment">     * this call.</em>
-<a class="jxr_linenumber" name="L348" href="#L348">348</a> <em class="jxr_javadoccomment">     *</em>
-<a class="jxr_linenumber" name="L349" href="#L349">349</a> <em class="jxr_javadoccomment">     * @param &lt;T&gt; Type of result expected</em>
-<a class="jxr_linenumber" name="L350" href="#L350">350</a> <em class="jxr_javadoccomment">     * @param outcome Outcome of the operation</em>
-<a class="jxr_linenumber" name="L351" href="#L351">351</a> <em class="jxr_javadoccomment">     * @return Result of type T</em>
-<a class="jxr_linenumber" name="L352" href="#L352">352</a> <em class="jxr_javadoccomment">     * @throws SQLException If fails</em>
-<a class="jxr_linenumber" name="L353" href="#L353">353</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L354" href="#L354">354</a>     <strong class="jxr_keyword">public</strong> &lt;T&gt; T call(<strong class="jxr_keyword">final</strong> Outcome&lt;T&gt; outcome)
-<a class="jxr_linenumber" name="L355" href="#L355">355</a>         <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L356" href="#L356">356</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.run(
-<a class="jxr_linenumber" name="L357" href="#L357">357</a>             outcome, <strong class="jxr_keyword">new</strong> Connect.Call(<strong class="jxr_keyword">this</strong>.query), Request.EXECUTE_UPDATE
-<a class="jxr_linenumber" name="L358" href="#L358">358</a>         );
-<a class="jxr_linenumber" name="L359" href="#L359">359</a>     }
-<a class="jxr_linenumber" name="L360" href="#L360">360</a> 
-<a class="jxr_linenumber" name="L361" href="#L361">361</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L362" href="#L362">362</a> <em class="jxr_javadoccomment">     * Make SQL request expecting no response from the server.</em>
-<a class="jxr_linenumber" name="L363" href="#L363">363</a> <em class="jxr_javadoccomment">     *</em>
-<a class="jxr_linenumber" name="L364" href="#L364">364</a> <em class="jxr_javadoccomment">     * &lt;p&gt;This method should be used for schema manipulation statements,</em>
-<a class="jxr_linenumber" name="L365" href="#L365">365</a> <em class="jxr_javadoccomment">     * like CREATE TABLE, CREATE INDEX, DROP COLUMN, etc. and server-side</em>
-<a class="jxr_linenumber" name="L366" href="#L366">366</a> <em class="jxr_javadoccomment">     * instructions that return no data back. Main difference between this</em>
-<a class="jxr_linenumber" name="L367" href="#L367">367</a> <em class="jxr_javadoccomment">     * one and {@code #execute()} is that the later requests JDBC to return</em>
-<a class="jxr_linenumber" name="L368" href="#L368">368</a> <em class="jxr_javadoccomment">     * generated keys. When SQL server doesn't return any keys this may</em>
-<a class="jxr_linenumber" name="L369" href="#L369">369</a> <em class="jxr_javadoccomment">     * cause runtime exceptions in JDBC.</em>
-<a class="jxr_linenumber" name="L370" href="#L370">370</a> <em class="jxr_javadoccomment">     *</em>
-<a class="jxr_linenumber" name="L371" href="#L371">371</a> <em class="jxr_javadoccomment">     * &lt;p&gt;JDBC connection is opened and, optionally, closed by this method.</em>
-<a class="jxr_linenumber" name="L372" href="#L372">372</a> <em class="jxr_javadoccomment">     *</em>
-<a class="jxr_linenumber" name="L373" href="#L373">373</a> <em class="jxr_javadoccomment">     * @return This object</em>
-<a class="jxr_linenumber" name="L374" href="#L374">374</a> <em class="jxr_javadoccomment">     * @throws SQLException If fails</em>
-<a class="jxr_linenumber" name="L375" href="#L375">375</a> <em class="jxr_javadoccomment">     * @since 0.9</em>
-<a class="jxr_linenumber" name="L376" href="#L376">376</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L377" href="#L377">377</a>     <strong class="jxr_keyword">public</strong> <a href="../../../com/jcabi/jdbc/JdbcSession.html">JdbcSession</a> execute() <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L378" href="#L378">378</a>         <strong class="jxr_keyword">this</strong>.run(
-<a class="jxr_linenumber" name="L379" href="#L379">379</a>             Outcome.VOID,
-<a class="jxr_linenumber" name="L380" href="#L380">380</a>             <strong class="jxr_keyword">new</strong> Connect.Plain(<strong class="jxr_keyword">this</strong>.query),
-<a class="jxr_linenumber" name="L381" href="#L381">381</a>             Request.EXECUTE
-<a class="jxr_linenumber" name="L382" href="#L382">382</a>         );
-<a class="jxr_linenumber" name="L383" href="#L383">383</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
-<a class="jxr_linenumber" name="L384" href="#L384">384</a>     }
-<a class="jxr_linenumber" name="L385" href="#L385">385</a> 
-<a class="jxr_linenumber" name="L386" href="#L386">386</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L387" href="#L387">387</a> <em class="jxr_javadoccomment">     * Make SQL {@code SELECT} request.</em>
+<a class="jxr_linenumber" name="L301" href="#L301">301</a> <em class="jxr_javadoccomment">     * Rollback the transaction (calls {@link Connection#rollback()} and then</em>
+<a class="jxr_linenumber" name="L302" href="#L302">302</a> <em class="jxr_javadoccomment">     * {@link Connection#close()}).</em>
+<a class="jxr_linenumber" name="L303" href="#L303">303</a> <em class="jxr_javadoccomment">     * @throws SQLException If fails to do the SQL operation</em>
+<a class="jxr_linenumber" name="L304" href="#L304">304</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L305" href="#L305">305</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> rollback() <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L306" href="#L306">306</a>         <strong class="jxr_keyword">final</strong> Connection conn = <strong class="jxr_keyword">this</strong>.connection.get();
+<a class="jxr_linenumber" name="L307" href="#L307">307</a>         <strong class="jxr_keyword">if</strong> (conn == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L308" href="#L308">308</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalStateException(
+<a class="jxr_linenumber" name="L309" href="#L309">309</a>                 <span class="jxr_string">"connection is not open, can't rollback"</span>
+<a class="jxr_linenumber" name="L310" href="#L310">310</a>             );
+<a class="jxr_linenumber" name="L311" href="#L311">311</a>         }
+<a class="jxr_linenumber" name="L312" href="#L312">312</a>         conn.rollback();
+<a class="jxr_linenumber" name="L313" href="#L313">313</a>         <strong class="jxr_keyword">this</strong>.disconnect();
+<a class="jxr_linenumber" name="L314" href="#L314">314</a>     }
+<a class="jxr_linenumber" name="L315" href="#L315">315</a> 
+<a class="jxr_linenumber" name="L316" href="#L316">316</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L317" href="#L317">317</a> <em class="jxr_javadoccomment">     * Make SQL {@code INSERT} request.</em>
+<a class="jxr_linenumber" name="L318" href="#L318">318</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L319" href="#L319">319</a> <em class="jxr_javadoccomment">     * &lt;p&gt;{@link Outcome} will receive</em>
+<a class="jxr_linenumber" name="L320" href="#L320">320</a> <em class="jxr_javadoccomment">     * a {@link ResultSet} of generated keys.</em>
+<a class="jxr_linenumber" name="L321" href="#L321">321</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L322" href="#L322">322</a> <em class="jxr_javadoccomment">     * &lt;p&gt;JDBC connection is opened and, optionally, closed by this method.</em>
+<a class="jxr_linenumber" name="L323" href="#L323">323</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L324" href="#L324">324</a> <em class="jxr_javadoccomment">     * @param outcome The outcome of the operation</em>
+<a class="jxr_linenumber" name="L325" href="#L325">325</a> <em class="jxr_javadoccomment">     * @param &lt;T&gt; Type of response</em>
+<a class="jxr_linenumber" name="L326" href="#L326">326</a> <em class="jxr_javadoccomment">     * @return The result</em>
+<a class="jxr_linenumber" name="L327" href="#L327">327</a> <em class="jxr_javadoccomment">     * @throws SQLException If fails</em>
+<a class="jxr_linenumber" name="L328" href="#L328">328</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L329" href="#L329">329</a>     <strong class="jxr_keyword">public</strong> &lt;T&gt; T insert(<strong class="jxr_keyword">final</strong> Outcome&lt;T&gt; outcome)
+<a class="jxr_linenumber" name="L330" href="#L330">330</a>         <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L331" href="#L331">331</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.run(
+<a class="jxr_linenumber" name="L332" href="#L332">332</a>             outcome,
+<a class="jxr_linenumber" name="L333" href="#L333">333</a>             <strong class="jxr_keyword">new</strong> Connect.WithKeys(<strong class="jxr_keyword">this</strong>.query),
+<a class="jxr_linenumber" name="L334" href="#L334">334</a>             Request.EXECUTE
+<a class="jxr_linenumber" name="L335" href="#L335">335</a>         );
+<a class="jxr_linenumber" name="L336" href="#L336">336</a>     }
+<a class="jxr_linenumber" name="L337" href="#L337">337</a> 
+<a class="jxr_linenumber" name="L338" href="#L338">338</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L339" href="#L339">339</a> <em class="jxr_javadoccomment">     * Make SQL {@code UPDATE} request.</em>
+<a class="jxr_linenumber" name="L340" href="#L340">340</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L341" href="#L341">341</a> <em class="jxr_javadoccomment">     * &lt;p&gt;JDBC connection is opened and, optionally, closed by this method.</em>
+<a class="jxr_linenumber" name="L342" href="#L342">342</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L343" href="#L343">343</a> <em class="jxr_javadoccomment">     * @param &lt;T&gt; Type of result expected</em>
+<a class="jxr_linenumber" name="L344" href="#L344">344</a> <em class="jxr_javadoccomment">     * @param outcome Outcome of the operation</em>
+<a class="jxr_linenumber" name="L345" href="#L345">345</a> <em class="jxr_javadoccomment">     * @return This object</em>
+<a class="jxr_linenumber" name="L346" href="#L346">346</a> <em class="jxr_javadoccomment">     * @throws SQLException If fails</em>
+<a class="jxr_linenumber" name="L347" href="#L347">347</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L348" href="#L348">348</a>     <strong class="jxr_keyword">public</strong> &lt;T&gt; T update(<strong class="jxr_keyword">final</strong> Outcome&lt;T&gt; outcome)
+<a class="jxr_linenumber" name="L349" href="#L349">349</a>         <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L350" href="#L350">350</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.run(
+<a class="jxr_linenumber" name="L351" href="#L351">351</a>             outcome,
+<a class="jxr_linenumber" name="L352" href="#L352">352</a>             <strong class="jxr_keyword">new</strong> Connect.WithKeys(<strong class="jxr_keyword">this</strong>.query),
+<a class="jxr_linenumber" name="L353" href="#L353">353</a>             Request.EXECUTE_UPDATE
+<a class="jxr_linenumber" name="L354" href="#L354">354</a>         );
+<a class="jxr_linenumber" name="L355" href="#L355">355</a>     }
+<a class="jxr_linenumber" name="L356" href="#L356">356</a> 
+<a class="jxr_linenumber" name="L357" href="#L357">357</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L358" href="#L358">358</a> <em class="jxr_javadoccomment">     * Call an SQL stored procedure.</em>
+<a class="jxr_linenumber" name="L359" href="#L359">359</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L360" href="#L360">360</a> <em class="jxr_javadoccomment">     * &lt;p&gt;JDBC connection is opened and, optionally, commited by this</em>
+<a class="jxr_linenumber" name="L361" href="#L361">361</a> <em class="jxr_javadoccomment">     * method, depending on the &lt;b&gt;autocommit&lt;/b&gt; class attribute:</em>
+<a class="jxr_linenumber" name="L362" href="#L362">362</a> <em class="jxr_javadoccomment">     * if it's value is true, the connection will be commited after</em>
+<a class="jxr_linenumber" name="L363" href="#L363">363</a> <em class="jxr_javadoccomment">     * this call.</em>
+<a class="jxr_linenumber" name="L364" href="#L364">364</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L365" href="#L365">365</a> <em class="jxr_javadoccomment">     * @param &lt;T&gt; Type of result expected</em>
+<a class="jxr_linenumber" name="L366" href="#L366">366</a> <em class="jxr_javadoccomment">     * @param outcome Outcome of the operation</em>
+<a class="jxr_linenumber" name="L367" href="#L367">367</a> <em class="jxr_javadoccomment">     * @return Result of type T</em>
+<a class="jxr_linenumber" name="L368" href="#L368">368</a> <em class="jxr_javadoccomment">     * @throws SQLException If fails</em>
+<a class="jxr_linenumber" name="L369" href="#L369">369</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L370" href="#L370">370</a>     <strong class="jxr_keyword">public</strong> &lt;T&gt; T call(<strong class="jxr_keyword">final</strong> Outcome&lt;T&gt; outcome)
+<a class="jxr_linenumber" name="L371" href="#L371">371</a>         <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L372" href="#L372">372</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.run(
+<a class="jxr_linenumber" name="L373" href="#L373">373</a>             outcome, <strong class="jxr_keyword">new</strong> Connect.Call(<strong class="jxr_keyword">this</strong>.query), Request.EXECUTE_UPDATE
+<a class="jxr_linenumber" name="L374" href="#L374">374</a>         );
+<a class="jxr_linenumber" name="L375" href="#L375">375</a>     }
+<a class="jxr_linenumber" name="L376" href="#L376">376</a> 
+<a class="jxr_linenumber" name="L377" href="#L377">377</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L378" href="#L378">378</a> <em class="jxr_javadoccomment">     * Make SQL request expecting no response from the server.</em>
+<a class="jxr_linenumber" name="L379" href="#L379">379</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L380" href="#L380">380</a> <em class="jxr_javadoccomment">     * &lt;p&gt;This method should be used for schema manipulation statements,</em>
+<a class="jxr_linenumber" name="L381" href="#L381">381</a> <em class="jxr_javadoccomment">     * like CREATE TABLE, CREATE INDEX, DROP COLUMN, etc. and server-side</em>
+<a class="jxr_linenumber" name="L382" href="#L382">382</a> <em class="jxr_javadoccomment">     * instructions that return no data back. Main difference between this</em>
+<a class="jxr_linenumber" name="L383" href="#L383">383</a> <em class="jxr_javadoccomment">     * one and {@code #execute()} is that the later requests JDBC to return</em>
+<a class="jxr_linenumber" name="L384" href="#L384">384</a> <em class="jxr_javadoccomment">     * generated keys. When SQL server doesn't return any keys this may</em>
+<a class="jxr_linenumber" name="L385" href="#L385">385</a> <em class="jxr_javadoccomment">     * cause runtime exceptions in JDBC.</em>
+<a class="jxr_linenumber" name="L386" href="#L386">386</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L387" href="#L387">387</a> <em class="jxr_javadoccomment">     * &lt;p&gt;JDBC connection is opened and, optionally, closed by this method.</em>
 <a class="jxr_linenumber" name="L388" href="#L388">388</a> <em class="jxr_javadoccomment">     *</em>
-<a class="jxr_linenumber" name="L389" href="#L389">389</a> <em class="jxr_javadoccomment">     * &lt;p&gt;JDBC connection is opened and, optionally, closed by this method.</em>
-<a class="jxr_linenumber" name="L390" href="#L390">390</a> <em class="jxr_javadoccomment">     *</em>
-<a class="jxr_linenumber" name="L391" href="#L391">391</a> <em class="jxr_javadoccomment">     * @param outcome The outcome of the operaton</em>
-<a class="jxr_linenumber" name="L392" href="#L392">392</a> <em class="jxr_javadoccomment">     * @param &lt;T&gt; Type of response</em>
-<a class="jxr_linenumber" name="L393" href="#L393">393</a> <em class="jxr_javadoccomment">     * @return The result</em>
-<a class="jxr_linenumber" name="L394" href="#L394">394</a> <em class="jxr_javadoccomment">     * @throws SQLException If fails</em>
-<a class="jxr_linenumber" name="L395" href="#L395">395</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L396" href="#L396">396</a>     <strong class="jxr_keyword">public</strong> &lt;T&gt; T select(<strong class="jxr_keyword">final</strong> Outcome&lt;T&gt; outcome)
-<a class="jxr_linenumber" name="L397" href="#L397">397</a>         <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L398" href="#L398">398</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.run(
-<a class="jxr_linenumber" name="L399" href="#L399">399</a>             outcome,
-<a class="jxr_linenumber" name="L400" href="#L400">400</a>             <strong class="jxr_keyword">new</strong> Connect.Plain(<strong class="jxr_keyword">this</strong>.query),
-<a class="jxr_linenumber" name="L401" href="#L401">401</a>             Request.EXECUTE_QUERY
-<a class="jxr_linenumber" name="L402" href="#L402">402</a>         );
-<a class="jxr_linenumber" name="L403" href="#L403">403</a>     }
-<a class="jxr_linenumber" name="L404" href="#L404">404</a> 
-<a class="jxr_linenumber" name="L405" href="#L405">405</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L406" href="#L406">406</a> <em class="jxr_javadoccomment">     * Run with this outcome, and this fetcher.</em>
-<a class="jxr_linenumber" name="L407" href="#L407">407</a> <em class="jxr_javadoccomment">     * @param outcome The outcome of the operation</em>
-<a class="jxr_linenumber" name="L408" href="#L408">408</a> <em class="jxr_javadoccomment">     * @param connect Connect</em>
-<a class="jxr_linenumber" name="L409" href="#L409">409</a> <em class="jxr_javadoccomment">     * @param request Request</em>
-<a class="jxr_linenumber" name="L410" href="#L410">410</a> <em class="jxr_javadoccomment">     * @param &lt;T&gt; Type of response</em>
-<a class="jxr_linenumber" name="L411" href="#L411">411</a> <em class="jxr_javadoccomment">     * @return The result</em>
-<a class="jxr_linenumber" name="L412" href="#L412">412</a> <em class="jxr_javadoccomment">     * @throws SQLException If fails</em>
-<a class="jxr_linenumber" name="L413" href="#L413">413</a> <em class="jxr_javadoccomment">     * @checkstyle ExecutableStatementCount (100 lines)</em>
-<a class="jxr_linenumber" name="L414" href="#L414">414</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L415" href="#L415">415</a>     <strong class="jxr_keyword">private</strong> &lt;T&gt; T run(<strong class="jxr_keyword">final</strong> Outcome&lt;T&gt; outcome,
-<a class="jxr_linenumber" name="L416" href="#L416">416</a>         <strong class="jxr_keyword">final</strong> <a href="../../../com/jcabi/jdbc/Connect.html">Connect</a> connect, <strong class="jxr_keyword">final</strong> <a href="../../../com/jcabi/jdbc/Request.html">Request</a> request)
-<a class="jxr_linenumber" name="L417" href="#L417">417</a>         <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L418" href="#L418">418</a>         <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">this</strong>.query == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L419" href="#L419">419</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalStateException(<span class="jxr_string">"call #sql() first"</span>);
-<a class="jxr_linenumber" name="L420" href="#L420">420</a>         }
-<a class="jxr_linenumber" name="L421" href="#L421">421</a>         <strong class="jxr_keyword">final</strong> Connection conn = <strong class="jxr_keyword">this</strong>.connect();
-<a class="jxr_linenumber" name="L422" href="#L422">422</a>         <strong class="jxr_keyword">final</strong> T result;
-<a class="jxr_linenumber" name="L423" href="#L423">423</a>         <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L424" href="#L424">424</a>             conn.setAutoCommit(<strong class="jxr_keyword">this</strong>.auto);
-<a class="jxr_linenumber" name="L425" href="#L425">425</a>             <strong class="jxr_keyword">final</strong> PreparedStatement stmt = connect.open(conn);
-<a class="jxr_linenumber" name="L426" href="#L426">426</a>             <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L427" href="#L427">427</a>                 <strong class="jxr_keyword">this</strong>.configure(stmt);
-<a class="jxr_linenumber" name="L428" href="#L428">428</a>                 <strong class="jxr_keyword">final</strong> ResultSet rset = request.fetch(stmt);
-<a class="jxr_linenumber" name="L429" href="#L429">429</a>                 <em class="jxr_comment">// @checkstyle NestedTryDepth (5 lines)</em>
-<a class="jxr_linenumber" name="L430" href="#L430">430</a>                 <strong class="jxr_keyword">try</strong> {
-<a class="jxr_linenumber" name="L431" href="#L431">431</a>                     result = outcome.handle(rset, stmt);
-<a class="jxr_linenumber" name="L432" href="#L432">432</a>                 } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="L433" href="#L433">433</a>                     <strong class="jxr_keyword">if</strong> (rset != <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L434" href="#L434">434</a>                         rset.close();
-<a class="jxr_linenumber" name="L435" href="#L435">435</a>                     }
-<a class="jxr_linenumber" name="L436" href="#L436">436</a>                 }
-<a class="jxr_linenumber" name="L437" href="#L437">437</a>             } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="L438" href="#L438">438</a>                 stmt.close();
-<a class="jxr_linenumber" name="L439" href="#L439">439</a>             }
-<a class="jxr_linenumber" name="L440" href="#L440">440</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> SQLException ex) {
-<a class="jxr_linenumber" name="L441" href="#L441">441</a>             <strong class="jxr_keyword">if</strong> (!<strong class="jxr_keyword">this</strong>.auto) {
-<a class="jxr_linenumber" name="L442" href="#L442">442</a>                 conn.rollback();
-<a class="jxr_linenumber" name="L443" href="#L443">443</a>                 <strong class="jxr_keyword">this</strong>.disconnect();
-<a class="jxr_linenumber" name="L444" href="#L444">444</a>             }
-<a class="jxr_linenumber" name="L445" href="#L445">445</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> SQLException(ex);
-<a class="jxr_linenumber" name="L446" href="#L446">446</a>         } <strong class="jxr_keyword">finally</strong> {
-<a class="jxr_linenumber" name="L447" href="#L447">447</a>             <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">this</strong>.auto) {
-<a class="jxr_linenumber" name="L448" href="#L448">448</a>                 <strong class="jxr_keyword">this</strong>.disconnect();
-<a class="jxr_linenumber" name="L449" href="#L449">449</a>             }
-<a class="jxr_linenumber" name="L450" href="#L450">450</a>             <strong class="jxr_keyword">this</strong>.clear();
-<a class="jxr_linenumber" name="L451" href="#L451">451</a>         }
-<a class="jxr_linenumber" name="L452" href="#L452">452</a>         <strong class="jxr_keyword">return</strong> result;
-<a class="jxr_linenumber" name="L453" href="#L453">453</a>     }
-<a class="jxr_linenumber" name="L454" href="#L454">454</a> 
-<a class="jxr_linenumber" name="L455" href="#L455">455</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L456" href="#L456">456</a> <em class="jxr_javadoccomment">     * Open connection and cache it locally in the class.</em>
-<a class="jxr_linenumber" name="L457" href="#L457">457</a> <em class="jxr_javadoccomment">     * @return Connection to use</em>
-<a class="jxr_linenumber" name="L458" href="#L458">458</a> <em class="jxr_javadoccomment">     * @throws SQLException If fails</em>
-<a class="jxr_linenumber" name="L459" href="#L459">459</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L460" href="#L460">460</a>     <strong class="jxr_keyword">private</strong> Connection connect() <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L461" href="#L461">461</a>         <strong class="jxr_keyword">synchronized</strong> (<strong class="jxr_keyword">this</strong>.args) {
-<a class="jxr_linenumber" name="L462" href="#L462">462</a>             <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">this</strong>.connection.get() == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L463" href="#L463">463</a>                 <strong class="jxr_keyword">this</strong>.connection.set(<strong class="jxr_keyword">this</strong>.source.getConnection());
-<a class="jxr_linenumber" name="L464" href="#L464">464</a>             }
-<a class="jxr_linenumber" name="L465" href="#L465">465</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.connection.get();
-<a class="jxr_linenumber" name="L466" href="#L466">466</a>         }
-<a class="jxr_linenumber" name="L467" href="#L467">467</a>     }
-<a class="jxr_linenumber" name="L468" href="#L468">468</a> 
-<a class="jxr_linenumber" name="L469" href="#L469">469</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L470" href="#L470">470</a> <em class="jxr_javadoccomment">     * Close connection if it's open (runtime exception otherwise).</em>
-<a class="jxr_linenumber" name="L471" href="#L471">471</a> <em class="jxr_javadoccomment">     * @throws SQLException If fails to do the SQL operation</em>
-<a class="jxr_linenumber" name="L472" href="#L472">472</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L473" href="#L473">473</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> disconnect() <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L474" href="#L474">474</a>         <strong class="jxr_keyword">final</strong> Connection conn = <strong class="jxr_keyword">this</strong>.connection.getAndSet(<strong class="jxr_keyword">null</strong>);
-<a class="jxr_linenumber" name="L475" href="#L475">475</a>         <strong class="jxr_keyword">if</strong> (conn == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L476" href="#L476">476</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalStateException(
-<a class="jxr_linenumber" name="L477" href="#L477">477</a>                 <span class="jxr_string">"connection is not open, can't close"</span>
-<a class="jxr_linenumber" name="L478" href="#L478">478</a>             );
-<a class="jxr_linenumber" name="L479" href="#L479">479</a>         }
-<a class="jxr_linenumber" name="L480" href="#L480">480</a>         conn.close();
-<a class="jxr_linenumber" name="L481" href="#L481">481</a>     }
-<a class="jxr_linenumber" name="L482" href="#L482">482</a> 
-<a class="jxr_linenumber" name="L483" href="#L483">483</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="L484" href="#L484">484</a> <em class="jxr_javadoccomment">     * Configure the statement.</em>
-<a class="jxr_linenumber" name="L485" href="#L485">485</a> <em class="jxr_javadoccomment">     * @param stmt Statement</em>
-<a class="jxr_linenumber" name="L486" href="#L486">486</a> <em class="jxr_javadoccomment">     * @throws SQLException If fails</em>
-<a class="jxr_linenumber" name="L487" href="#L487">487</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="L488" href="#L488">488</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> configure(<strong class="jxr_keyword">final</strong> PreparedStatement stmt) <strong class="jxr_keyword">throws</strong> SQLException {
-<a class="jxr_linenumber" name="L489" href="#L489">489</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> Preparation prep : <strong class="jxr_keyword">this</strong>.preparations) {
-<a class="jxr_linenumber" name="L490" href="#L490">490</a>             prep.prepare(stmt);
-<a class="jxr_linenumber" name="L491" href="#L491">491</a>         }
-<a class="jxr_linenumber" name="L492" href="#L492">492</a>     }
-<a class="jxr_linenumber" name="L493" href="#L493">493</a> 
-<a class="jxr_linenumber" name="L494" href="#L494">494</a> }
+<a class="jxr_linenumber" name="L389" href="#L389">389</a> <em class="jxr_javadoccomment">     * @return This object</em>
+<a class="jxr_linenumber" name="L390" href="#L390">390</a> <em class="jxr_javadoccomment">     * @throws SQLException If fails</em>
+<a class="jxr_linenumber" name="L391" href="#L391">391</a> <em class="jxr_javadoccomment">     * @since 0.9</em>
+<a class="jxr_linenumber" name="L392" href="#L392">392</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L393" href="#L393">393</a>     <strong class="jxr_keyword">public</strong> <a href="../../../com/jcabi/jdbc/JdbcSession.html">JdbcSession</a> execute() <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L394" href="#L394">394</a>         <strong class="jxr_keyword">this</strong>.run(
+<a class="jxr_linenumber" name="L395" href="#L395">395</a>             Outcome.VOID,
+<a class="jxr_linenumber" name="L396" href="#L396">396</a>             <strong class="jxr_keyword">new</strong> Connect.Plain(<strong class="jxr_keyword">this</strong>.query),
+<a class="jxr_linenumber" name="L397" href="#L397">397</a>             Request.EXECUTE
+<a class="jxr_linenumber" name="L398" href="#L398">398</a>         );
+<a class="jxr_linenumber" name="L399" href="#L399">399</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>;
+<a class="jxr_linenumber" name="L400" href="#L400">400</a>     }
+<a class="jxr_linenumber" name="L401" href="#L401">401</a> 
+<a class="jxr_linenumber" name="L402" href="#L402">402</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L403" href="#L403">403</a> <em class="jxr_javadoccomment">     * Make SQL {@code SELECT} request.</em>
+<a class="jxr_linenumber" name="L404" href="#L404">404</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L405" href="#L405">405</a> <em class="jxr_javadoccomment">     * &lt;p&gt;JDBC connection is opened and, optionally, closed by this method.</em>
+<a class="jxr_linenumber" name="L406" href="#L406">406</a> <em class="jxr_javadoccomment">     *</em>
+<a class="jxr_linenumber" name="L407" href="#L407">407</a> <em class="jxr_javadoccomment">     * @param outcome The outcome of the operaton</em>
+<a class="jxr_linenumber" name="L408" href="#L408">408</a> <em class="jxr_javadoccomment">     * @param &lt;T&gt; Type of response</em>
+<a class="jxr_linenumber" name="L409" href="#L409">409</a> <em class="jxr_javadoccomment">     * @return The result</em>
+<a class="jxr_linenumber" name="L410" href="#L410">410</a> <em class="jxr_javadoccomment">     * @throws SQLException If fails</em>
+<a class="jxr_linenumber" name="L411" href="#L411">411</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L412" href="#L412">412</a>     <strong class="jxr_keyword">public</strong> &lt;T&gt; T select(<strong class="jxr_keyword">final</strong> Outcome&lt;T&gt; outcome)
+<a class="jxr_linenumber" name="L413" href="#L413">413</a>         <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L414" href="#L414">414</a>         <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.run(
+<a class="jxr_linenumber" name="L415" href="#L415">415</a>             outcome,
+<a class="jxr_linenumber" name="L416" href="#L416">416</a>             <strong class="jxr_keyword">new</strong> Connect.Plain(<strong class="jxr_keyword">this</strong>.query),
+<a class="jxr_linenumber" name="L417" href="#L417">417</a>             Request.EXECUTE_QUERY
+<a class="jxr_linenumber" name="L418" href="#L418">418</a>         );
+<a class="jxr_linenumber" name="L419" href="#L419">419</a>     }
+<a class="jxr_linenumber" name="L420" href="#L420">420</a> 
+<a class="jxr_linenumber" name="L421" href="#L421">421</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L422" href="#L422">422</a> <em class="jxr_javadoccomment">     * Run with this outcome, and this fetcher.</em>
+<a class="jxr_linenumber" name="L423" href="#L423">423</a> <em class="jxr_javadoccomment">     * @param outcome The outcome of the operation</em>
+<a class="jxr_linenumber" name="L424" href="#L424">424</a> <em class="jxr_javadoccomment">     * @param connect Connect</em>
+<a class="jxr_linenumber" name="L425" href="#L425">425</a> <em class="jxr_javadoccomment">     * @param request Request</em>
+<a class="jxr_linenumber" name="L426" href="#L426">426</a> <em class="jxr_javadoccomment">     * @param &lt;T&gt; Type of response</em>
+<a class="jxr_linenumber" name="L427" href="#L427">427</a> <em class="jxr_javadoccomment">     * @return The result</em>
+<a class="jxr_linenumber" name="L428" href="#L428">428</a> <em class="jxr_javadoccomment">     * @throws SQLException If fails</em>
+<a class="jxr_linenumber" name="L429" href="#L429">429</a> <em class="jxr_javadoccomment">     * @checkstyle ExecutableStatementCount (100 lines)</em>
+<a class="jxr_linenumber" name="L430" href="#L430">430</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L431" href="#L431">431</a>     <strong class="jxr_keyword">private</strong> &lt;T&gt; T run(<strong class="jxr_keyword">final</strong> Outcome&lt;T&gt; outcome,
+<a class="jxr_linenumber" name="L432" href="#L432">432</a>         <strong class="jxr_keyword">final</strong> <a href="../../../com/jcabi/jdbc/Connect.html">Connect</a> connect, <strong class="jxr_keyword">final</strong> <a href="../../../com/jcabi/jdbc/Request.html">Request</a> request)
+<a class="jxr_linenumber" name="L433" href="#L433">433</a>         <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L434" href="#L434">434</a>         <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">this</strong>.query == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L435" href="#L435">435</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalStateException(<span class="jxr_string">"call #sql() first"</span>);
+<a class="jxr_linenumber" name="L436" href="#L436">436</a>         }
+<a class="jxr_linenumber" name="L437" href="#L437">437</a>         <strong class="jxr_keyword">final</strong> Connection conn = <strong class="jxr_keyword">this</strong>.connect();
+<a class="jxr_linenumber" name="L438" href="#L438">438</a>         <strong class="jxr_keyword">final</strong> T result;
+<a class="jxr_linenumber" name="L439" href="#L439">439</a>         <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L440" href="#L440">440</a>             conn.setAutoCommit(<strong class="jxr_keyword">this</strong>.auto);
+<a class="jxr_linenumber" name="L441" href="#L441">441</a>             <strong class="jxr_keyword">final</strong> PreparedStatement stmt = connect.open(conn);
+<a class="jxr_linenumber" name="L442" href="#L442">442</a>             <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L443" href="#L443">443</a>                 <strong class="jxr_keyword">this</strong>.configure(stmt);
+<a class="jxr_linenumber" name="L444" href="#L444">444</a>                 <strong class="jxr_keyword">final</strong> ResultSet rset = request.fetch(stmt);
+<a class="jxr_linenumber" name="L445" href="#L445">445</a>                 <em class="jxr_comment">// @checkstyle NestedTryDepth (5 lines)</em>
+<a class="jxr_linenumber" name="L446" href="#L446">446</a>                 <strong class="jxr_keyword">try</strong> {
+<a class="jxr_linenumber" name="L447" href="#L447">447</a>                     result = outcome.handle(rset, stmt);
+<a class="jxr_linenumber" name="L448" href="#L448">448</a>                 } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="L449" href="#L449">449</a>                     <strong class="jxr_keyword">if</strong> (rset != <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L450" href="#L450">450</a>                         rset.close();
+<a class="jxr_linenumber" name="L451" href="#L451">451</a>                     }
+<a class="jxr_linenumber" name="L452" href="#L452">452</a>                 }
+<a class="jxr_linenumber" name="L453" href="#L453">453</a>             } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="L454" href="#L454">454</a>                 stmt.close();
+<a class="jxr_linenumber" name="L455" href="#L455">455</a>             }
+<a class="jxr_linenumber" name="L456" href="#L456">456</a>         } <strong class="jxr_keyword">catch</strong> (<strong class="jxr_keyword">final</strong> SQLException ex) {
+<a class="jxr_linenumber" name="L457" href="#L457">457</a>             <strong class="jxr_keyword">if</strong> (!<strong class="jxr_keyword">this</strong>.auto) {
+<a class="jxr_linenumber" name="L458" href="#L458">458</a>                 conn.rollback();
+<a class="jxr_linenumber" name="L459" href="#L459">459</a>                 <strong class="jxr_keyword">this</strong>.disconnect();
+<a class="jxr_linenumber" name="L460" href="#L460">460</a>             }
+<a class="jxr_linenumber" name="L461" href="#L461">461</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> SQLException(ex);
+<a class="jxr_linenumber" name="L462" href="#L462">462</a>         } <strong class="jxr_keyword">finally</strong> {
+<a class="jxr_linenumber" name="L463" href="#L463">463</a>             <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">this</strong>.auto) {
+<a class="jxr_linenumber" name="L464" href="#L464">464</a>                 <strong class="jxr_keyword">this</strong>.disconnect();
+<a class="jxr_linenumber" name="L465" href="#L465">465</a>             }
+<a class="jxr_linenumber" name="L466" href="#L466">466</a>             <strong class="jxr_keyword">this</strong>.clear();
+<a class="jxr_linenumber" name="L467" href="#L467">467</a>         }
+<a class="jxr_linenumber" name="L468" href="#L468">468</a>         <strong class="jxr_keyword">return</strong> result;
+<a class="jxr_linenumber" name="L469" href="#L469">469</a>     }
+<a class="jxr_linenumber" name="L470" href="#L470">470</a> 
+<a class="jxr_linenumber" name="L471" href="#L471">471</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L472" href="#L472">472</a> <em class="jxr_javadoccomment">     * Open connection and cache it locally in the class.</em>
+<a class="jxr_linenumber" name="L473" href="#L473">473</a> <em class="jxr_javadoccomment">     * @return Connection to use</em>
+<a class="jxr_linenumber" name="L474" href="#L474">474</a> <em class="jxr_javadoccomment">     * @throws SQLException If fails</em>
+<a class="jxr_linenumber" name="L475" href="#L475">475</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L476" href="#L476">476</a>     <strong class="jxr_keyword">private</strong> Connection connect() <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L477" href="#L477">477</a>         <strong class="jxr_keyword">synchronized</strong> (<strong class="jxr_keyword">this</strong>.args) {
+<a class="jxr_linenumber" name="L478" href="#L478">478</a>             <strong class="jxr_keyword">if</strong> (<strong class="jxr_keyword">this</strong>.connection.get() == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L479" href="#L479">479</a>                 <strong class="jxr_keyword">this</strong>.connection.set(<strong class="jxr_keyword">this</strong>.source.getConnection());
+<a class="jxr_linenumber" name="L480" href="#L480">480</a>             }
+<a class="jxr_linenumber" name="L481" href="#L481">481</a>             <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">this</strong>.connection.get();
+<a class="jxr_linenumber" name="L482" href="#L482">482</a>         }
+<a class="jxr_linenumber" name="L483" href="#L483">483</a>     }
+<a class="jxr_linenumber" name="L484" href="#L484">484</a> 
+<a class="jxr_linenumber" name="L485" href="#L485">485</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L486" href="#L486">486</a> <em class="jxr_javadoccomment">     * Close connection if it's open (runtime exception otherwise).</em>
+<a class="jxr_linenumber" name="L487" href="#L487">487</a> <em class="jxr_javadoccomment">     * @throws SQLException If fails to do the SQL operation</em>
+<a class="jxr_linenumber" name="L488" href="#L488">488</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L489" href="#L489">489</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> disconnect() <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L490" href="#L490">490</a>         <strong class="jxr_keyword">final</strong> Connection conn = <strong class="jxr_keyword">this</strong>.connection.getAndSet(<strong class="jxr_keyword">null</strong>);
+<a class="jxr_linenumber" name="L491" href="#L491">491</a>         <strong class="jxr_keyword">if</strong> (conn == <strong class="jxr_keyword">null</strong>) {
+<a class="jxr_linenumber" name="L492" href="#L492">492</a>             <strong class="jxr_keyword">throw</strong> <strong class="jxr_keyword">new</strong> IllegalStateException(
+<a class="jxr_linenumber" name="L493" href="#L493">493</a>                 <span class="jxr_string">"connection is not open, can't close"</span>
+<a class="jxr_linenumber" name="L494" href="#L494">494</a>             );
+<a class="jxr_linenumber" name="L495" href="#L495">495</a>         }
+<a class="jxr_linenumber" name="L496" href="#L496">496</a>         conn.close();
+<a class="jxr_linenumber" name="L497" href="#L497">497</a>     }
+<a class="jxr_linenumber" name="L498" href="#L498">498</a> 
+<a class="jxr_linenumber" name="L499" href="#L499">499</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L500" href="#L500">500</a> <em class="jxr_javadoccomment">     * Configure the statement.</em>
+<a class="jxr_linenumber" name="L501" href="#L501">501</a> <em class="jxr_javadoccomment">     * @param stmt Statement</em>
+<a class="jxr_linenumber" name="L502" href="#L502">502</a> <em class="jxr_javadoccomment">     * @throws SQLException If fails</em>
+<a class="jxr_linenumber" name="L503" href="#L503">503</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L504" href="#L504">504</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">void</strong> configure(<strong class="jxr_keyword">final</strong> PreparedStatement stmt) <strong class="jxr_keyword">throws</strong> SQLException {
+<a class="jxr_linenumber" name="L505" href="#L505">505</a>         <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">final</strong> Preparation prep : <strong class="jxr_keyword">this</strong>.preparations) {
+<a class="jxr_linenumber" name="L506" href="#L506">506</a>             prep.prepare(stmt);
+<a class="jxr_linenumber" name="L507" href="#L507">507</a>         }
+<a class="jxr_linenumber" name="L508" href="#L508">508</a>     }
+<a class="jxr_linenumber" name="L509" href="#L509">509</a> 
+<a class="jxr_linenumber" name="L510" href="#L510">510</a> }
 </pre>
 <hr/>
 <div id="footer">Copyright &#169; 2012&#x2013;2019 <a href="http://www.jcabi.com">jcabi.com</a>. All rights reserved.</div>
