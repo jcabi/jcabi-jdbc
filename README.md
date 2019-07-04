@@ -12,9 +12,12 @@
 [![Dependencies](https://www.versioneye.com/user/projects/561ac40ea193340f28001102/badge.svg?style=flat)](https://www.versioneye.com/user/projects/561ac40ea193340f28001102)
 
 [![jpeek report](http://i.jpeek.org/com.jcabi/jcabi-jdbc/badge.svg)](http://i.jpeek.org/com.jcabi/jcabi-jdbc/)
+[![Hits-of-Code](https://hitsofcode.com/github/jcabi/jcabi-jdbc)](https://hitsofcode.com/view/github/jcabi-jdbc)
 
 More details are here: [jdbc.jcabi.com](http://jdbc.jcabi.com/index.html).
-Also, read this blog post: [Fluent JDBC Decorator](http://www.yegor256.com/2014/08/18/fluent-jdbc-decorator.html).
+
+Also, read this blog post:
+[_Fluent JDBC Decorator_](http://www.yegor256.com/2014/08/18/fluent-jdbc-decorator.html).
 
 `JdbcSession` is a convenient fluent wrapper around JDBC:
 
@@ -29,11 +32,6 @@ public class Main {
   }
 }
 ```
-
-## Questions?
-
-If you have any questions about the framework, or something doesn't work as expected,
-please [submit an issue here](https://github.com/yegor256/jcabi/issues/new).
 
 ## How to contribute?
 
