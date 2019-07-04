@@ -3,13 +3,13 @@
 [![EO principles respected here](https://www.elegantobjects.org/badge.svg)](https://www.elegantobjects.org)
 [![Managed by Zerocracy](https://www.0crat.com/badge/C3RUBL5H9.svg)](https://www.0crat.com/p/C3RUBL5H9)
 [![DevOps By Rultor.com](http://www.rultor.com/b/jcabi/jcabi-jdbc)](http://www.rultor.com/p/jcabi/jcabi-jdbc)
+[![We recommend IntelliJ IDEA](https://www.elegantobjects.org/intellij-idea.svg)](https://www.jetbrains.com/idea/)
 
 [![Build Status](https://travis-ci.org/jcabi/jcabi-jdbc.svg?branch=master)](https://travis-ci.org/jcabi/jcabi-jdbc)
 [![PDD status](http://www.0pdd.com/svg?name=jcabi/jcabi-jdbc)](http://www.0pdd.com/p?name=jcabi/jcabi-jdbc)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.jcabi/jcabi-jdbc/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.jcabi/jcabi-jdbc)
 [![Javadoc](https://javadoc.io/badge/com.jcabi/jcabi-jdbc.svg)](http://www.javadoc.io/doc/com.jcabi/jcabi-jdbc)
 [![Coverage Status](https://coveralls.io/repos/jcabi/jcabi-jdbc/badge.svg?branch=__rultor&service=github)](https://coveralls.io/github/jcabi/jcabi-jdbc?branch=__rultor)
-[![Dependencies](https://www.versioneye.com/user/projects/561ac40ea193340f28001102/badge.svg?style=flat)](https://www.versioneye.com/user/projects/561ac40ea193340f28001102)
 
 [![jpeek report](http://i.jpeek.org/com.jcabi/jcabi-jdbc/badge.svg)](http://i.jpeek.org/com.jcabi/jcabi-jdbc/)
 [![Hits-of-Code](https://hitsofcode.com/github/jcabi/jcabi-jdbc)](https://hitsofcode.com/view/github/jcabi-jdbc)
