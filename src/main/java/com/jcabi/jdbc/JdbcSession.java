@@ -298,6 +298,22 @@ public final class JdbcSession {
     }
 
     /**
+     * Rollback the transaction (calls {@link Connection#rollback()} and then
+     * {@link Connection#close()}).
+     * @throws SQLException If fails to do the SQL operation
+     */
+    public void rollback() throws SQLException {
+        final Connection conn = this.connection.get();
+        if (conn == null) {
+            throw new IllegalStateException(
+                "connection is not open, can't rollback"
+            );
+        }
+        conn.rollback();
+        this.disconnect();
+    }
+
+    /**
      * Make SQL {@code INSERT} request.
      *
      * <p>{@link Outcome} will receive
