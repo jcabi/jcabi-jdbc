@@ -11,7 +11,7 @@
 [![Javadoc](https://javadoc.io/badge/com.jcabi/jcabi-jdbc.svg)](http://www.javadoc.io/doc/com.jcabi/jcabi-jdbc)
 [![Coverage Status](https://coveralls.io/repos/jcabi/jcabi-jdbc/badge.svg?branch=__rultor&service=github)](https://coveralls.io/github/jcabi/jcabi-jdbc?branch=__rultor)
 
-[![jpeek report](http://i.jpeek.org/com.jcabi/jcabi-jdbc/badge.svg)](http://i.jpeek.org/com.jcabi/jcabi-jdbc/)
+[![jpeek report](https://i.jpeek.org/com.jcabi/jcabi-jdbc/badge.svg)](https://i.jpeek.org/com.jcabi/jcabi-jdbc/)
 [![Hits-of-Code](https://hitsofcode.com/github/jcabi/jcabi-jdbc)](https://hitsofcode.com/view/github/jcabi-jdbc)
 
 More details are here: [jdbc.jcabi.com](http://jdbc.jcabi.com/index.html).
