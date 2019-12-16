@@ -32,6 +32,9 @@ public class Main {
   }
 }
 ```
+## Limitations
+
+UUID data type is not supported.
 
 ## How to contribute?
 
