@@ -1,6 +1,6 @@
 architect:
 - yegor256
-- dmarkov
+- andreoss
 install:
 - sudo gem install pdd -v 0.20.5
 - sudo gem install xcop -v 0.6
@@ -14,16 +14,6 @@ merge:
     mvn clean install site -Psite -P!coveralls -Pqulice --errors --settings ../settings.xml
     mvn clean
     pdd --source=$(pwd) --verbose --file=/dev/null
-  commanders:
-  - carlosmiranda
-  - darkled
-  - dmzaytsev
-  - ggajos
-  - hdouss
-  - krzyk
-  - longtimeago
-  - mkordas
-  - pinaf
 deploy:
   script: |-
     mvn clean deploy -Pqulice --errors --settings ../settings.xml
@@ -38,5 +28,3 @@ release:
     git commit -am "${tag}"
     mvn clean deploy -Pqulice -Psonatype -Pjcabi --errors --settings ../settings.xml
     mvn clean site-deploy -Pjcabi -Psite --errors --settings ../settings.xml
-  commanders:
-  - yegor256
