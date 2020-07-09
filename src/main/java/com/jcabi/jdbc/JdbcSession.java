@@ -338,8 +338,8 @@ public final class JdbcSession {
      *
      * <p>JDBC connection is opened and, optionally, closed by this method.
      *
-     * @param <T> Type of result expected
      * @param outcome Outcome of the operation
+     * @param <T> Type of result expected
      * @return This object
      * @throws SQLException If fails
      */
@@ -360,8 +360,8 @@ public final class JdbcSession {
      * if it's value is true, the connection will be commited after
      * this call.
      *
-     * @param <T> Type of result expected
      * @param outcome Outcome of the operation
+     * @param <T> Type of result expected
      * @return Result of type T
      * @throws SQLException If fails
      */
