@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2012-2018, jcabi.com
  * All rights reserved.
  *
