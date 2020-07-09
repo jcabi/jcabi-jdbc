@@ -31,7 +31,6 @@
 /**
  * JDBC wrapper, tests.
  *
- * @version $Id$
  * @since 0.1.8
  */
 package com.jcabi.jdbc;

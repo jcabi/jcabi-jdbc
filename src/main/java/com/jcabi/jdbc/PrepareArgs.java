@@ -39,7 +39,6 @@ import java.util.Collections;
 /**
  * Prepare arguments.
  *
- * @version $Id$
  * @since 0.13
  */
 final class PrepareArgs implements Preparation {

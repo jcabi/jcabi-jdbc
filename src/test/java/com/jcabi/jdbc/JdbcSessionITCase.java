@@ -46,7 +46,6 @@ import org.junit.Test;
 
 /**
  * Integration case for {@link JdbcSession}.
- * @version $Id$
  * @since 0.1
  */
 public final class JdbcSessionITCase {

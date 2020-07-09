@@ -38,7 +38,6 @@ import lombok.ToString;
 
 /**
  * Outcome of a stored procedure with OUT parameters.
- * @version $Id$
  * @since 0.17
  * @param <T> Type of the returned result, which <b>has to be</b> Object[]
  */

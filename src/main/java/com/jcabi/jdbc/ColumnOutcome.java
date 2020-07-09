@@ -50,7 +50,6 @@ import lombok.ToString;
  * <p>Supported types are: {@link String}, {@link Long}, {@link Boolean},
  * {@link Byte}, {@link Date}, and {@link Utc}.
  *
- * @version $Id$
  * @since 0.13
  * @param <T> Type of items
  */

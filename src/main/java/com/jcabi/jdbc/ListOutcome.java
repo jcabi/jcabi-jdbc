@@ -55,7 +55,6 @@ import lombok.ToString;
  *     )
  *   );</pre>
  *
- * @version $Id$
  * @since 0.13
  * @param <T> Type of items
  */

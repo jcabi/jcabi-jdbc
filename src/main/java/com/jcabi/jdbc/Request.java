@@ -36,7 +36,6 @@ import java.sql.SQLException;
 /**
  * Request.
  *
- * @version $Id$
  * @since 0.13
  */
 interface Request {

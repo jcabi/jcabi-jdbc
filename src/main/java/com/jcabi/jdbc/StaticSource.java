@@ -39,7 +39,6 @@ import lombok.ToString;
 /**
  * Static data source which wraps a single {@link Connection}.
  *
- * @version $Id$
  * @since 0.10
  */
 @ToString

@@ -37,7 +37,6 @@ import org.junit.Test;
 
 /**
  * Test case for {@link ColumnOutcome}.
- * @version $Id$
  * @since 0.13
  */
 public final class ColumnOutcomeTest {

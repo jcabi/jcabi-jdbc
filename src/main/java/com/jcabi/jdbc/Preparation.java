@@ -35,7 +35,6 @@ import java.sql.SQLException;
 /**
  * Preparation of a {@link java.sql.PreparedStatement}.
  *
- * @version $Id$
  * @since 0.13
  */
 public interface Preparation {

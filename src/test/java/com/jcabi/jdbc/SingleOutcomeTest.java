@@ -36,7 +36,6 @@ import org.junit.Test;
 
 /**
  * Test case for {@link SingleOutcome}.
- * @version $Id$
  * @since 0.1
  */
 public final class SingleOutcomeTest {

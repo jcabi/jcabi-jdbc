@@ -37,7 +37,6 @@ import java.sql.Statement;
 /**
  * Connect.
  *
- * @version $Id$
  * @since 0.13
  */
 interface Connect {

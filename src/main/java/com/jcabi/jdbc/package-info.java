@@ -39,7 +39,6 @@
  *   &lt;artifactId&gt;jcabi-jdbc&lt;/artifactId&gt;
  * &lt;/dependency&gt;</pre>
  *
- * @version $Id$
  * @since 0.1.8
  * @see <a href="http://jdbc.jcabi.com/">project website</a>
  */

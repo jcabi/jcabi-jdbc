@@ -42,7 +42,6 @@ import lombok.ToString;
 /**
  * H2 data source, for unit testing.
  *
- * @version $Id$
  * @since 0.13
  */
 @ToString

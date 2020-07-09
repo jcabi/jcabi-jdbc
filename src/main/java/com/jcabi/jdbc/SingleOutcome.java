@@ -62,7 +62,6 @@ import lombok.ToString;
  *   // such a record wasn't found in the database
  * }</pre>
  *
- * @version $Id$
  * @since 0.1.8
  * @param <T> Type of items
  */
