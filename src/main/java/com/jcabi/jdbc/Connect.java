@@ -37,7 +37,6 @@ import java.sql.Statement;
 /**
  * Connect.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
  * @since 0.13
  */

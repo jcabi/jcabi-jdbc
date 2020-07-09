@@ -133,7 +133,6 @@ import lombok.ToString;
  *  .execute();</pre>
  * <p>This class is thread-safe.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
  * @version $Id$
  * @since 0.1.8
  * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)

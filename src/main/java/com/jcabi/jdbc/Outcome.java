@@ -45,7 +45,6 @@ import java.sql.Statement;
  *  <li>{@link Outcome#UPDATE_COUNT} to check the number of updated rows.
  * </ul>
  *
- * @author Carlos Miranda (miranda.cma@gmail.com)
  * @version $Id$
  * @param <T> Type of expected result
  * @since 0.12
