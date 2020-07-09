@@ -88,6 +88,7 @@ public final class ListOutcome<T> implements Outcome<List<T>> {
     /**
      * Mapping.
      * @param <T> Type of output
+     * @since 0.13
      */
     public interface Mapping<T> {
         /**
