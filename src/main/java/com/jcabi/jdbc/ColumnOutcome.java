@@ -98,7 +98,9 @@ public final class ColumnOutcome<T> implements Outcome<Collection<T>> {
      * @return The result
      * @throws SQLException If some error inside
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked",
+        "PMD.CyclomaticComplexity"
+    })
     private T fetch(final ResultSet rset) throws SQLException {
         final Object result;
         final Class<T> tpe;
