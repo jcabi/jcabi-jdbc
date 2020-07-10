@@ -1,9 +1,10 @@
 architect:
 - yegor256
 - andreoss
-install:
-- sudo gem install pdd -v 0.20.5
-- sudo gem install xcop -v 0.6
+install: |-
+  sudo update-java-alternatives -s java-1.8.0-openjdk-amd64
+  sudo gem install pdd -v 0.20.5
+  sudo gem install xcop -v 0.6
 assets:
   secring.gpg: yegor256/home#assets/secring.gpg
   settings.xml: yegor256/home#assets/jcabi/settings.xml
@@ -11,13 +12,13 @@ assets:
   s3cfg: yegor256/home#assets/s3cfg
 merge:
   script: |-
-    mvn clean install site -Psite -P!coveralls -Pqulice --errors --settings ../settings.xml
-    mvn clean
+    mvn --batch-mode clean install site -Psite -P!coveralls -Pqulice --errors --settings ../settings.xml
+    mvn --batch-mode clean
     pdd --source=$(pwd) --verbose --file=/dev/null
 deploy:
   script: |-
-    mvn clean deploy -Pqulice --errors --settings ../settings.xml
-    mvn clean
+    mvn --batch-mode clean deploy -Pqulice --errors --settings ../settings.xml
+    mvn --batch-mode clean
     pdd --source=$(pwd) --verbose --file=jcabi-jdbc.xml
     s3cmd --no-progress put jcabi-jdbc.xml --config=../s3cfg s3://pdd.teamed.io/jcabi-jdbc.xml
 env:
@@ -26,5 +27,5 @@ release:
   script: |-
     mvn versions:set "-DnewVersion=${tag}"
     git commit -am "${tag}"
-    mvn clean deploy -Pqulice -Psonatype -Pjcabi --errors --settings ../settings.xml
-    mvn clean site-deploy -Pjcabi -Psite --errors --settings ../settings.xml
+    mvn --batch-mode clean deploy -Pqulice -Psonatype -Pjcabi --errors --settings ../settings.xml
+    mvn --batch-mode clean site-deploy -Pjcabi -Psite --errors --settings ../settings.xml
