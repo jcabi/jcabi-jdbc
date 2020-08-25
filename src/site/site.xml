@@ -43,10 +43,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
   </bannerLeft>
   <googleAnalyticsAccountId>UA-1963507-23</googleAnalyticsAccountId>
   <body>
-    <head>
-      <link href="http://img.jcabi.com/favicon.ico" rel="shortcut icon"/>
-      <link href="https://plus.google.com/u/0/114792568016408327418?rel=author" rel="author"/>
-    </head>
     <menu name="Overview">
       <item name="Introduction" href="index.html"/>
       <item name="JavaDoc ${project.version}" href="./apidocs-${project.version}/index.html"/>

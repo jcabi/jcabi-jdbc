@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2012-2018, jcabi.com
  * All rights reserved.
  *
@@ -35,8 +35,6 @@ import java.sql.SQLException;
 /**
  * Preparation of a {@link java.sql.PreparedStatement}.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 0.13
  */
 public interface Preparation {

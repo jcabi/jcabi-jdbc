@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2012-2018, jcabi.com
  * All rights reserved.
  *
@@ -62,8 +62,6 @@ import lombok.ToString;
  *   // such a record wasn't found in the database
  * }</pre>
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 0.1.8
  * @param <T> Type of items
  */
@@ -129,7 +127,9 @@ public final class SingleOutcome<T> implements Outcome<T> {
      * @return The result
      * @throws SQLException If some error inside
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked",
+        "PMD.CyclomaticComplexity"
+    })
     private T fetch(final ResultSet rset) throws SQLException {
         final Object result;
         final Class<T> tpe;
