@@ -4,6 +4,7 @@
 [![Managed by Zerocracy](https://www.0crat.com/badge/C3RUBL5H9.svg)](https://www.0crat.com/p/C3RUBL5H9)
 [![DevOps By Rultor.com](http://www.rultor.com/b/jcabi/jcabi-jdbc)](http://www.rultor.com/p/jcabi/jcabi-jdbc)
 [![We recommend IntelliJ IDEA](https://www.elegantobjects.org/intellij-idea.svg)](https://www.jetbrains.com/idea/)
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fjcabi%2Fjcabi-jdbc.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fjcabi%2Fjcabi-jdbc?ref=badge_shield)
 
 [![Build Status](https://travis-ci.org/jcabi/jcabi-jdbc.svg?branch=master)](https://travis-ci.org/jcabi/jcabi-jdbc)
 [![PDD status](http://www.0pdd.com/svg?name=jcabi/jcabi-jdbc)](http://www.0pdd.com/p?name=jcabi/jcabi-jdbc)
@@ -49,3 +50,7 @@ $ mvn clean install -Pqulice
 ```
 
 Please make sure that you're doing so under user account without administrative rights, otherwise the build will fail (postgresql instance needed for tests can't be launched under admin/root account).
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fjcabi%2Fjcabi-jdbc.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fjcabi%2Fjcabi-jdbc?ref=badge_large)
