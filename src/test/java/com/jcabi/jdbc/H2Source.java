@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2012-2018, jcabi.com
  * All rights reserved.
  *
@@ -42,8 +42,6 @@ import lombok.ToString;
 /**
  * H2 data source, for unit testing.
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 0.13
  */
 @ToString

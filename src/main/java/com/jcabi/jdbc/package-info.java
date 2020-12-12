@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2012-2018, jcabi.com
  * All rights reserved.
  *
@@ -39,8 +39,6 @@
  *   &lt;artifactId&gt;jcabi-jdbc&lt;/artifactId&gt;
  * &lt;/dependency&gt;</pre>
  *
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 0.1.8
  * @see <a href="http://jdbc.jcabi.com/">project website</a>
  */

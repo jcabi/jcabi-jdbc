@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2012-2018, jcabi.com
  * All rights reserved.
  *
@@ -38,8 +38,6 @@ import lombok.ToString;
 
 /**
  * Outcome of a stored procedure with OUT parameters.
- * @author Mihai Andronache (amihaiemil@gmail.com)
- * @version $Id$
  * @since 0.17
  * @param <T> Type of the returned result, which <b>has to be</b> Object[]
  */

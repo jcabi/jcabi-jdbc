@@ -1,4 +1,4 @@
-/**
+/*
  * Copyright (c) 2012-2018, jcabi.com
  * All rights reserved.
  *
@@ -39,8 +39,6 @@ import org.junit.Test;
 
 /**
  * Test case for {@link ListOutcome}.
- * @author Yegor Bugayenko (yegor256@gmail.com)
- * @version $Id$
  * @since 0.13
  */
 public final class ListOutcomeTest {
