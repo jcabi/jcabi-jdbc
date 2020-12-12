@@ -60,10 +60,7 @@ final class JdbcSessionITCase {
      */
     @Container
     private final JdbcDatabaseContainer<?> container =
-        new PostgreSQLContainer<>("postgres:9.6.12")
-            .withDatabaseName("foo")
-            .withUsername("foo")
-            .withPassword("secret");
+        new PostgreSQLContainer<>("postgres:9.6.12");
 
     /**
      * JdbcSession can do PostgreSQL manipulations.
