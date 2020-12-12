@@ -163,51 +163,11 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
       </plugin>
       <plugin>
         <artifactId>maven-failsafe-plugin</artifactId>
-        <configuration>
-          <systemPropertyVariables>
-            <failsafe.pgsql.jdbc>jdbc:postgresql://localhost:${failsafe.pgsql.port}/test</failsafe.pgsql.jdbc>
-            <failsafe.pgsql.user>${failsafe.pgsql.user}</failsafe.pgsql.user>
-            <failsafe.pgsql.password>${failsafe.pgsql.password}</failsafe.pgsql.password>
-          </systemPropertyVariables>
-        </configuration>
         <executions>
           <execution>
             <goals>
               <goal>integration-test</goal>
               <goal>verify</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>com.github.adrianboimvaser</groupId>
-        <artifactId>postgresql-maven-plugin</artifactId>
-        <version>0.2</version>
-        <configuration>
-          <pgsqlHome>${project.build.directory}/pgsql</pgsqlHome>
-          <dataDir>${project.build.directory}/data</dataDir>
-          <databaseName>test</databaseName>
-          <username>${failsafe.pgsql.user}</username>
-          <passwordFile>${project.build.directory}/test-classes/password.txt</passwordFile>
-          <port>${failsafe.pgsql.port}</port>
-          <timeoutInSeconds>10</timeoutInSeconds>
-          <logfile>${project.build.directory}/pgsql/log.file</logfile>
-        </configuration>
-        <executions>
-          <execution>
-            <id>init-db</id>
-            <phase>pre-integration-test</phase>
-            <goals>
-              <goal>initdb</goal>
-              <goal>start</goal>
-              <goal>createdb</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>stop-postgresql</id>
-            <phase>post-integration-test</phase>
-            <goals>
-              <goal>stop</goal>
             </goals>
           </execution>
         </executions>
