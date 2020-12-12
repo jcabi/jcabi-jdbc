@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2012-2018, jcabi.com
  * All rights reserved.
- * <p>
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met: 1) Redistributions of source code must retain the above
@@ -13,7 +13,7 @@
  * the names of its contributors may be used to endorse or promote
  * products derived from this software without specific prior written
  * permission.
- * <p>
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT
  * NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
@@ -55,11 +55,15 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 @Testcontainers
 final class JdbcSessionITCase {
 
+    /**
+     * The database container.
+     */
     @Container
-    private final JdbcDatabaseContainer<?> container = new PostgreSQLContainer<>("postgres:9.6.12")
-        .withDatabaseName("foo")
-        .withUsername("foo")
-        .withPassword("secret");
+    private final JdbcDatabaseContainer<?> container =
+        new PostgreSQLContainer<>("postgres:9.6.12")
+            .withDatabaseName("foo")
+            .withUsername("foo")
+            .withPassword("secret");
 
     /**
      * JdbcSession can do PostgreSQL manipulations.
@@ -67,7 +71,7 @@ final class JdbcSessionITCase {
      * @throws Exception If there is some problem inside
      */
     @Test
-    void manipulatesPostgresql() throws Exception {
+    public void manipulatesPostgresql() throws Exception {
         final DataSource source = this.source();
         new JdbcSession(source)
             .autocommit(false)
@@ -85,7 +89,7 @@ final class JdbcSessionITCase {
      * @throws Exception If there is some problem inside
      */
     @Test
-    void changesTransactionIsolationLevel() throws Exception {
+    public void changesTransactionIsolationLevel() throws Exception {
         final DataSource source = this.source();
         new JdbcSession(source).sql("VACUUM").execute();
     }
@@ -97,7 +101,7 @@ final class JdbcSessionITCase {
      * @throws Exception If something goes wrong
      */
     @Test
-    void callsFunctionWithOutParam() throws Exception {
+    public void callsFunctionWithOutParam() throws Exception {
         final DataSource source = this.source();
         new JdbcSession(source).autocommit(false).sql(
             "CREATE TABLE IF NOT EXISTS users (name VARCHAR(50))"
@@ -144,7 +148,7 @@ final class JdbcSessionITCase {
      * @throws Exception If something goes wrong
      */
     @Test
-    void callsFunctionWithInOutParam() throws Exception {
+    public void callsFunctionWithInOutParam() throws Exception {
         final DataSource source = this.source();
         new JdbcSession(source).autocommit(false).sql(
             "CREATE TABLE IF NOT EXISTS usersids (id INTEGER, name VARCHAR(50))"
