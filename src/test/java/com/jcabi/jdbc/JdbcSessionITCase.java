@@ -1,7 +1,7 @@
 /**
  * Copyright (c) 2012-2018, jcabi.com
  * All rights reserved.
- *
+ * <p>
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions
  * are met: 1) Redistributions of source code must retain the above
@@ -13,7 +13,7 @@
  * the names of its contributors may be used to endorse or promote
  * products derived from this software without specific prior written
  * permission.
- *
+ * <p>
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
  * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT
  * NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
@@ -40,9 +40,11 @@ import javax.sql.DataSource;
 import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Assume;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.testcontainers.containers.JdbcDatabaseContainer;
+import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.junit.jupiter.Testcontainers;
 
 /**
  * Integration case for {@link JdbcSession}.
@@ -50,35 +52,23 @@ import org.junit.Test;
  * @version $Id$
  * @since 0.1
  */
-public final class JdbcSessionITCase {
+@Testcontainers
+final class JdbcSessionITCase {
 
-    /**
-     * JDBC URL.
-     */
-    private static final String URL =
-        System.getProperty("failsafe.pgsql.jdbc");
-
-    /**
-     * JDBC username.
-     */
-    private static final String USER =
-        System.getProperty("failsafe.pgsql.user");
-
-    /**
-     * Before every test.
-     */
-    @Before
-    public void before() {
-        Assume.assumeNotNull(JdbcSessionITCase.URL);
-    }
+    @Container
+    private final JdbcDatabaseContainer<?> container = new PostgreSQLContainer<>("postgres:9.6.12")
+        .withDatabaseName("foo")
+        .withUsername("foo")
+        .withPassword("secret");
 
     /**
      * JdbcSession can do PostgreSQL manipulations.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void manipulatesPostgresql() throws Exception {
-        final DataSource source = JdbcSessionITCase.source();
+    void manipulatesPostgresql() throws Exception {
+        final DataSource source = this.source();
         new JdbcSession(source)
             .autocommit(false)
             .sql("CREATE TABLE IF NOT EXISTS foo (name VARCHAR(50))")
@@ -91,22 +81,24 @@ public final class JdbcSessionITCase {
 
     /**
      * JdbcSession can change transaction isolation level.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void changesTransactionIsolationLevel() throws Exception {
-        final DataSource source = JdbcSessionITCase.source();
+    void changesTransactionIsolationLevel() throws Exception {
+        final DataSource source = this.source();
         new JdbcSession(source).sql("VACUUM").execute();
     }
 
     /**
      * JdbcSession can run a function (stored procedure) with
      * output parameters.
+     *
      * @throws Exception If something goes wrong
      */
     @Test
-    public void callsFunctionWithOutParam() throws Exception {
-        final DataSource source = JdbcSessionITCase.source();
+    void callsFunctionWithOutParam() throws Exception {
+        final DataSource source = this.source();
         new JdbcSession(source).autocommit(false).sql(
             "CREATE TABLE IF NOT EXISTS users (name VARCHAR(50))"
         ).execute().sql("INSERT INTO users (name) VALUES (?)")
@@ -148,11 +140,12 @@ public final class JdbcSessionITCase {
     /**
      * JdbcSession can run a function (stored procedure) with
      * input and output parameters.
+     *
      * @throws Exception If something goes wrong
      */
     @Test
-    public void callsFunctionWithInOutParam() throws Exception {
-        final DataSource source = JdbcSessionITCase.source();
+    void callsFunctionWithInOutParam() throws Exception {
+        final DataSource source = this.source();
         new JdbcSession(source).autocommit(false).sql(
             "CREATE TABLE IF NOT EXISTS usersids (id INTEGER, name VARCHAR(50))"
         ).execute().sql("INSERT INTO usersids (id, name) VALUES (?, ?)")
@@ -188,14 +181,15 @@ public final class JdbcSessionITCase {
 
     /**
      * Get data source.
+     *
      * @return Source
      */
-    private static DataSource source() {
+    private DataSource source() {
         final BoneCPDataSource src = new BoneCPDataSource();
         src.setDriverClass("org.postgresql.Driver");
-        src.setJdbcUrl(JdbcSessionITCase.URL);
-        src.setUser(JdbcSessionITCase.USER);
-        src.setPassword(JdbcSessionITCase.USER);
+        src.setJdbcUrl(this.container.getJdbcUrl());
+        src.setUser(this.container.getUsername());
+        src.setPassword(this.container.getPassword());
         src.setPartitionCount(Tv.THREE);
         src.setMaxConnectionsPerPartition(1);
         src.setMinConnectionsPerPartition(1);
