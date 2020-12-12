@@ -50,7 +50,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
  * Integration case for {@link JdbcSession}.
  * @since 0.1
  */
-@Testcontainers
+@Testcontainers(disabledWithoutDocker = true)
 final class JdbcSessionITCase {
 
     /**
