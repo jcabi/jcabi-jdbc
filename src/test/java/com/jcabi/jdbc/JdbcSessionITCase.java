@@ -66,7 +66,7 @@ final class JdbcSessionITCase {
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void manipulatesPostgresql() throws Exception {
+    void manipulatesPostgresql() throws Exception {
         final DataSource source = this.source();
         new JdbcSession(source)
             .autocommit(false)
@@ -84,7 +84,7 @@ final class JdbcSessionITCase {
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void changesTransactionIsolationLevel() throws Exception {
+    void changesTransactionIsolationLevel() throws Exception {
         final DataSource source = this.source();
         new JdbcSession(source).sql("VACUUM").execute();
     }
@@ -96,7 +96,7 @@ final class JdbcSessionITCase {
      * @throws Exception If something goes wrong
      */
     @Test
-    public void callsFunctionWithOutParam() throws Exception {
+    void callsFunctionWithOutParam() throws Exception {
         final DataSource source = this.source();
         new JdbcSession(source).autocommit(false).sql(
             "CREATE TABLE IF NOT EXISTS users (name VARCHAR(50))"
@@ -143,7 +143,7 @@ final class JdbcSessionITCase {
      * @throws Exception If something goes wrong
      */
     @Test
-    public void callsFunctionWithInOutParam() throws Exception {
+    void callsFunctionWithInOutParam() throws Exception {
         final DataSource source = this.source();
         new JdbcSession(source).autocommit(false).sql(
             "CREATE TABLE IF NOT EXISTS usersids (id INTEGER, name VARCHAR(50))"
@@ -185,7 +185,7 @@ final class JdbcSessionITCase {
      */
     private DataSource source() {
         final BoneCPDataSource src = new BoneCPDataSource();
-        src.setDriverClass("org.postgresql.Driver");
+        src.setDriverClass(this.container.getDriverClassName());
         src.setJdbcUrl(this.container.getJdbcUrl());
         src.setUser(this.container.getUsername());
         src.setPassword(this.container.getPassword());
