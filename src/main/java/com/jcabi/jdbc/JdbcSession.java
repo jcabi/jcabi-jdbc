@@ -389,9 +389,19 @@ public final class JdbcSession {
      * @since 0.9
      */
     public JdbcSession execute() throws SQLException {
+        final String vendor;
+        try (Connection conn = this.source.getConnection()) {
+            vendor = conn.getMetaData().getDatabaseProductName();
+        }
+        final Connect connect;
+        if (vendor.equalsIgnoreCase("mysql")) {
+            connect = new Connect.WithKeys(this.query);
+        } else {
+            connect = new Connect.Plain(this.query);
+        }
         this.run(
             Outcome.VOID,
-            new Connect.Plain(this.query),
+            connect,
             Request.EXECUTE
         );
         return this;
