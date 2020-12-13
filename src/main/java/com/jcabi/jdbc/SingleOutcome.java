@@ -29,11 +29,15 @@
  */
 package com.jcabi.jdbc;
 
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import lombok.EqualsAndHashCode;
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 /**
@@ -62,12 +66,28 @@ import lombok.ToString;
  *   // such a record wasn't found in the database
  * }</pre>
  *
- * @since 0.1.8
  * @param <T> Type of items
+ * @since 0.1.8
  */
 @ToString
-@EqualsAndHashCode(of = { "type", "silently" })
+@EqualsAndHashCode(of = {"type", "silently"})
 public final class SingleOutcome<T> implements Outcome<T> {
+
+    /**
+     * Per-type extraction methods.
+     */
+    private static final Map<Class<?>, Fetch<?>> FETCH_MAP = new HashMap<>();
+
+    static {
+        FETCH_MAP.put(String.class, rs -> rs.getString(1));
+        FETCH_MAP.put(Long.class, rs -> rs.getLong(1));
+        FETCH_MAP.put(Boolean.class, rs -> rs.getBoolean(1));
+        FETCH_MAP.put(Byte.class, rs -> rs.getByte(1));
+        FETCH_MAP.put(Date.class, rs -> rs.getDate(1));
+        FETCH_MAP.put(Utc.class, rs -> new Utc(Utc.getTimestamp(rs, 1)));
+        FETCH_MAP.put(byte[].class, rs -> rs.getBytes(1));
+        FETCH_MAP.put(BigDecimal.class, rs -> rs.getBigDecimal(1));
+    }
 
     /**
      * The type name.
@@ -81,6 +101,7 @@ public final class SingleOutcome<T> implements Outcome<T> {
 
     /**
      * Public ctor.
+     *
      * @param tpe The type to convert to
      */
     public SingleOutcome(final Class<T> tpe) {
@@ -89,17 +110,14 @@ public final class SingleOutcome<T> implements Outcome<T> {
 
     /**
      * Public ctor.
+     *
      * @param tpe The type to convert to
      * @param slnt Silently return NULL if there is no row
      */
     @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
     public SingleOutcome(final Class<T> tpe, final boolean slnt) {
         //@checkstyle BooleanExpressionComplexity (3 lines)
-        if (tpe.equals(String.class) || tpe.equals(Long.class)
-            || tpe.equals(Boolean.class) || tpe.equals(Byte.class)
-            || tpe.equals(Date.class) || tpe.equals(Utc.class)
-            || byte[].class.equals(tpe)
-        ) {
+        if (FETCH_MAP.containsKey(tpe)) {
             this.type = tpe.getName();
         } else {
             throw new IllegalArgumentException(
@@ -131,35 +149,49 @@ public final class SingleOutcome<T> implements Outcome<T> {
         "PMD.CyclomaticComplexity"
     })
     private T fetch(final ResultSet rset) throws SQLException {
-        final Object result;
         final Class<T> tpe;
         try {
             tpe = (Class<T>) Class.forName(this.type);
-            if (tpe.equals(String.class)) {
-                result = rset.getString(1);
-            } else if (tpe.equals(Long.class)) {
-                result = rset.getLong(1);
-            } else if (tpe.equals(Boolean.class)) {
-                result = rset.getBoolean(1);
-            } else if (tpe.equals(Byte.class)) {
-                result = rset.getByte(1);
-            } else if (tpe.equals(Date.class)) {
-                result = rset.getDate(1);
-            } else if (tpe.equals(Utc.class)) {
-                result = new Utc(Utc.getTimestamp(rset, 1));
-            } else if (byte[].class.equals(tpe)) {
-                result = rset.getBytes(1);
-            } else {
-                throw new IllegalStateException(
-                    String.format("type %s is not allowed", tpe.getName())
-                );
-            }
+            return tpe.cast(FETCH_MAP.getOrDefault(tpe, new Unsupported<>(tpe)).fetch(rset));
         } catch (final ClassNotFoundException ex) {
             throw new IllegalArgumentException(
                 String.format("Unknown type: %s", this.type), ex
             );
         }
-        return tpe.cast(result);
     }
 
+    /**
+     * Fetch object from ResultSet.
+     * @param <T> Type of result
+     * @since 0.17.6
+     */
+    private interface Fetch<T> {
+        /**
+         * Fetch object from result set.
+         * @param rset ResultSet
+         * @return The result
+         * @throws SQLException If error occurs
+         */
+        T fetch(ResultSet rset) throws SQLException;
+    }
+
+    /**
+     * Unsupported fetch.
+     * @param <T> Unsupported type.
+     * @since 0.17.6
+     */
+    @RequiredArgsConstructor
+    private static class Unsupported<T> implements Fetch<T> {
+        /**
+         * Unsupported type.
+         */
+        private final Class<T> tpe;
+
+        @Override
+        public T fetch(final ResultSet rset) throws SQLException {
+            throw new IllegalStateException(
+                String.format("type %s is not allowed", this.tpe.getName())
+            );
+        }
+    }
 }

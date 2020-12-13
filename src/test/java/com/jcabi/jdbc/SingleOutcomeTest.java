@@ -29,24 +29,76 @@
  */
 package com.jcabi.jdbc;
 
+import java.math.BigDecimal;
+import java.util.Date;
 import javax.sql.DataSource;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Test;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link SingleOutcome}.
+ *
  * @since 0.1
  */
-public final class SingleOutcomeTest {
+final class SingleOutcomeTest {
 
-    /**
-     * SingleOutcome can return the first column of the first row.
-     * @throws Exception If there is some problem inside
-     */
     @Test
-    public void retrievesFirstRowFromTheFirstColumn() throws Exception {
-        final DataSource source = new H2Source("ytt68");
+    void retrievesByte() throws Exception {
+        MatcherAssert.assertThat(
+            new JdbcSession(this.datasource())
+                .sql("CALL 65")
+                .select(new SingleOutcome<>(Byte.class)),
+            Matchers.is((byte) 'A')
+        );
+    }
+
+    @Test
+    void retrievesBigDecimal() throws Exception {
+        MatcherAssert.assertThat(
+            new JdbcSession(this.datasource())
+                .sql("CALL POWER(10, 10)")
+                .select(new SingleOutcome<>(BigDecimal.class)),
+            Matchers.is(new BigDecimal("1.0E+10"))
+        );
+    }
+
+    @Test
+    void retrievesBytes() throws Exception {
+        final int size = 256;
+        MatcherAssert.assertThat(
+            new JdbcSession(this.datasource())
+                .sql(String.format("CALL SECURE_RAND(%d)", size))
+                .select(new SingleOutcome<>(byte[].class))
+                .length,
+            Matchers.is(size)
+        );
+    }
+
+    @Test
+    void retrievesUtc() throws Exception {
+        MatcherAssert.assertThat(
+            new JdbcSession(this.datasource())
+                .sql("CALL CURRENT_TIMESTAMP()")
+                .select(new SingleOutcome<>(Utc.class)),
+            Matchers.notNullValue()
+        );
+    }
+
+    @Test
+    void retrievesDate() throws Exception {
+        MatcherAssert.assertThat(
+            new JdbcSession(this.datasource())
+                .sql("CALL CURRENT_DATE()")
+                .select(new SingleOutcome<>(Date.class)),
+            Matchers.notNullValue()
+        );
+    }
+
+    @Test
+    void retrievesString() throws Exception {
+        final DataSource source = this.datasource();
         new JdbcSession(source)
             .autocommit(false)
             .sql("CREATE TABLE foo (name VARCHAR(50))")
@@ -63,14 +115,20 @@ public final class SingleOutcomeTest {
         MatcherAssert.assertThat(name, Matchers.startsWith("Jeff"));
     }
 
-    /**
-     * SingleOutcome should fail immediately when initialized with an
-     * unsupported type.
-     * @throws Exception If an exception occurs
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void failsFast() throws Exception {
-        new SingleOutcome<Exception>(Exception.class);
+    @Test
+    void failsFast() {
+        Assertions.assertThrows(
+            IllegalArgumentException.class,
+            () -> new SingleOutcome<>(Exception.class)
+        );
     }
 
+    /**
+     * Create datasource.
+     *
+     * @return Source.
+     */
+    private DataSource datasource() {
+        return new H2Source("ytt68");
+    }
 }
