@@ -33,20 +33,21 @@ import java.util.Collection;
 import javax.sql.DataSource;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link ColumnOutcome}.
+ *
  * @since 0.13
  */
-public final class ColumnOutcomeTest {
+final class ColumnOutcomeTest {
 
     /**
      * ColumnOutcome can return the first column.
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void retrievesFirstColumn() throws Exception {
+    void retrievesFirstColumn() throws Exception {
         final DataSource source = new H2Source("i8o98");
         new JdbcSession(source)
             .autocommit(false)
@@ -60,20 +61,10 @@ public final class ColumnOutcomeTest {
             .commit();
         final Collection<String> names = new JdbcSession(source)
             .sql("SELECT name FROM foo")
-            .select(new ColumnOutcome<String>(String.class));
+            .select(new ColumnOutcome<>(String.class));
         MatcherAssert.assertThat(
             names, Matchers.hasSize(2)
         );
-    }
-
-    /**
-     * SingleOutcome should fail immediately when initialized with an
-     * unsupported type.
-     * @throws Exception If an exception occurs
-     */
-    @Test(expected = IllegalArgumentException.class)
-    public void failsFast() throws Exception {
-        new SingleOutcome<Exception>(Exception.class);
     }
 
 }

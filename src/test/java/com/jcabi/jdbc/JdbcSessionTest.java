@@ -38,20 +38,20 @@ import java.sql.Statement;
 import javax.sql.DataSource;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link JdbcSession}.
  * @since 0.1
  */
-public final class JdbcSessionTest {
+final class JdbcSessionTest {
 
     /**
      * JdbcSession can do SQL manipulations.
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void sendsSqlManipulationsToJdbcDriver() throws Exception {
+    void sendsSqlManipulationsToJdbcDriver() throws Exception {
         final DataSource source = new H2Source("tiu78");
         new JdbcSession(source)
             .autocommit(false)
@@ -83,7 +83,7 @@ public final class JdbcSessionTest {
      * @since 0.9
      */
     @Test
-    public void executesSql() throws Exception {
+    void executesSql() throws Exception {
         final DataSource source = new H2Source("tpl98");
         new JdbcSession(source)
             .autocommit(false)
@@ -99,7 +99,7 @@ public final class JdbcSessionTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void automaticallyCommitsByDefault() throws Exception {
+    void automaticallyCommitsByDefault() throws Exception {
         final DataSource source = new H2Source("tt8u");
         new JdbcSession(source)
             .sql("CREATE TABLE foo16 (name VARCHAR(50))")
@@ -138,7 +138,7 @@ public final class JdbcSessionTest {
      */
     @Test
     @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
-    public void releasesConnectionsFromThePool() throws Exception {
+    void releasesConnectionsFromThePool() throws Exception {
         final DataSource source = new H2Source("t445p");
         new JdbcSession(source)
             .sql("CREATE TABLE foo776 (name VARCHAR(30))")
@@ -156,7 +156,7 @@ public final class JdbcSessionTest {
      * @since 0.10.2
      */
     @Test
-    public void executesSqlInParallelThreads() throws Exception {
+    void executesSqlInParallelThreads() throws Exception {
         final DataSource source = new H2Source("til87");
         new JdbcSession(source)
             .sql("CREATE TABLE foo99 (name VARCHAR(30))")
@@ -169,7 +169,7 @@ public final class JdbcSessionTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void rollbacksTransaction() throws Exception {
+    void rollbacksTransaction() throws Exception {
         final DataSource source = new H2Source("t228x");
         new JdbcSession(source)
             .sql("CREATE TABLE t228x (name VARCHAR(30))")

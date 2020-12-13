@@ -32,20 +32,20 @@ package com.jcabi.jdbc;
 import javax.sql.DataSource;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link Outcome}.
  * @since 0.13
  */
-public final class OutcomeTest {
+final class OutcomeTest {
 
     /**
      * Outcome can fetch last insert id.
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void fetchesLastInsertId() throws Exception {
+    void fetchesLastInsertId() throws Exception {
         final DataSource source = new H2Source("trrto98");
         final long num = new JdbcSession(source)
             .sql("CREATE TABLE foo (id INT auto_increment, name VARCHAR(50))")

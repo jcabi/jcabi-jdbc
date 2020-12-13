@@ -138,17 +138,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
       <version>1.15.1</version>
       <scope>test</scope>
     </dependency>
-    <!--
-    @todo #81:30m Migrate to Junit 5 .
-     This dependency added in order to support Junit 4 test.
-     Replace Junit 4 API with JUnit 5's and remove this
-     dependency.
-    -->
-    <dependency>
-      <groupId>org.junit.vintage</groupId>
-      <artifactId>junit-vintage-engine</artifactId>
-      <scope>test</scope>
-    </dependency>
   </dependencies>
   <build>
     <pluginManagement>

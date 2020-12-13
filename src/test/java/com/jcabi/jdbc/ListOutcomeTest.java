@@ -29,26 +29,24 @@
  */
 package com.jcabi.jdbc;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.Collection;
 import javax.sql.DataSource;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link ListOutcome}.
  * @since 0.13
  */
-public final class ListOutcomeTest {
+final class ListOutcomeTest {
 
     /**
      * ListOutcome can return the full list.
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void retrievesList() throws Exception {
+    void retrievesList() throws Exception {
         final DataSource source = new H2Source("tto98");
         new JdbcSession(source)
             .autocommit(false)
@@ -63,14 +61,8 @@ public final class ListOutcomeTest {
         final Collection<String> names = new JdbcSession(source)
             .sql("SELECT name FROM foo")
             .select(
-                new ListOutcome<String>(
-                    new ListOutcome.Mapping<String>() {
-                        @Override
-                        public String map(final ResultSet rset)
-                            throws SQLException {
-                            return rset.getString(1);
-                        }
-                    }
+                new ListOutcome<>(
+                    rset -> rset.getString(1)
                 )
             );
         MatcherAssert.assertThat(

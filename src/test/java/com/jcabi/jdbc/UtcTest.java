@@ -43,15 +43,15 @@ import java.util.TimeZone;
 import javax.sql.DataSource;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 /**
  * Test case of {@link Utc}.
  * @since 0.1
  * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
-public final class UtcTest {
+final class UtcTest {
 
     /**
      * Randomizer.
@@ -72,8 +72,8 @@ public final class UtcTest {
      * Prepare this test case.
      * @throws Exception If there is some problem inside
      */
-    @Before
-    public void prepare() throws Exception {
+    @BeforeEach
+    void prepare() throws Exception {
         this.source = new H2Source(
             String.format("xpo%d", UtcTest.RND.nextInt())
         );
@@ -90,14 +90,13 @@ public final class UtcTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void savesDateWithUtcTimezone() throws Exception {
+    void savesDateWithUtcTimezone() throws Exception {
         this.fmt.setCalendar(
             new GregorianCalendar(TimeZone.getTimeZone("GMT-5"))
         );
         final Date date = this.fmt.parse("2008-05-24 05:06:07.000");
         final String saved;
-        final Connection conn = this.source.getConnection();
-        try {
+        try (Connection conn = this.source.getConnection()) {
             final PreparedStatement ustmt = conn.prepareStatement(
                 "INSERT INTO foo (date) VALUES (?)"
             );
@@ -106,17 +105,12 @@ public final class UtcTest {
             final PreparedStatement rstmt = conn.prepareStatement(
                 "SELECT date FROM foo"
             );
-            final ResultSet rset = rstmt.executeQuery();
-            try {
+            try (ResultSet rset = rstmt.executeQuery()) {
                 if (!rset.next()) {
                     throw new IllegalArgumentException();
                 }
                 saved = rset.getString(1);
-            } finally {
-                rset.close();
             }
-        } finally {
-            conn.close();
         }
         MatcherAssert.assertThat(
             saved,
@@ -129,7 +123,7 @@ public final class UtcTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void loadsDateWithUtcTimezone() throws Exception {
+    void loadsDateWithUtcTimezone() throws Exception {
         final Connection conn = this.source.getConnection();
         final Date loaded;
         try {
@@ -141,14 +135,11 @@ public final class UtcTest {
             final PreparedStatement rstmt = conn.prepareStatement(
                 "SELECT date FROM foo "
             );
-            final ResultSet rset = rstmt.executeQuery();
-            try {
+            try (ResultSet rset = rstmt.executeQuery()) {
                 if (!rset.next()) {
                     throw new IllegalArgumentException();
                 }
                 loaded = Utc.getTimestamp(rset, 1);
-            } finally {
-                rset.close();
             }
         } finally {
             conn.close();
@@ -167,7 +158,7 @@ public final class UtcTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-    public void setsAndReadsDateWithDifferentTimezone() throws Exception {
+    void setsAndReadsDateWithDifferentTimezone() throws Exception {
         final Date date = new Date();
         new JdbcSession(this.source)
             .sql("INSERT INTO foo VALUES (?) ")
@@ -179,14 +170,11 @@ public final class UtcTest {
             final PreparedStatement stmt = conn.prepareStatement(
                 "SELECT date FROM foo  "
             );
-            final ResultSet rset = stmt.executeQuery();
-            try {
+            try (ResultSet rset = stmt.executeQuery()) {
                 if (!rset.next()) {
                     throw new IllegalStateException();
                 }
                 saved = rset.getString(1);
-            } finally {
-                rset.close();
             }
         } finally {
             conn.close();
