@@ -85,19 +85,4 @@ public final class ListOutcome<T> implements Outcome<List<T>> {
         return result;
     }
 
-    /**
-     * Mapping.
-     * @param <T> Type of output
-     * @since 0.13
-     */
-    public interface Mapping<T> {
-        /**
-         * Map.
-         * @param rset Result set
-         * @return Object
-         * @throws SQLException If fails
-         */
-        T map(ResultSet rset) throws SQLException;
-    }
-
 }

@@ -29,13 +29,10 @@
  */
 package com.jcabi.jdbc;
 
-import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -70,34 +67,19 @@ import lombok.ToString;
  * @since 0.1.8
  */
 @ToString
-@EqualsAndHashCode(of = {"type", "silently"})
+@EqualsAndHashCode(of = {"mapping", "silently"})
+@RequiredArgsConstructor
 public final class SingleOutcome<T> implements Outcome<T> {
 
     /**
-     * Per-type extraction methods.
+     * The type.
      */
-    private static final Map<Class<?>, Fetch<?>> FETCH_MAP = new HashMap<>();
-
-    static {
-        FETCH_MAP.put(String.class, rs -> rs.getString(1));
-        FETCH_MAP.put(Long.class, rs -> rs.getLong(1));
-        FETCH_MAP.put(Boolean.class, rs -> rs.getBoolean(1));
-        FETCH_MAP.put(Byte.class, rs -> rs.getByte(1));
-        FETCH_MAP.put(Date.class, rs -> rs.getDate(1));
-        FETCH_MAP.put(Utc.class, rs -> new Utc(Utc.getTimestamp(rs, 1)));
-        FETCH_MAP.put(byte[].class, rs -> rs.getBytes(1));
-        FETCH_MAP.put(BigDecimal.class, rs -> rs.getBigDecimal(1));
-    }
-
-    /**
-     * The type name.
-     */
-    private final transient String type;
+    private final Mapping<? extends T> mapping;
 
     /**
      * Silently return NULL if no row found.
      */
-    private final transient boolean silently;
+    private final boolean silently;
 
     /**
      * Public ctor.
@@ -116,15 +98,22 @@ public final class SingleOutcome<T> implements Outcome<T> {
      */
     @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
     public SingleOutcome(final Class<T> tpe, final boolean slnt) {
-        //@checkstyle BooleanExpressionComplexity (3 lines)
-        if (FETCH_MAP.containsKey(tpe)) {
-            this.type = tpe.getName();
-        } else {
-            throw new IllegalArgumentException(
-                String.format("type %s is not supported", tpe.getName())
-            );
-        }
-        this.silently = slnt;
+        this(
+            tpe,
+            Outcome.DEFAULT_MAPPINGS,
+            slnt
+        );
+    }
+
+    /**
+     * Public ctor.
+     *
+     * @param tpe The type to convert to
+     * @param mps The mappings
+     * @param slnt Silently return NULL if there is no row
+     */
+    public SingleOutcome(final Class<T> tpe, final Mappings mps, final boolean slnt) {
+        this(mps.forType(tpe), slnt);
     }
 
     @Override
@@ -141,57 +130,12 @@ public final class SingleOutcome<T> implements Outcome<T> {
 
     /**
      * Fetch the value from result set.
+     *
      * @param rset Result set
      * @return The result
      * @throws SQLException If some error inside
      */
-    @SuppressWarnings({"unchecked",
-        "PMD.CyclomaticComplexity"
-    })
     private T fetch(final ResultSet rset) throws SQLException {
-        final Class<T> tpe;
-        try {
-            tpe = (Class<T>) Class.forName(this.type);
-            return tpe.cast(FETCH_MAP.getOrDefault(tpe, new Unsupported<>(tpe)).fetch(rset));
-        } catch (final ClassNotFoundException ex) {
-            throw new IllegalArgumentException(
-                String.format("Unknown type: %s", this.type), ex
-            );
-        }
-    }
-
-    /**
-     * Fetch object from ResultSet.
-     * @param <T> Type of result
-     * @since 0.17.6
-     */
-    private interface Fetch<T> {
-        /**
-         * Fetch object from result set.
-         * @param rset ResultSet
-         * @return The result
-         * @throws SQLException If error occurs
-         */
-        T fetch(ResultSet rset) throws SQLException;
-    }
-
-    /**
-     * Unsupported fetch.
-     * @param <T> Unsupported type.
-     * @since 0.17.6
-     */
-    @RequiredArgsConstructor
-    private static class Unsupported<T> implements Fetch<T> {
-        /**
-         * Unsupported type.
-         */
-        private final Class<T> tpe;
-
-        @Override
-        public T fetch(final ResultSet rset) throws SQLException {
-            throw new IllegalStateException(
-                String.format("type %s is not allowed", this.tpe.getName())
-            );
-        }
+        return this.mapping.map(rset);
     }
 }

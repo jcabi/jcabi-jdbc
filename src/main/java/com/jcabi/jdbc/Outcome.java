@@ -59,13 +59,7 @@ public interface Outcome<T> {
      *
      * @since 0.12
      */
-    Outcome<Boolean> NOT_EMPTY = new Outcome<Boolean>() {
-        @Override
-        public Boolean handle(final ResultSet rset, final Statement stmt)
-            throws SQLException {
-            return rset.next();
-        }
-    };
+    Outcome<Boolean> NOT_EMPTY = (rset, stmt) -> rset.next();
 
     /**
      * Outcome that does nothing (and always returns {@code null}).
@@ -79,12 +73,7 @@ public interface Outcome<T> {
      *
      * @since 0.12
      */
-    Outcome<Void> VOID = new Outcome<Void>() {
-        @Override
-        public Void handle(final ResultSet rset, final Statement stmt) {
-            return null;
-        }
-    };
+    Outcome<Void> VOID = (rset, stmt) -> Void.TYPE.cast(null);
 
     /**
      * Outcome that returns the number of updated rows.
@@ -98,13 +87,7 @@ public interface Outcome<T> {
      *
      * @since 0.12
      */
-    Outcome<Integer> UPDATE_COUNT = new Outcome<Integer>() {
-        @Override
-        public Integer handle(final ResultSet rset, final Statement stmt)
-            throws SQLException {
-            return stmt.getUpdateCount();
-        }
-    };
+    Outcome<Integer> UPDATE_COUNT = (rset, stmt) -> stmt.getUpdateCount();
 
     /**
      * Outcome that returns last insert ID.
@@ -118,19 +101,23 @@ public interface Outcome<T> {
      *
      * @since 0.13
      */
-    Outcome<Long> LAST_INSERT_ID = new Outcome<Long>() {
-        @Override
-        public Long handle(final ResultSet rset, final Statement stmt)
-            throws SQLException {
-            if (!rset.next()) {
-                throw new SQLException("no last_insert_id() available");
-            }
-            return rset.getLong(1);
+    Outcome<Long> LAST_INSERT_ID = (rset, stmt) -> {
+        if (!rset.next()) {
+            throw new SQLException("no last_insert_id() available");
         }
+        return rset.getLong(1);
     };
 
     /**
+     * Default mappings.
+     *
+     * @since 0.17.6
+     */
+    Mappings DEFAULT_MAPPINGS = new DefaultMappings();
+
+    /**
      * Process the result set and return some value.
+     *
      * @param rset The result set to process
      * @param stmt The statement used in the run
      * @return The result
@@ -138,4 +125,36 @@ public interface Outcome<T> {
      */
     T handle(ResultSet rset, Statement stmt) throws SQLException;
 
+    /**
+     * Mapping.
+     *
+     * @param <T> Type of output
+     * @since 0.13
+     */
+    interface Mapping<T> {
+        /**
+         * Map.
+         *
+         * @param rset Result set
+         * @return Object
+         * @throws SQLException If fails
+         */
+        T map(ResultSet rset) throws SQLException;
+    }
+
+    /**
+     * Mappings for different types.
+     *
+     * @since 0.17.6
+     */
+    interface Mappings {
+        /**
+         * Mapping for a type.
+         *
+         * @param tpe Class of result.
+         * @param <T> Type of result.
+         * @return Mapping.
+         */
+        <T> Mapping<T> forType(Class<? extends T> tpe);
+    }
 }

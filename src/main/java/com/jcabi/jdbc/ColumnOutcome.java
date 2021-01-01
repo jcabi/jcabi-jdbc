@@ -36,6 +36,7 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
 import lombok.EqualsAndHashCode;
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 /**
@@ -50,36 +51,36 @@ import lombok.ToString;
  * <p>Supported types are: {@link String}, {@link Long}, {@link Boolean},
  * {@link Byte}, {@link Date}, and {@link Utc}.
  *
- * @since 0.13
  * @param <T> Type of items
+ * @since 0.13
  */
 @ToString
-@EqualsAndHashCode(of = "type")
+@EqualsAndHashCode
+@RequiredArgsConstructor
 public final class ColumnOutcome<T> implements Outcome<Collection<T>> {
 
     /**
-     * The type name.
+     * Mapping.
      */
-    private final transient String type;
+    private final Mapping<T> mapping;
 
     /**
      * Public ctor.
+     *
      * @param tpe The type to convert to
      */
-    @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
     public ColumnOutcome(final Class<T> tpe) {
-        //@checkstyle BooleanExpressionComplexity (3 lines)
-        if (tpe.equals(String.class) || tpe.equals(Long.class)
-            || tpe.equals(Boolean.class) || tpe.equals(Byte.class)
-            || tpe.equals(Date.class) || tpe.equals(Utc.class)
-            || byte[].class.equals(tpe)
-            ) {
-            this.type = tpe.getName();
-        } else {
-            throw new IllegalArgumentException(
-                String.format("type %s is not supported", tpe.getName())
-            );
-        }
+        this(tpe, Outcome.DEFAULT_MAPPINGS);
+    }
+
+    /**
+     * Public ctor.
+     *
+     * @param tpe The type to convert to
+     * @param mps The mappings.
+     */
+    public ColumnOutcome(final Class<T> tpe, final Mappings mps) {
+        this(mps.forType(tpe));
     }
 
     @Override
@@ -87,50 +88,9 @@ public final class ColumnOutcome<T> implements Outcome<Collection<T>> {
         throws SQLException {
         final Collection<T> result = new LinkedList<>();
         while (rset.next()) {
-            result.add(this.fetch(rset));
+            result.add(this.mapping.map(rset));
         }
         return result;
-    }
-
-    /**
-     * Fetch the value from result set.
-     * @param rset Result set
-     * @return The result
-     * @throws SQLException If some error inside
-     */
-    @SuppressWarnings({"unchecked",
-        "PMD.CyclomaticComplexity"
-    })
-    private T fetch(final ResultSet rset) throws SQLException {
-        final Object result;
-        final Class<T> tpe;
-        try {
-            tpe = (Class<T>) Class.forName(this.type);
-            if (tpe.equals(String.class)) {
-                result = rset.getString(1);
-            } else if (tpe.equals(Long.class)) {
-                result = rset.getLong(1);
-            } else if (tpe.equals(Boolean.class)) {
-                result = rset.getBoolean(1);
-            } else if (tpe.equals(Byte.class)) {
-                result = rset.getByte(1);
-            } else if (tpe.equals(Date.class)) {
-                result = rset.getDate(1);
-            } else if (tpe.equals(Utc.class)) {
-                result = new Utc(Utc.getTimestamp(rset, 1));
-            } else if (byte[].class.equals(tpe)) {
-                result = rset.getBytes(1);
-            } else {
-                throw new IllegalStateException(
-                    String.format("type %s is not allowed", tpe.getName())
-                );
-            }
-        } catch (final ClassNotFoundException ex) {
-            throw new IllegalArgumentException(
-                String.format("Unknown type: %s", this.type), ex
-            );
-        }
-        return tpe.cast(result);
     }
 
 }
