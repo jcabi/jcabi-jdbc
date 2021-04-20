@@ -33,6 +33,7 @@ import java.math.BigDecimal;
 import java.util.AbstractMap;
 import java.util.Date;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import lombok.AccessLevel;
@@ -87,6 +88,9 @@ final class DefaultMappings implements Outcome.Mappings {
             ),
             new AbstractMap.SimpleImmutableEntry<>(
                 BigDecimal.class, rs -> rs.getBigDecimal(column)
+            ),
+            new AbstractMap.SimpleImmutableEntry<>(
+                UUID.class, rs -> rs.getObject(column, UUID.class)
             )
         );
     }

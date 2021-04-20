@@ -35,6 +35,7 @@ import java.sql.Statement;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.UUID;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -49,7 +50,7 @@ import lombok.ToString;
  *   .select(new ColumnOutcome&lt;Long&gt;(Long.class));</pre>
  *
  * <p>Supported types are: {@link String}, {@link Long}, {@link Boolean},
- * {@link Byte}, {@link Date}, and {@link Utc}.
+ * {@link Byte}, {@link Date}, {@link UUID}, and {@link Utc}.
  *
  * @param <T> Type of items
  * @since 0.13

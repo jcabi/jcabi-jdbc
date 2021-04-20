@@ -34,6 +34,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.sql.DataSource;
@@ -240,7 +241,7 @@ public final class JdbcSession {
      *
      * <p>The following types are supported: {@link Boolean},
      * {@link java.sql.Date},
-     * {@link Utc}, {@link Long}, {@link Float}, byte[], {@link Integer}.
+     * {@link Utc}, {@link Long}, {@link Float}, byte[], {@link Integer}, , {@link UUID}.
      * All other types will be converted to {@link String} using
      * their {@code toString()} methods.
      *

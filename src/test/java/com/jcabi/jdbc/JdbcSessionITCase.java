@@ -36,6 +36,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Date;
+import java.util.UUID;
+
 import javax.sql.DataSource;
 import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.MatcherAssert;
@@ -76,6 +78,29 @@ final class JdbcSessionITCase {
             .set("Jeff Lebowski")
             .execute()
             .commit();
+    }
+
+    /**
+     * JdbcSession can manipulate UUID types.
+     *
+     * @throws Exception If there is some problem inside
+     */
+    @Test
+    void retrievesUUID() throws Exception {
+        final DataSource source = this.source();
+        final UUID uuid = UUID.randomUUID();
+        new JdbcSession(source)
+            .autocommit(false)
+            .sql("CREATE TABLE uuidtb (id UUID)")
+            .execute()
+            .sql("INSERT INTO uuidtb (id) VALUES (?)")
+            .set(uuid)
+            .execute()
+            .commit();
+        final UUID id = new JdbcSession(source)
+            .sql("SELECT id FROM uuidtb")
+            .select(new SingleOutcome<>(UUID.class));
+        MatcherAssert.assertThat(id, Matchers.equalTo(uuid));
     }
 
     /**

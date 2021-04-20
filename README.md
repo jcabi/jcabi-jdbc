@@ -32,10 +32,6 @@ public class Main {
   }
 }
 ```
-## Limitations
-
-UUID data type is not supported.
-
 ## How to contribute?
 
 Fork the repository, make changes, submit a pull request.

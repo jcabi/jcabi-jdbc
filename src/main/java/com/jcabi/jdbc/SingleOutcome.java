@@ -33,6 +33,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
+import java.util.UUID;
 import lombok.EqualsAndHashCode;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -48,7 +49,7 @@ import lombok.ToString;
  *   .select(new SingleOutcome&lt;Long&gt;(Long.class));</pre>
  *
  * <p>Supported types are: {@link String}, {@link Long}, {@link Boolean},
- * {@link Byte}, {@link Date}, and {@link Utc}.
+ * {@link Byte}, {@link Date}, {@link UUID}, and {@link Utc}.
  *
  * <p>By default, the outcome throws {@link SQLException} if no records
  * are found in the {@link ResultSet}. You can change this behavior by using
