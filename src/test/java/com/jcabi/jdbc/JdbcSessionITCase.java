@@ -37,7 +37,6 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Date;
 import java.util.UUID;
-
 import javax.sql.DataSource;
 import org.apache.commons.lang3.StringUtils;
 import org.hamcrest.MatcherAssert;
@@ -86,7 +85,7 @@ final class JdbcSessionITCase {
      * @throws Exception If there is some problem inside
      */
     @Test
-    void retrievesUUID() throws Exception {
+    void manipulatesUuidTypes() throws Exception {
         final DataSource source = this.source();
         final UUID uuid = UUID.randomUUID();
         new JdbcSession(source)
