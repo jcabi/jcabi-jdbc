@@ -94,6 +94,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
       <groupId>org.postgresql</groupId>
       <artifactId>postgresql</artifactId>
       <version>42.2.19.jre7</version>
+      <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>mysql</groupId>
