@@ -117,7 +117,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>org.testcontainers</groupId>
       <artifactId>testcontainers</artifactId>
-      <version>1.16.0</version>
+      <version>1.16.2</version>
       <scope>test</scope>
     </dependency>
     <dependency>
