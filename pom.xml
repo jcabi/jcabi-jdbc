@@ -87,7 +87,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
-      <version>2.1.210</version>
+      <version>2.1.212</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -99,7 +99,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>mysql</groupId>
       <artifactId>mysql-connector-java</artifactId>
-      <version>8.0.28</version>
+      <version>8.0.29</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
@@ -129,7 +129,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <dependency>
       <groupId>org.testcontainers</groupId>
       <artifactId>mysql</artifactId>
-      <version>1.16.3</version>
+      <version>1.17.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -171,7 +171,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
       </plugin>
       <plugin>
         <artifactId>maven-failsafe-plugin</artifactId>
-        <version>3.0.0-M5</version>
+        <version>3.0.0-M6</version>
         <executions>
           <execution>
             <goals>
