@@ -38,7 +38,7 @@ import java.sql.Statement;
 import javax.sql.DataSource;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 /**
  * Test case for {@link JdbcSession}.
