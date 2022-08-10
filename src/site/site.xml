@@ -32,12 +32,12 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
   <skin>
     <groupId>com.jcabi</groupId>
     <artifactId>jcabi-maven-skin</artifactId>
-    <version>1.5.1</version>
+    <version>1.7.1</version>
   </skin>
   <bannerLeft>
     <name>jcabi</name>
     <src>http://img.jcabi.com/logo-square.svg</src>
-    <href>http://www.jcabi.com/</href>
+    <href>https://www.jcabi.com/</href>
     <width>64</width>
     <height>64</height>
   </bannerLeft>
@@ -50,7 +50,6 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
     <menu name="Overview">
       <item name="Introduction" href="index.html"/>
       <item name="JavaDoc ${project.version}" href="./apidocs-${project.version}/index.html"/>
-      <item name="Test coverage" href="./cobertura/index.html"/>
       <item name="Release History" href="https://github.com/jcabi/jcabi-jdbc/releases"/>
     </menu>
     <menu name="Examples">
