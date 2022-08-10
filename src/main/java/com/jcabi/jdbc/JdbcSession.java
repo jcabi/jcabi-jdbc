@@ -135,7 +135,6 @@ import lombok.ToString;
  * <p>This class is thread-safe.
  *
  * @since 0.1.8
- * @checkstyle ClassDataAbstractionCouplingCheck (500 lines)
  * @todo #51:30min Refactor this class to avoid too much coupling.
  *  For instance, CRUD operations could be performed by another class.
  *  Don't forget to remove the suppressions that become obsolete afterwards.

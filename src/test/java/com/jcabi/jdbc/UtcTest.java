@@ -49,7 +49,6 @@ import org.junit.jupiter.api.Test;
 /**
  * Test case of {@link Utc}.
  * @since 0.1
- * @checkstyle ClassDataAbstractionCoupling (500 lines)
  */
 final class UtcTest {
 
