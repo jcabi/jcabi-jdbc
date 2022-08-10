@@ -1,22 +1,22 @@
-architect:
-  - yegor256
-  - andreoss
-assets:
-  settings.xml: yegor256/home#assets/jcabi/settings.xml
-  secring.gpg: yegor256/home#assets/secring.gpg
-  pubring.gpg: yegor256/home#assets/pubring.gpg
+docker:
+  image: yegor256/rultor-image:1.9.1
 install: |
   pdd --file=/dev/null
+assets:
+  secring.gpg: yegor256/home#assets/secring.gpg
+  settings.xml: yegor256/home#assets/jcabi/settings.xml
+  pubring.gpg: yegor256/home#assets/pubring.gpg
 merge:
-  script: |
-    mvn clean install -Pqulice --errors --batch-mode
+  script: |-
+    pdd -f /dev/null
+    mvn clean install -Pqulice --errors --settings ../settings.xml
 release:
   pre: false
+  sensitive:
+    - settings.xml
   script: |-
-    env
-    export JAVA_HOME=/usr/lib/jvm/default-java
-    mvn versions:set "-DnewVersion=${tag}" --batch-mode
+    pdd -f /dev/null
+    mvn versions:set "-DnewVersion=${tag}"
     git commit -am "${tag}"
-    mvn clean deploy -Pqulice -Psonatype -Pjcabi --batch-mode --errors --settings ../settings.xml
-    mvn clean site-deploy -Psite --errors --settings ../settings.xml --batch-mode
-    
+    mvn clean deploy -Pqulice -Psonatype -Pjcabi --errors --settings ../settings.xml
+    mvn clean site-deploy -Pjcabi -Psite --errors --settings ../settings.xml
