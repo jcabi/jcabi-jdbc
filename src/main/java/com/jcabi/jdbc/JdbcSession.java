@@ -101,13 +101,14 @@ import lombok.ToString;
  *   .sql("SHUTDOWN COMPACT")
  *   .execute();</pre>
  *
- * <b>IMPORTANT:</b>
+ * <p><b>IMPORTANT:</b></p>
+ *
  * <p>If you rely on one specific {@link Connection} instance, be careful if
  * you are using it in more places, especially if more references of this class
  * use it - one of those references might close the connection if you forget
- * to call {@link #autocommit(false)}
- * </p>
- * <b>E.g.</b>
+ * to call {@link JdbcSession#autocommit(boolean)} with {@code false} as an argument,
+ * for example:</p>
+ *
  * <pre>
  * Connection connection = [...];
  * DataSource ds = new StaticSource(connection);
@@ -117,11 +118,12 @@ import lombok.ToString;
  * new JdbcSession(ds)
  *  .sql("SQL STATEMENT 2")
  *  .execute();</pre>
+
  * <p>The above example will <b>fail</b> because the first JdbcSession closes
  * the connection, and the next one tries to work with it closed. In order to
  * not have this failure, the first session has to call
- * {@link #autocommit(false)}, like this:
- * </p>
+ * {@link #autocommit(boolean)} with {@code false} as an argument, like this:</p>
+ *
  * <pre>
  * Connection connection = [...];
  * DataSource ds = new StaticSource(connection);
