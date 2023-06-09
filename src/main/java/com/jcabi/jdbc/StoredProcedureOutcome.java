@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2022, jcabi.com
+ * Copyright (c) 2012-2023, jcabi.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -59,7 +59,7 @@ public final class StoredProcedureOutcome<T> implements Outcome<T> {
     public StoredProcedureOutcome(final int... indexes) {
         if (indexes.length == 0) {
             throw new IllegalArgumentException(
-                "At least 1 OUT param's index needs to be specified!"
+                "At least one OUT param's index needs to be specified"
             );
         }
         final int size = indexes.length;

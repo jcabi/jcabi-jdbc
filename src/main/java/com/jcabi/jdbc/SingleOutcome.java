@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2022, jcabi.com
+ * Copyright (c) 2012-2023, jcabi.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -124,7 +124,7 @@ public final class SingleOutcome<T> implements Outcome<T> {
         if (rset.next()) {
             result = this.fetch(rset);
         } else if (!this.silently) {
-            throw new SQLException("no records found");
+            throw new SQLException("No records found");
         }
         return result;
     }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2022, jcabi.com
+ * Copyright (c) 2012-2023, jcabi.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -121,7 +121,7 @@ final class DefaultMappings implements Outcome.Mappings {
     public <X> Outcome.Mapping<X> forType(final Class<? extends X> tpe) {
         if (!this.map.containsKey(tpe)) {
             throw new IllegalArgumentException(
-                String.format("type %s is not supported", tpe.getName())
+                String.format("Type %s is not supported", tpe.getName())
             );
         }
         return (Outcome.Mapping<X>) this.map.get(tpe);

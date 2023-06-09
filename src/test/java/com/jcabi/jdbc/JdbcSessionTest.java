@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2022, jcabi.com
+ * Copyright (c) 2012-2023, jcabi.com
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -30,7 +30,6 @@
 package com.jcabi.jdbc;
 
 import com.jcabi.aspects.Parallel;
-import com.jcabi.aspects.Tv;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -143,7 +142,7 @@ final class JdbcSessionTest {
         new JdbcSession(source)
             .sql("CREATE TABLE foo776 (name VARCHAR(30))")
             .execute();
-        for (int idx = 0; idx < Tv.TEN; ++idx) {
+        for (int idx = 0; idx < 10; ++idx) {
             new JdbcSession(source)
                 .sql("INSERT INTO foo776 VALUES ('hello, world!')")
                 .execute();
@@ -194,7 +193,7 @@ final class JdbcSessionTest {
      * @throws Exception If there is some problem inside
      * @since 0.10.2
      */
-    @Parallel(threads = Tv.FIFTY)
+    @Parallel(threads = 50)
     private void insert(final DataSource src, final String table)
         throws Exception {
         new JdbcSession(src)
