@@ -177,11 +177,13 @@ public final class JdbcSession {
     private transient String query;
 
     /**
-     * Public ctor.<br><br>
-     * If all you have is a {@link Connection}, wrap it inside our
+     * Public ctor.
+     *
+     * <p>If all you have is a {@link Connection}, wrap it inside our
      * {@link StaticSource}, but make sure you understand the autocommit
      * mechanism we have in place here. Read the class' javadoc (especially the
-     * last paragraph, marked with <b>IMPORTANT</b>).
+     * last paragraph, marked with <b>IMPORTANT</b>).</p>
+     *
      * @param src Data source
      */
     @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
@@ -255,6 +257,7 @@ public final class JdbcSession {
 
     /**
      * Run this preparation before executing the statement.
+     *
      * @param prp Preparation
      * @return This object
      * @since 0.13
@@ -268,6 +271,7 @@ public final class JdbcSession {
 
     /**
      * Clear all pre-set parameters (args, preparations, etc).
+     *
      * @return This object
      * @since 0.13
      */
@@ -283,6 +287,7 @@ public final class JdbcSession {
     /**
      * Commit the transaction (calls {@link Connection#commit()} and then
      * {@link Connection#close()}).
+     *
      * @throws SQLException If fails to do the SQL operation
      */
     public void commit() throws SQLException {
@@ -299,6 +304,7 @@ public final class JdbcSession {
     /**
      * Rollback the transaction (calls {@link Connection#rollback()} and then
      * {@link Connection#close()}).
+     *
      * @throws SQLException If fails to do the SQL operation
      */
     public void rollback() throws SQLException {
@@ -316,9 +322,9 @@ public final class JdbcSession {
      * Make SQL {@code INSERT} request.
      *
      * <p>{@link Outcome} will receive
-     * a {@link ResultSet} of generated keys.
+     * a {@link ResultSet} of generated keys.</p>
      *
-     * <p>JDBC connection is opened and, optionally, closed by this method.
+     * <p>JDBC connection is opened and, optionally, closed by this method.</p>
      *
      * @param outcome The outcome of the operation
      * @param <T> Type of response
@@ -337,7 +343,7 @@ public final class JdbcSession {
     /**
      * Make SQL {@code UPDATE} request.
      *
-     * <p>JDBC connection is opened and, optionally, closed by this method.
+     * <p>JDBC connection is opened and, optionally, closed by this method.</p>
      *
      * @param outcome Outcome of the operation
      * @param <T> Type of result expected
@@ -356,10 +362,10 @@ public final class JdbcSession {
     /**
      * Call an SQL stored procedure.
      *
-     * <p>JDBC connection is opened and, optionally, commited by this
+     * <p>JDBC connection is opened and, optionally, committed by this
      * method, depending on the <b>autocommit</b> class attribute:
-     * if it's value is true, the connection will be commited after
-     * this call.
+     * if it's value is true, the connection will be committed after
+     * this call.</p>
      *
      * @param outcome Outcome of the operation
      * @param <T> Type of result expected
@@ -381,9 +387,9 @@ public final class JdbcSession {
      * instructions that return no data back. Main difference between this
      * one and {@code #execute()} is that the later requests JDBC to return
      * generated keys. When SQL server doesn't return any keys this may
-     * cause runtime exceptions in JDBC.
+     * cause runtime exceptions in JDBC.</p>
      *
-     * <p>JDBC connection is opened and, optionally, closed by this method.
+     * <p>JDBC connection is opened and, optionally, closed by this method.</p>
      *
      * @return This object
      * @throws SQLException If fails
@@ -411,7 +417,7 @@ public final class JdbcSession {
     /**
      * Make SQL {@code SELECT} request.
      *
-     * <p>JDBC connection is opened and, optionally, closed by this method.
+     * <p>JDBC connection is opened and, optionally, closed by this method.</p>
      *
      * @param outcome The outcome of the operation
      * @param <T> Type of response
@@ -429,6 +435,7 @@ public final class JdbcSession {
 
     /**
      * Run with this outcome, and this fetcher.
+     *
      * @param outcome The outcome of the operation
      * @param connect Connect
      * @param request Request
@@ -490,6 +497,7 @@ public final class JdbcSession {
 
     /**
      * Open connection and cache it locally in the class.
+     *
      * @return Connection to use
      * @throws SQLException If fails
      */
@@ -504,6 +512,7 @@ public final class JdbcSession {
 
     /**
      * Close connection if it's open (runtime exception otherwise).
+     *
      * @throws SQLException If fails to do the SQL operation
      */
     private void disconnect() throws SQLException {
@@ -518,6 +527,7 @@ public final class JdbcSession {
 
     /**
      * Configure the statement.
+     * 
      * @param stmt Statement
      * @throws SQLException If fails
      */
