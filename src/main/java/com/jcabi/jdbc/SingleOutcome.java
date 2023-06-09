@@ -124,7 +124,7 @@ public final class SingleOutcome<T> implements Outcome<T> {
         if (rset.next()) {
             result = this.fetch(rset);
         } else if (!this.silently) {
-            throw new SQLException("no records found");
+            throw new SQLException("No records found");
         }
         return result;
     }

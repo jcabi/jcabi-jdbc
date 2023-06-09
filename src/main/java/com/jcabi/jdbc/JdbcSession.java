@@ -288,7 +288,7 @@ public final class JdbcSession {
         final Connection conn = this.connection.get();
         if (conn == null) {
             throw new IllegalStateException(
-                "connection is not open, can't commit"
+                "Connection is not open, can't commit"
             );
         }
         conn.commit();
@@ -304,7 +304,7 @@ public final class JdbcSession {
         final Connection conn = this.connection.get();
         if (conn == null) {
             throw new IllegalStateException(
-                "connection is not open, can't rollback"
+                "Connection is not open, can't rollback"
             );
         }
         conn.rollback();
@@ -412,7 +412,7 @@ public final class JdbcSession {
      *
      * <p>JDBC connection is opened and, optionally, closed by this method.
      *
-     * @param outcome The outcome of the operaton
+     * @param outcome The outcome of the operation
      * @param <T> Type of response
      * @return The result
      * @throws SQLException If fails
@@ -441,7 +441,7 @@ public final class JdbcSession {
         final Connect connect, final Request request)
         throws SQLException {
         if (this.query == null) {
-            throw new IllegalStateException("call #sql() first");
+            throw new IllegalStateException("Call #sql() first");
         }
         final Connection conn = this.connect();
         conn.setAutoCommit(this.auto);
