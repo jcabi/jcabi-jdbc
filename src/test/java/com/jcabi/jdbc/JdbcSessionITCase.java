@@ -29,7 +29,6 @@
  */
 package com.jcabi.jdbc;
 
-import com.jcabi.aspects.Tv;
 import com.jolbox.bonecp.BoneCPDataSource;
 import java.sql.CallableStatement;
 import java.sql.PreparedStatement;
@@ -213,7 +212,7 @@ final class JdbcSessionITCase {
         src.setJdbcUrl(this.container.getJdbcUrl());
         src.setUser(this.container.getUsername());
         src.setPassword(this.container.getPassword());
-        src.setPartitionCount(Tv.THREE);
+        src.setPartitionCount(3);
         src.setMaxConnectionsPerPartition(1);
         src.setMinConnectionsPerPartition(1);
         src.setAcquireIncrement(1);

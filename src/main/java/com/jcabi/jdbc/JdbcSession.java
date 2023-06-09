@@ -527,7 +527,7 @@ public final class JdbcSession {
 
     /**
      * Configure the statement.
-     * 
+     *
      * @param stmt Statement
      * @throws SQLException If fails
      */
