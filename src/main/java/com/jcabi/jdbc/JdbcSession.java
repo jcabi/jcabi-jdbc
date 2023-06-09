@@ -436,6 +436,7 @@ public final class JdbcSession {
      * @throws SQLException If fails
      * @checkstyle ExecutableStatementCount (100 lines)
      */
+    @SuppressWarnings({"PMD.PreserveStackTrace", "PMD.ExceptionAsFlowControl"})
     private <T> T run(final Outcome<T> outcome,
         final Connect connect, final Request request)
         throws SQLException {
@@ -443,9 +444,9 @@ public final class JdbcSession {
             throw new IllegalStateException("call #sql() first");
         }
         final Connection conn = this.connect();
+        conn.setAutoCommit(this.auto);
         final T result;
         try {
-            conn.setAutoCommit(this.auto);
             final PreparedStatement stmt = connect.open(conn);
             try {
                 this.configure(stmt);
@@ -463,8 +464,18 @@ public final class JdbcSession {
             }
         } catch (final SQLException ex) {
             if (!this.auto) {
-                conn.rollback();
-                this.disconnect();
+                try {
+                    conn.rollback();
+                    this.disconnect();
+                } catch (final SQLException exc) {
+                    throw new SQLException(
+                        String.format(
+                            "Failed to rollback after failure: %s",
+                            exc.getMessage()
+                        ),
+                        ex
+                    );
+                }
             }
             throw new SQLException(ex);
         } finally {
@@ -498,7 +509,7 @@ public final class JdbcSession {
         final Connection conn = this.connection.getAndSet(null);
         if (conn == null) {
             throw new IllegalStateException(
-                "connection is not open, can't close"
+                "Connection is not open, can't close"
             );
         }
         conn.close();
