@@ -109,32 +109,31 @@ import lombok.ToString;
  * to call {@link JdbcSession#autocommit(boolean)} with {@code false} as an argument,
  * for example:</p>
  *
- * <pre>
- * Connection connection = [...];
- * DataSource ds = new StaticSource(connection);
- * new JdbcSession(ds)
- *  .sql("SQL STATEMENT")
- *  .execute();
- * new JdbcSession(ds)
- *  .sql("SQL STATEMENT 2")
- *  .execute();</pre>
+ * <pre> Connection connection = [...];
+ *   DataSource ds = new StaticSource(connection);
+ *   new JdbcSession(ds)
+ *     .sql("SQL STATEMENT")
+ *     .execute();
+ *   new JdbcSession(ds)
+ *     .sql("SQL STATEMENT 2")
+ *     .execute();</pre>
 
  * <p>The above example will <b>fail</b> because the first JdbcSession closes
  * the connection, and the next one tries to work with it closed. In order to
  * not have this failure, the first session has to call
  * {@link #autocommit(boolean)} with {@code false} as an argument, like this:</p>
  *
- * <pre>
- * Connection connection = [...];
- * DataSource ds = new StaticSource(connection);
- * new JdbcSession(ds)
- *  <b>.autocommit(false)</b>
- *  .sql("SQL STATEMENT")
- *  .execute();
- * new JdbcSession(ds)
- *  .sql("SQL STATEMENT 2")
- *  .execute();</pre>
- * <p>This class is thread-safe.
+ * <pre> Connection connection = [...];
+ *   DataSource ds = new StaticSource(connection);
+ *   new JdbcSession(ds)
+ *     .autocommit(false)
+ *     .sql("SQL STATEMENT")
+ *     .execute();
+ *   new JdbcSession(ds)
+ *     .sql("SQL STATEMENT 2")
+ *     .execute();</pre>
+ *
+ * <p>This class is thread-safe.</p>
  *
  * @since 0.1.8
  * @todo #51:30min Refactor this class to avoid too much coupling.
