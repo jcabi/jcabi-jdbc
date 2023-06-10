@@ -36,7 +36,6 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.UUID;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.sql.DataSource;
 import lombok.EqualsAndHashCode;
@@ -155,7 +154,7 @@ public final class JdbcSession {
      * Arguments.
      *
      * <p>Every time this attribute is modified, we must synchronize, because
-     * a non-thread-safe {@link LinkedList} is assigned to it.</>
+     * a non-thread-safe {@link LinkedList} is assigned to it.</p>
      */
     private final transient Collection<Object> args;
 
@@ -163,7 +162,7 @@ public final class JdbcSession {
      * Arguments.
      *
      * <p>Every time this attribute is modified, we must synchronize, because
-     * a non-thread-safe {@link LinkedList} is assigned to it.</>
+     * a non-thread-safe {@link LinkedList} is assigned to it.</p>
      *
      * @since 0.13
      */
