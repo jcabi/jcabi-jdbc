@@ -17,7 +17,7 @@ Fluent JDBC Wrapper
 +--
 import com.jcabi.jdbc.JdbcSession;
 public class Main {
-  public static void main(String[] args) {
+  public static void main(String[] args) throws SQLException {
     String name = new JdbcSession(source)
       .sql("SELECT name FROM foo WHERE id = ?")
       .set(123)

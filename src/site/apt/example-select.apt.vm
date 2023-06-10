@@ -12,7 +12,7 @@ Selecting SQL Rows Through JDBC
 
 +--
 public class Main {
-  public static void main(String[] args) {
+  public static void main(String[] args) throws SQLException {
     Collection<String> names = new JdbcSession(source)
       .sql("SELECT name FROM employee WHERE salary > 35000")
       .select(
@@ -37,7 +37,7 @@ public class Main {
 
 +--
 public class Main {
-  public static void main(String[] args) {
+  public static void main(String[] args) throws SQLException {
     String name = new JdbcSession(source)
       .sql("SELECT name FROM employee WHERE name = ?")
       .set("Jeff Bridges")
