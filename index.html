@@ -33,7 +33,7 @@
                                                                     </ul>
                                                     </li>
                                                                                                                         <li >
-                            <span>                        <a href="apidocs-0.18.1/index.html" title="JavaDoc 0.18.1">JavaDoc 0.18.1</a>
+                            <span>                        <a href="apidocs-0.18.2/index.html" title="JavaDoc 0.18.2">JavaDoc 0.18.2</a>
         </span>
                                                                                                                                                                 <ul>
                                                                     </ul>
@@ -175,13 +175,13 @@
                             </div>
                             <ul class="badges">
                                 <li>
-                                    <strong itemprop="version">0.18.1</strong>
+                                    <strong itemprop="version">0.18.2</strong>
                                 </li>
                                 <li>
                                     
-                                    <time itemprop="datePublished" datetime="2023-06-09T04:48:57Z">
+                                    <time itemprop="datePublished" datetime="2023-06-10T06:14:59Z">
                                         
-                                        09-Jun-2023
+                                        10-Jun-2023
                                     </time>
                                 </li>
                                 <li class="menu-button">menu</li>
@@ -194,23 +194,23 @@
                                                 <article itemprop="articleBody">
                             <section>
 <h2><a name="Fluent_JDBC_Wrapper"></a>Fluent JDBC Wrapper</h2>
-<p><a href="./apidocs-0.18.1/com/jcabi/jdbc/JdbcSession.html"><code>JdbcSession</code></a> is a convenient <a class="externalLink" href="http://en.wikipedia.org/wiki/Fluent_interface">fluent</a> wrapper around JDBC. Read this blog post: <a class="externalLink" href="http://www.yegor256.com/2014/08/18/fluent-jdbc-decorator.html">Fluent JDBC Decorator</a>.</p>
+<p><a href="./apidocs-0.18.2/com/jcabi/jdbc/JdbcSession.html"><code>JdbcSession</code></a> is a convenient <a class="externalLink" href="http://en.wikipedia.org/wiki/Fluent_interface">fluent</a> wrapper around JDBC. Read this blog post: <a class="externalLink" href="http://www.yegor256.com/2014/08/18/fluent-jdbc-decorator.html">Fluent JDBC Decorator</a>.</p>
 <div class="source">
 <pre>import com.jcabi.jdbc.JdbcSession;
 public class Main {
-  public static void main(String[] args) {
+  public static void main(String[] args) throws SQLException {
     String name = new JdbcSession(source)
       .sql(&quot;SELECT name FROM foo WHERE id = ?&quot;)
       .set(123)
       .select(new SingleOutcome&lt;String&gt;(String.class));
   }
 }</pre></div>
-<p>The only dependency you need is (you can also download <a class="externalLink" href="http://repo1.maven.org/maven2/com/jcabi/jcabi-jdbc/0.18.1/jcabi-jdbc-0.18.1.jar">jcabi-jdbc-0.18.1.jar</a> and add it to the classpath):</p>
+<p>The only dependency you need is (you can also download <a class="externalLink" href="http://repo1.maven.org/maven2/com/jcabi/jcabi-jdbc/0.18.2/jcabi-jdbc-0.18.2.jar">jcabi-jdbc-0.18.2.jar</a> and add it to the classpath):</p>
 <div class="source">
 <pre>&lt;dependency&gt;
   &lt;groupId&gt;com.jcabi&lt;/groupId&gt;
   &lt;artifactId&gt;jcabi-jdbc&lt;/artifactId&gt;
-  &lt;version&gt;0.18.1&lt;/version&gt;
+  &lt;version&gt;0.18.2&lt;/version&gt;
 &lt;/dependency&gt;</pre></div>
 <p>Similar solutions (if you know others please <a class="externalLink" href="https://github.com/yegor256/jcabi/issues">submit it to github</a>): <a class="externalLink" href="http://code.google.com/p/ollin/">ollin</a>, <a class="externalLink" href="http://www.jdbi.org/">JDBI</a>, <a class="externalLink" href="http://static.springsource.org/spring/docs/2.0.x/api/org/springframework/jdbc/core/JdbcTemplate.html">Spring JdbcTemplate</a>.</p><section>
 <h3><a name="Cutting_Edge_Version"></a>Cutting Edge Version</h3>

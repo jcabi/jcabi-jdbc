@@ -33,7 +33,7 @@
                                                                     </ul>
                                                     </li>
                                                                                                                         <li >
-                            <span>                        <a href="apidocs-0.18.1/index.html" title="JavaDoc 0.18.1">JavaDoc 0.18.1</a>
+                            <span>                        <a href="apidocs-0.18.2/index.html" title="JavaDoc 0.18.2">JavaDoc 0.18.2</a>
         </span>
                                                                                                                                                                 <ul>
                                                                     </ul>
@@ -113,13 +113,13 @@
                             </div>
                             <ul class="badges">
                                 <li>
-                                    <strong itemprop="version">0.18.1</strong>
+                                    <strong itemprop="version">0.18.2</strong>
                                 </li>
                                 <li>
                                     
-                                    <time itemprop="datePublished" datetime="2023-06-09T04:48:57Z">
+                                    <time itemprop="datePublished" datetime="2023-06-10T06:14:59Z">
                                         
-                                        09-Jun-2023
+                                        10-Jun-2023
                                     </time>
                                 </li>
                                 <li class="menu-button">menu</li>
@@ -135,7 +135,7 @@
 <p>This is how you fetch all rows from an SQL <code>SELECT</code> query:</p>
 <div class="source">
 <pre>public class Main {
-  public static void main(String[] args) {
+  public static void main(String[] args) throws SQLException {
     Collection&lt;String&gt; names = new JdbcSession(source)
       .sql(&quot;SELECT name FROM employee WHERE salary &gt; 35000&quot;)
       .select(
@@ -155,7 +155,7 @@
 <p>There is an off-the-shelf <code>SingleOutcome</code> Outcome, which can be used if you interested in the first value of the first row of the <code>SELECT</code> query result set:</p>
 <div class="source">
 <pre>public class Main {
-  public static void main(String[] args) {
+  public static void main(String[] args) throws SQLException {
     String name = new JdbcSession(source)
       .sql(&quot;SELECT name FROM employee WHERE name = ?&quot;)
       .set(&quot;Jeff Bridges&quot;)
