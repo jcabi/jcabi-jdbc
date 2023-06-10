@@ -34,8 +34,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.UUID;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.sql.DataSource;
 import lombok.EqualsAndHashCode;
@@ -152,11 +152,18 @@ public final class JdbcSession {
 
     /**
      * Arguments.
+     *
+     * <p>Every time this attribute is modified, we must synchronize, because
+     * a non-thread-safe {@link LinkedList} is assigned to it.</p>
      */
     private final transient Collection<Object> args;
 
     /**
      * Arguments.
+     *
+     * <p>Every time this attribute is modified, we must synchronize, because
+     * a non-thread-safe {@link LinkedList} is assigned to it.</p>
+     *
      * @since 0.13
      */
     private final transient Collection<Preparation> preparations;
@@ -188,8 +195,8 @@ public final class JdbcSession {
      */
     @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
     public JdbcSession(final DataSource src) {
-        this.args = new CopyOnWriteArrayList<>();
-        this.preparations = new CopyOnWriteArrayList<>();
+        this.args = new LinkedList<>();
+        this.preparations = new LinkedList<>();
         this.connection = new AtomicReference<>();
         this.auto = true;
         this.source = src;
@@ -251,7 +258,9 @@ public final class JdbcSession {
      * @return This object
      */
     public JdbcSession set(final Object value) {
-        this.args.add(value);
+        synchronized (this.args) {
+            this.args.add(value);
+        }
         return this;
     }
 
