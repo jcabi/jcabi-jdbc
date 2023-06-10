@@ -153,11 +153,18 @@ public final class JdbcSession {
 
     /**
      * Arguments.
+     *
+     * <p>Every time this attribute is modified, we must synchronize, because
+     * a non-thread-safe {@link LinkedList} is assigned to it.</>
      */
     private final transient Collection<Object> args;
 
     /**
      * Arguments.
+     *
+     * <p>Every time this attribute is modified, we must synchronize, because
+     * a non-thread-safe {@link LinkedList} is assigned to it.</>
+     *
      * @since 0.13
      */
     private final transient Collection<Preparation> preparations;
