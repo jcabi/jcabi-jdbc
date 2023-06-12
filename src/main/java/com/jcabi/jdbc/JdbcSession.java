@@ -415,11 +415,7 @@ public final class JdbcSession {
         } else {
             connect = new Connect.Plain(this.query);
         }
-        this.run(
-            Outcome.VOID,
-            connect,
-            Request.EXECUTE
-        );
+        this.run(Outcome.VOID, connect, Request.EXECUTE);
         return this;
     }
 
