@@ -44,7 +44,7 @@ import lombok.ToString;
 /**
  * Universal JDBC wrapper.
  *
- * <p>Execute a simple SQL query over a JDBC data source:
+ * <p>Execute a simple SQL query over a JDBC data source:</p>
  *
  * <pre> String name = new JdbcSession(source)
  *   .sql("SELECT name FROM foo WHERE id = ?")
@@ -61,7 +61,7 @@ import lombok.ToString;
  *
  * <p>There are a number of convenient pre-defined outcomes, like
  * {@link Outcome#VOID}, {@link Outcome#NOT_EMPTY}, {@link Outcome#UPDATE_COUNT}
- * {@link SingleOutcome}, etc.
+ * {@link SingleOutcome}, etc.</p>
  *
  * <p>Methods {@link #insert(Outcome)},
  * {@link #update(Outcome)},
@@ -71,7 +71,7 @@ import lombok.ToString;
  * it's necessary to perform a number of SQL statements in a group. For
  * example, the following construct will execute two SQL queries, in a single
  * transaction and will "commit" at the end (or rollback the entire transaction
- * in case of any error in between):
+ * in case of any error in between):</p>
  *
  * <pre> new JdbcSession(source)
  *   .autocommit(false)
@@ -84,7 +84,7 @@ import lombok.ToString;
  *   .execute()
  *   .commit();</pre>
  *
- * <p>The following SQL queries will be sent to the database:
+ * <p>The following SQL queries will be sent to the database:</p>
  *
  * <pre> START TRANSACTION;
  * DELETE FROM foo WHERE id = 444;
@@ -94,7 +94,7 @@ import lombok.ToString;
  * <p>{@link #autocommit(boolean)} (with {@code false} as an argument)
  * can be used when it's necessary to execute
  * a statement and leave the connection open. For example when shutting down
- * the database through SQL:
+ * the database through SQL:</p>
  *
  * <pre> new JdbcSession(&#47;* H2 Database data source *&#47;)
  *   .autocommit(false)
@@ -208,7 +208,7 @@ public final class JdbcSession {
      *
      * <p>The query will be used in {@link PreparedStatement}, that's why
      * you can use the same formatting as there. Arguments shall be marked
-     * as {@code "?"} (question marks). For example:
+     * as {@code "?"} (question marks). For example:</p>
      *
      * <pre> String name = new JdbcSession(source)
      *   .sql("INSERT INTO foo (id, name) VALUES (?, ?)")
@@ -233,7 +233,7 @@ public final class JdbcSession {
      * {@link #insert(Outcome)}, {@link #execute()}, and
      * {@link #select(Outcome)} will
      * call {@link Connection#commit()} after
-     * their successful execution.
+     * their successful execution.</p>
      *
      * @param autocommit Shall we?
      * @return This object
@@ -252,7 +252,7 @@ public final class JdbcSession {
      * {@link java.sql.Date},
      * {@link Utc}, {@link Long}, {@link Float}, byte[], {@link Integer}, {@link UUID}.
      * All other types will be converted to {@link String} using
-     * their {@code toString()} methods.
+     * their {@code toString()} methods.</p>
      *
      * @param value The value to add
      * @return This object
