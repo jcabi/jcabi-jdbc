@@ -453,7 +453,6 @@ public final class JdbcSession {
      * @throws SQLException If fails
      * @checkstyle ExecutableStatementCount (100 lines)
      */
-    @SuppressWarnings({"PMD.PreserveStackTrace", "PMD.ExceptionAsFlowControl"})
     private <T> T run(final Outcome<T> outcome,
         final Connect connect, final Request request)
         throws SQLException {
@@ -480,20 +479,7 @@ public final class JdbcSession {
                 stmt.close();
             }
         } catch (final SQLException ex) {
-            if (!this.auto) {
-                try {
-                    conn.rollback();
-                    this.disconnect();
-                } catch (final SQLException exc) {
-                    throw new SQLException(
-                        String.format(
-                            "Failed to rollback after failure: %s",
-                            exc.getMessage()
-                        ),
-                        ex
-                    );
-                }
-            }
+            this.rollbackOnFailure(conn, ex);
             throw new SQLException(ex);
         } finally {
             if (this.auto) {
@@ -502,6 +488,31 @@ public final class JdbcSession {
             this.clear();
         }
         return result;
+    }
+
+    /**
+     * Rollback in case of error.
+     * @param conn The connection
+     * @param failure The original failure
+     * @throws SQLException If fails
+     */
+    @SuppressWarnings("PMD.PreserveStackTrace")
+    private void rollbackOnFailure(final Connection conn, final SQLException failure)
+        throws SQLException {
+        if (!this.auto) {
+            try {
+                conn.rollback();
+                this.disconnect();
+            } catch (final SQLException exc) {
+                throw new SQLException(
+                    String.format(
+                        "Failed to rollback after failure: %s",
+                        exc.getMessage()
+                    ),
+                    failure
+                );
+            }
+        }
     }
 
     /**
