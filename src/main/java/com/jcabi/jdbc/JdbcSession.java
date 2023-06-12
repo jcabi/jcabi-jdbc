@@ -461,23 +461,8 @@ public final class JdbcSession {
         }
         final Connection conn = this.connect();
         conn.setAutoCommit(this.auto);
-        final T result;
         try {
-            final PreparedStatement stmt = connect.open(conn);
-            try {
-                this.configure(stmt);
-                final ResultSet rset = request.fetch(stmt);
-                // @checkstyle NestedTryDepth (5 lines)
-                try {
-                    result = outcome.handle(rset, stmt);
-                } finally {
-                    if (rset != null) {
-                        rset.close();
-                    }
-                }
-            } finally {
-                stmt.close();
-            }
+            return this.fetch(outcome, request, connect.open(conn));
         } catch (final SQLException ex) {
             this.rollbackOnFailure(conn, ex);
             throw new SQLException(ex);
@@ -486,6 +471,34 @@ public final class JdbcSession {
                 this.disconnect();
             }
             this.clear();
+        }
+    }
+
+    /**
+     * Fetch the result.
+     * @param outcome The outcome of the operation
+     * @param request Request
+     * @param stmt Statement
+     * @param <T> Type of response
+     * @return The result
+     * @throws SQLException If fails
+     */
+    private <T> T fetch(final Outcome<T> outcome,
+        final Request request, final PreparedStatement stmt) throws SQLException {
+        final T result;
+        try {
+            this.configure(stmt);
+            final ResultSet rset = request.fetch(stmt);
+            // @checkstyle NestedTryDepth (5 lines)
+            try {
+                result = outcome.handle(rset, stmt);
+            } finally {
+                if (rset != null) {
+                    rset.close();
+                }
+            }
+        } finally {
+            stmt.close();
         }
         return result;
     }
