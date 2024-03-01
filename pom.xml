@@ -250,6 +250,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
             <version>0.22.0</version>
             <configuration>
               <excludes combine.children="append">
+                <exclude>duplicatefinder:.*</exclude>
                 <exclude>findbugs:.*</exclude>
                 <exclude>snapshots:.*</exclude>
                 <exclude>dependencies:.*</exclude>
