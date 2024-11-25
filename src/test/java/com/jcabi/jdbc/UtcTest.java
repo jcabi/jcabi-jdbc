@@ -148,6 +148,7 @@ final class UtcTest {
             new GregorianCalendar(TimeZone.getTimeZone("GMT-3"))
         );
         MatcherAssert.assertThat(
+            "loaded date is 2005-02-02 07:07:08",
             this.fmt.format(loaded),
             Matchers.startsWith("2005-02-02 07:07:08")
         );
