@@ -38,8 +38,8 @@ import lombok.ToString;
 
 /**
  * Outcome of a stored procedure with OUT parameters.
- * @since 0.17
  * @param <T> Type of the returned result, which <b>has to be</b> Object[]
+ * @since 0.17
  */
 @ToString
 @EqualsAndHashCode
