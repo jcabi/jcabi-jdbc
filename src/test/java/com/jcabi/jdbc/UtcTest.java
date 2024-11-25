@@ -183,6 +183,7 @@ final class UtcTest {
         this.fmt.setTimeZone(TimeZone.getTimeZone("GMT"));
         final Date absolute = this.fmt.parse(saved);
         MatcherAssert.assertThat(
+            "the received date is equal to the set date",
             absolute.toString(),
             Matchers.equalTo(date.toString())
         );
