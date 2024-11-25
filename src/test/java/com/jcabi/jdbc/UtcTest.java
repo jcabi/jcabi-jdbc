@@ -112,6 +112,7 @@ final class UtcTest {
             }
         }
         MatcherAssert.assertThat(
+            "saved date is 2008-05-24 10:06:07",
             saved,
             Matchers.startsWith("2008-05-24 10:06:07")
         );
