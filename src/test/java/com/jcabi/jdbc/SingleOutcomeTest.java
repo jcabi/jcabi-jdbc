@@ -93,6 +93,7 @@ final class SingleOutcomeTest {
     @Test
     void retrievesDate() throws Exception {
         MatcherAssert.assertThat(
+            "received date should be current date",
             new JdbcSession(this.datasource())
                 .sql("CALL CURRENT_DATE()")
                 .select(new SingleOutcome<>(Date.class)),
