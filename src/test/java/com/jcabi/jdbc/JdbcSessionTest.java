@@ -180,6 +180,7 @@ final class JdbcSessionTest {
             .execute()
             .rollback();
         MatcherAssert.assertThat(
+            "result should contains foo",
             new JdbcSession(source).sql("SELECT * FROM t228x")
                 .select(new ListOutcome<>(rset -> rset.getString("name"))),
             Matchers.contains("foo")
