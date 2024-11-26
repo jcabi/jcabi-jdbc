@@ -123,15 +123,13 @@ final class UtcTest {
      */
     @Test
     void loadsDateWithUtcTimezone() throws Exception {
-        final Connection conn = this.source.getConnection();
         final Date loaded;
-        try {
-            final PreparedStatement ustmt = conn.prepareStatement(
+        try (Connection conn = this.source.getConnection();
+            PreparedStatement ustmt = conn.prepareStatement(
                 "INSERT INTO foo (date) VALUES (?) "
-            );
+             )) {
             ustmt.setString(1, "2005-02-02 10:07:08.000");
             ustmt.executeUpdate();
-            ustmt.close();
             try (PreparedStatement rstmt = conn.prepareStatement(
                 "SELECT date FROM foo "
             ); ResultSet rset = rstmt.executeQuery()) {
@@ -140,8 +138,6 @@ final class UtcTest {
                 }
                 loaded = Utc.getTimestamp(rset, 1);
             }
-        } finally {
-            conn.close();
         }
         this.fmt.setCalendar(
             new GregorianCalendar(TimeZone.getTimeZone("GMT-3"))
