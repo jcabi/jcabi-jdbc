@@ -47,6 +47,7 @@ final class SingleOutcomeTest {
     @Test
     void retrievesByte() throws Exception {
         MatcherAssert.assertThat(
+            "retrieve byte 'A'",
             new JdbcSession(this.datasource())
                 .sql("CALL 65")
                 .select(new SingleOutcome<>(Byte.class)),
