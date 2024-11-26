@@ -70,6 +70,7 @@ final class SingleOutcomeTest {
     void retrievesBytes() throws Exception {
         final int size = 256;
         MatcherAssert.assertThat(
+            "received bytes length should be 256",
             new JdbcSession(this.datasource())
                 .sql(String.format("CALL SECURE_RAND(%d)", size))
                 .select(new SingleOutcome<>(byte[].class))
