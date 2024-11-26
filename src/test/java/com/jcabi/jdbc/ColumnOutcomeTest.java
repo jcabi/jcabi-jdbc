@@ -63,7 +63,7 @@ final class ColumnOutcomeTest {
             .sql("SELECT name FROM foo")
             .select(new ColumnOutcome<>(String.class));
         MatcherAssert.assertThat(
-            names, Matchers.hasSize(2)
+            "result collection should have size 2", names, Matchers.hasSize(2)
         );
     }
 
