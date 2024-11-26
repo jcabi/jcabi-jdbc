@@ -127,7 +127,7 @@ final class JdbcSessionTest {
                     }
                 }
             );
-        MatcherAssert.assertThat(name, Matchers.startsWith("Wa"));
+        MatcherAssert.assertThat("result starts with Wa", name, Matchers.startsWith("Wa"));
     }
 
     /**
