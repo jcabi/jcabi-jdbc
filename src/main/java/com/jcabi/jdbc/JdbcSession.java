@@ -482,14 +482,12 @@ public final class JdbcSession {
     private <T> T fetch(final Outcome<T> outcome,
         final Request request, final PreparedStatement stmt) throws SQLException {
         final T result;
-        try {
+        try (stmt) {
             this.configure(stmt);
             // @checkstyle NestedTryDepth (5 lines)
             try (ResultSet rset = request.fetch(stmt)) {
                 result = outcome.handle(rset, stmt);
             }
-        } finally {
-            stmt.close();
         }
         return result;
     }
