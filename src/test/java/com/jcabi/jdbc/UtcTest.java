@@ -101,10 +101,10 @@ final class UtcTest {
             );
             new Utc(date).setTimestamp(ustmt, 1);
             ustmt.executeUpdate();
-            final PreparedStatement rstmt = conn.prepareStatement(
+            ustmt.close();
+            try (PreparedStatement rstmt = conn.prepareStatement(
                 "SELECT date FROM foo"
-            );
-            try (ResultSet rset = rstmt.executeQuery()) {
+            ); ResultSet rset = rstmt.executeQuery()) {
                 if (!rset.next()) {
                     throw new IllegalArgumentException();
                 }
