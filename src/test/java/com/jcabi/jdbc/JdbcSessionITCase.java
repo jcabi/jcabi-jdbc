@@ -155,6 +155,7 @@ final class JdbcSessionITCase {
             Matchers.containsString("Charles")
         );
         MatcherAssert.assertThat(
+            "second item of result collection should be not null date",
             (Date) result[1],
             Matchers.notNullValue()
         );
