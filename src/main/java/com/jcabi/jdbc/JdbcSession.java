@@ -410,7 +410,7 @@ public final class JdbcSession {
             vendor = conn.getMetaData().getDatabaseProductName();
         }
         final Connect connect;
-        if (vendor.equalsIgnoreCase("mysql")) {
+        if ("mysql".equalsIgnoreCase(vendor)) {
             connect = new Connect.WithKeys(this.query);
         } else {
             connect = new Connect.Plain(this.query);
