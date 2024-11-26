@@ -90,6 +90,7 @@ final class JdbcSessionMySqlITCase {
             )
             .execute();
         MatcherAssert.assertThat(
+            "result should be equal 1",
             new JdbcSession(this.source())
                 .sql("INSERT INTO foo (name) VALUES (?)")
                 .set("test")
