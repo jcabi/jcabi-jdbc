@@ -113,6 +113,7 @@ final class JdbcSessionMySqlITCase {
             .execute();
         final JdbcSession session = new JdbcSession(this.source());
         MatcherAssert.assertThat(
+            "result should be equal 1",
             session
                 .autocommit(false)
                 .sql("START TRANSACTION")
