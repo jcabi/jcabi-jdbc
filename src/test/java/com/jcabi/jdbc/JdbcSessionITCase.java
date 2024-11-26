@@ -98,7 +98,7 @@ final class JdbcSessionITCase {
         final UUID id = new JdbcSession(source)
             .sql("SELECT id FROM uuidtb")
             .select(new SingleOutcome<>(UUID.class));
-        MatcherAssert.assertThat(id, Matchers.equalTo(uuid));
+        MatcherAssert.assertThat("selected id should be equal the inserted id", id, Matchers.equalTo(uuid));
     }
 
     /**
