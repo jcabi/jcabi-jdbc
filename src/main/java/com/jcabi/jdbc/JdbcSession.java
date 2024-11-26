@@ -484,14 +484,9 @@ public final class JdbcSession {
         final T result;
         try {
             this.configure(stmt);
-            final ResultSet rset = request.fetch(stmt);
             // @checkstyle NestedTryDepth (5 lines)
-            try {
+            try (ResultSet rset = request.fetch(stmt)) {
                 result = outcome.handle(rset, stmt);
-            } finally {
-                if (rset != null) {
-                    rset.close();
-                }
             }
         } finally {
             stmt.close();
