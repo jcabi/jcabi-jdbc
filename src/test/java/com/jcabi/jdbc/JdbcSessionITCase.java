@@ -150,7 +150,7 @@ final class JdbcSessionITCase {
             .call(new StoredProcedureOutcome<Object[]>(1, 2));
         MatcherAssert.assertThat("result collection size should be 2", result.length, Matchers.is(2));
         MatcherAssert.assertThat(
-            "first item of result collection should be contains user name Charles",
+            "first item of result collection should contains user name Charles",
             result[0].toString(),
             Matchers.containsString("Charles")
         );
@@ -196,8 +196,9 @@ final class JdbcSessionITCase {
                 }
              )
             .call(new StoredProcedureOutcome<Object[]>(2));
-        MatcherAssert.assertThat(result.length, Matchers.is(1));
+        MatcherAssert.assertThat("result array length should be 1", result.length, Matchers.is(1));
         MatcherAssert.assertThat(
+            "first item of result collection should contains user name Polo",
             result[0].toString(),
             Matchers.containsString("Polo")
         );
