@@ -132,7 +132,8 @@ final class UtcTest {
             );
             ustmt.setString(1, "2005-02-02 10:07:08.000");
             ustmt.executeUpdate();
-            final PreparedStatement rstmt = conn.prepareStatement(
+            ustmt.close();
+            try (PreparedStatement rstmt = conn.prepareStatement(
                 "SELECT date FROM foo "
             );
             try (ResultSet rset = rstmt.executeQuery()) {
