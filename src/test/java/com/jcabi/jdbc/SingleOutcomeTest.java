@@ -58,6 +58,7 @@ final class SingleOutcomeTest {
     @Test
     void retrievesBigDecimal() throws Exception {
         MatcherAssert.assertThat(
+            "received value should be 1.0E+10",
             new JdbcSession(this.datasource())
                 .sql("CALL POWER(10, 10)")
                 .select(new SingleOutcome<>(BigDecimal.class)),
