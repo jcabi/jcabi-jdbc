@@ -82,6 +82,7 @@ final class SingleOutcomeTest {
     @Test
     void retrievesUtc() throws Exception {
         MatcherAssert.assertThat(
+            "received timestamp should be current timestamp",
             new JdbcSession(this.datasource())
                 .sql("CALL CURRENT_TIMESTAMP()")
                 .select(new SingleOutcome<>(Utc.class)),
