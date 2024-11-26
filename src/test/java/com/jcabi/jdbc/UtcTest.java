@@ -95,13 +95,12 @@ final class UtcTest {
         );
         final Date date = this.fmt.parse("2008-05-24 05:06:07.000");
         final String saved;
-        try (Connection conn = this.source.getConnection()) {
-            final PreparedStatement ustmt = conn.prepareStatement(
+        try (Connection conn = this.source.getConnection();
+            PreparedStatement ustmt = conn.prepareStatement(
                 "INSERT INTO foo (date) VALUES (?)"
-            );
+            )) {
             new Utc(date).setTimestamp(ustmt, 1);
             ustmt.executeUpdate();
-            ustmt.close();
             try (PreparedStatement rstmt = conn.prepareStatement(
                 "SELECT date FROM foo"
             ); ResultSet rset = rstmt.executeQuery()) {
