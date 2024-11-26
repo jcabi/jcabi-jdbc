@@ -113,7 +113,7 @@ final class SingleOutcomeTest {
         final String name = new JdbcSession(source)
             .sql("SELECT name FROM foo")
             .select(new SingleOutcome<String>(String.class));
-        MatcherAssert.assertThat(name, Matchers.startsWith("Jeff"));
+        MatcherAssert.assertThat("name should be Jeff", name, Matchers.startsWith("Jeff"));
     }
 
     @Test
