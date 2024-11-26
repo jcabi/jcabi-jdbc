@@ -167,16 +167,13 @@ final class UtcTest {
             .insert(Outcome.VOID);
         final Connection conn = this.source.getConnection();
         final String saved;
-        try {
-            final PreparedStatement stmt = conn.prepareStatement(
-                "SELECT date FROM foo  "
-            );
-            try (ResultSet rset = stmt.executeQuery()) {
-                if (!rset.next()) {
-                    throw new IllegalStateException();
-                }
-                saved = rset.getString(1);
+        try (PreparedStatement stmt = conn.prepareStatement(
+            "SELECT date FROM foo  "
+            ); ResultSet rset = stmt.executeQuery()) {
+            if (!rset.next()) {
+                throw new IllegalStateException();
             }
+            saved = rset.getString(1);
         } finally {
             conn.close();
         }
