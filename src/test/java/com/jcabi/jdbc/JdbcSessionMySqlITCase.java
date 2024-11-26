@@ -152,6 +152,7 @@ final class JdbcSessionMySqlITCase {
             )
             .call(new StoredProcedureOutcome<>(1, 2));
         MatcherAssert.assertThat(
+            "first item of result array should contains user name Jeff Charles and not null date",
             result,
             Matchers.arrayContaining(
                 Matchers.is("Jeff Charles"),
