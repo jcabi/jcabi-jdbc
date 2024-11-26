@@ -73,7 +73,7 @@ final class JdbcSessionTest {
                     }
                 }
             );
-        MatcherAssert.assertThat(name, Matchers.startsWith("Jeff"));
+        MatcherAssert.assertThat("result starts with Jeff", name, Matchers.startsWith("Jeff"));
     }
 
     /**
