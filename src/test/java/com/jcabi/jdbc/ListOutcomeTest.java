@@ -66,7 +66,7 @@ final class ListOutcomeTest {
                 )
             );
         MatcherAssert.assertThat(
-            names, Matchers.hasSize(2)
+            "names collection size should be 2", names, Matchers.hasSize(2)
         );
     }
 
