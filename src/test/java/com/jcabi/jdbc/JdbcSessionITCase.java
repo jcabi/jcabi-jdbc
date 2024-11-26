@@ -98,7 +98,7 @@ final class JdbcSessionITCase {
         final UUID id = new JdbcSession(source)
             .sql("SELECT id FROM uuidtb")
             .select(new SingleOutcome<>(UUID.class));
-        MatcherAssert.assertThat("selected id should be equal the inserted id", id, Matchers.equalTo(uuid));
+        MatcherAssert.assertThat("get id should be equal set id", id, Matchers.equalTo(uuid));
     }
 
     /**
@@ -148,7 +148,7 @@ final class JdbcSessionITCase {
                 }
              )
             .call(new StoredProcedureOutcome<Object[]>(1, 2));
-        MatcherAssert.assertThat("result collection size should be 2", result.length, Matchers.is(2));
+        MatcherAssert.assertThat("result array size should be 2", result.length, Matchers.is(2));
         MatcherAssert.assertThat(
             "first item of result collection should contains user name Charles",
             result[0].toString(),
