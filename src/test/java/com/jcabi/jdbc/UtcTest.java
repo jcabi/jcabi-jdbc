@@ -160,17 +160,15 @@ final class UtcTest {
             .sql("INSERT INTO foo VALUES (?) ")
             .set(new Utc(date))
             .insert(Outcome.VOID);
-        final Connection conn = this.source.getConnection();
         final String saved;
-        try (PreparedStatement stmt = conn.prepareStatement(
-            "SELECT date FROM foo  "
+        try (Connection conn = this.source.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(
+                "SELECT date FROM foo  "
             ); ResultSet rset = stmt.executeQuery()) {
             if (!rset.next()) {
                 throw new IllegalStateException();
             }
             saved = rset.getString(1);
-        } finally {
-            conn.close();
         }
         this.fmt.setTimeZone(TimeZone.getTimeZone("GMT"));
         final Date absolute = this.fmt.parse(saved);
