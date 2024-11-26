@@ -148,7 +148,7 @@ final class JdbcSessionITCase {
                 }
              )
             .call(new StoredProcedureOutcome<Object[]>(1, 2));
-        MatcherAssert.assertThat(result.length, Matchers.is(2));
+        MatcherAssert.assertThat("result collection size shoul be 2", result.length, Matchers.is(2));
         MatcherAssert.assertThat(
             result[0].toString(),
             Matchers.containsString("Charles")
