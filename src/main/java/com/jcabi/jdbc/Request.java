@@ -65,6 +65,18 @@ interface Request {
     };
 
     /**
+     * Execute update.
+     */
+    Request EXECUTE_BATCH_UPDATE = new Request() {
+        @Override
+        public ResultSet fetch(final PreparedStatement stmt)
+                throws SQLException {
+            stmt.executeBatch();
+            return stmt.getGeneratedKeys();
+        }
+    };
+
+    /**
      * Execute query.
      */
     Request EXECUTE_QUERY = new Request() {
