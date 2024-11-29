@@ -51,7 +51,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
  * @since 0.1
  */
 @Testcontainers(disabledWithoutDocker = true)
-final class JdbcSessionITCase {
+final class JdbcSessionITTest {
 
     /**
      * The database container.
@@ -59,6 +59,32 @@ final class JdbcSessionITCase {
     @Container
     private final JdbcDatabaseContainer<?> container =
         new PostgreSQLContainer<>("postgres:9.6.12");
+
+    @Test
+    void batchInsert() throws Exception {
+        final DataSource source = this.source();
+        new JdbcSession(source)
+                .sql("CREATE TABLE IF NOT EXISTS transactions (type VARCHAR(4), amount INTEGER)")
+                .execute()
+                .sql("INSERT INTO transactions (type, amount) VALUES (?, ?)")
+                .set("buy").set(42)
+                .set("sell").set(5)
+                .set("sell").set(12)
+                .set("sell").set(345)
+                .set("buy").set(1)
+                .set("sell").set(324)
+                .set("buy").set(42)
+                .set("buy").set(8)
+                .batchInsert(Outcome.NOT_EMPTY, 2);
+        MatcherAssert.assertThat(
+                new JdbcSession(source)
+                        .sql("SELECT SUM(amount) FROM transactions")
+                        .select(new SingleOutcome<>(Long.class)),
+                Matchers.equalTo(
+                        42L + 5 + 12 + 345 + 1 + 324 + 42 + 8
+                )
+        );
+    }
 
     /**
      * JdbcSession can do PostgreSQL manipulations.

@@ -35,6 +35,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Prepare arguments.
@@ -48,12 +49,15 @@ final class PrepareArgs implements Preparation {
      */
     private final transient Collection<Object> args;
 
+    private final AtomicInteger updateBatchSize;
+
     /**
      * Ctor.
      * @param arguments Arguments
      */
-    PrepareArgs(final Collection<Object> arguments) {
+    PrepareArgs(final Collection<Object> arguments, final AtomicInteger updateBatchSize) {
         this.args = Collections.unmodifiableCollection(arguments);
+        this.updateBatchSize = updateBatchSize;
     }
 
     @Override
@@ -64,8 +68,14 @@ final class PrepareArgs implements Preparation {
         }
     )
     public void prepare(final PreparedStatement stmt) throws SQLException {
-        int pos = 1;
+        int argNumber = 1;
         for (final Object arg : this.args) {
+            int pos;
+            if (this.updateBatchSize.get() != 0) {
+                pos = (argNumber - 1) % this.updateBatchSize.get() + 1;
+            } else {
+                pos = argNumber;
+            }
             if (arg == null) {
                 stmt.setNull(pos, Types.NULL);
             } else if (arg instanceof Long) {
@@ -85,7 +95,10 @@ final class PrepareArgs implements Preparation {
             } else {
                 stmt.setObject(pos, arg);
             }
-            ++pos;
+            if (this.updateBatchSize.get() != 0 && argNumber % this.updateBatchSize.get() == 0) {
+                stmt.addBatch();
+            }
+            ++argNumber;
         }
     }
 }

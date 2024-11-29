@@ -36,6 +36,7 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.sql.DataSource;
 import lombok.EqualsAndHashCode;
@@ -158,6 +159,8 @@ public final class JdbcSession {
      */
     private final transient Collection<Object> args;
 
+    private final transient AtomicInteger batchSize;
+
     /**
      * Arguments.
      *
@@ -196,11 +199,12 @@ public final class JdbcSession {
     @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
     public JdbcSession(final DataSource src) {
         this.args = new LinkedList<>();
+        this.batchSize = new AtomicInteger(0);
         this.preparations = new LinkedList<>();
         this.connection = new AtomicReference<>();
         this.auto = true;
         this.source = src;
-        this.preparations.add(new PrepareArgs(this.args));
+        this.preparations.add(new PrepareArgs(this.args, this.batchSize));
     }
 
     /**
@@ -288,7 +292,8 @@ public final class JdbcSession {
         synchronized (this.args) {
             this.args.clear();
             this.preparations.clear();
-            this.preparations.add(new PrepareArgs(this.args));
+            this.batchSize.set(0);
+            this.preparations.add(new PrepareArgs(this.args, this.batchSize));
         }
         return this;
     }
@@ -365,6 +370,16 @@ public final class JdbcSession {
             outcome,
             new Connect.WithKeys(this.query),
             Request.EXECUTE_UPDATE
+        );
+    }
+
+    public <T> T batchInsert(final Outcome<T> outcome, int batchSize)
+            throws SQLException {
+        this.batchSize.set(batchSize);
+        return this.run(
+                outcome,
+                new Connect.WithKeys(this.query),
+                Request.EXECUTE_BATCH_UPDATE
         );
     }
 
