@@ -55,8 +55,8 @@ import lombok.ToString;
  *     )
  *   );</pre>
  *
- * @since 0.13
  * @param <T> Type of items
+ * @since 0.13
  */
 @ToString
 @EqualsAndHashCode(of = "mapping")

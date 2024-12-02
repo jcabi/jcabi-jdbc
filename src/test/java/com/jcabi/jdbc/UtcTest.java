@@ -95,16 +95,15 @@ final class UtcTest {
         );
         final Date date = this.fmt.parse("2008-05-24 05:06:07.000");
         final String saved;
-        try (Connection conn = this.source.getConnection()) {
-            final PreparedStatement ustmt = conn.prepareStatement(
+        try (Connection conn = this.source.getConnection();
+            PreparedStatement ustmt = conn.prepareStatement(
                 "INSERT INTO foo (date) VALUES (?)"
-            );
+            )) {
             new Utc(date).setTimestamp(ustmt, 1);
             ustmt.executeUpdate();
-            final PreparedStatement rstmt = conn.prepareStatement(
+            try (PreparedStatement rstmt = conn.prepareStatement(
                 "SELECT date FROM foo"
-            );
-            try (ResultSet rset = rstmt.executeQuery()) {
+            ); ResultSet rset = rstmt.executeQuery()) {
                 if (!rset.next()) {
                     throw new IllegalArgumentException();
                 }
@@ -112,6 +111,7 @@ final class UtcTest {
             }
         }
         MatcherAssert.assertThat(
+            "saved date is 2008-05-24 10:06:07",
             saved,
             Matchers.startsWith("2008-05-24 10:06:07")
         );
@@ -123,30 +123,27 @@ final class UtcTest {
      */
     @Test
     void loadsDateWithUtcTimezone() throws Exception {
-        final Connection conn = this.source.getConnection();
         final Date loaded;
-        try {
-            final PreparedStatement ustmt = conn.prepareStatement(
+        try (Connection conn = this.source.getConnection();
+            PreparedStatement ustmt = conn.prepareStatement(
                 "INSERT INTO foo (date) VALUES (?) "
-            );
+             )) {
             ustmt.setString(1, "2005-02-02 10:07:08.000");
             ustmt.executeUpdate();
-            final PreparedStatement rstmt = conn.prepareStatement(
+            try (PreparedStatement rstmt = conn.prepareStatement(
                 "SELECT date FROM foo "
-            );
-            try (ResultSet rset = rstmt.executeQuery()) {
+            ); ResultSet rset = rstmt.executeQuery()) {
                 if (!rset.next()) {
                     throw new IllegalArgumentException();
                 }
                 loaded = Utc.getTimestamp(rset, 1);
             }
-        } finally {
-            conn.close();
         }
         this.fmt.setCalendar(
             new GregorianCalendar(TimeZone.getTimeZone("GMT-3"))
         );
         MatcherAssert.assertThat(
+            "loaded date is 2005-02-02 07:07:08",
             this.fmt.format(loaded),
             Matchers.startsWith("2005-02-02 07:07:08")
         );
@@ -163,24 +160,20 @@ final class UtcTest {
             .sql("INSERT INTO foo VALUES (?) ")
             .set(new Utc(date))
             .insert(Outcome.VOID);
-        final Connection conn = this.source.getConnection();
         final String saved;
-        try {
-            final PreparedStatement stmt = conn.prepareStatement(
+        try (Connection conn = this.source.getConnection();
+            PreparedStatement stmt = conn.prepareStatement(
                 "SELECT date FROM foo  "
-            );
-            try (ResultSet rset = stmt.executeQuery()) {
-                if (!rset.next()) {
-                    throw new IllegalStateException();
-                }
-                saved = rset.getString(1);
+            ); ResultSet rset = stmt.executeQuery()) {
+            if (!rset.next()) {
+                throw new IllegalStateException();
             }
-        } finally {
-            conn.close();
+            saved = rset.getString(1);
         }
         this.fmt.setTimeZone(TimeZone.getTimeZone("GMT"));
         final Date absolute = this.fmt.parse(saved);
         MatcherAssert.assertThat(
+            "the received date is equal to the set date",
             absolute.toString(),
             Matchers.equalTo(date.toString())
         );

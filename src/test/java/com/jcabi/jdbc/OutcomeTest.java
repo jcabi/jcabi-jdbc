@@ -53,7 +53,7 @@ final class OutcomeTest {
             .sql("INSERT INTO foo (name) VALUES (?)")
             .set("Jeff Lebowski")
             .update(Outcome.LAST_INSERT_ID);
-        MatcherAssert.assertThat(num, Matchers.equalTo(1L));
+        MatcherAssert.assertThat("last insert id is equal 1", num, Matchers.equalTo(1L));
     }
 
 }

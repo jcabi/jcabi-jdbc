@@ -73,7 +73,7 @@ final class JdbcSessionTest {
                     }
                 }
             );
-        MatcherAssert.assertThat(name, Matchers.startsWith("Jeff"));
+        MatcherAssert.assertThat("result starts with Jeff", name, Matchers.startsWith("Jeff"));
     }
 
     /**
@@ -127,7 +127,7 @@ final class JdbcSessionTest {
                     }
                 }
             );
-        MatcherAssert.assertThat(name, Matchers.startsWith("Wa"));
+        MatcherAssert.assertThat("result starts with Wa", name, Matchers.startsWith("Wa"));
     }
 
     /**
@@ -180,6 +180,7 @@ final class JdbcSessionTest {
             .execute()
             .rollback();
         MatcherAssert.assertThat(
+            "result should contains foo",
             new JdbcSession(source).sql("SELECT * FROM t228x")
                 .select(new ListOutcome<>(rset -> rset.getString("name"))),
             Matchers.contains("foo")

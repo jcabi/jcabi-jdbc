@@ -410,7 +410,7 @@ public final class JdbcSession {
             vendor = conn.getMetaData().getDatabaseProductName();
         }
         final Connect connect;
-        if (vendor.equalsIgnoreCase("mysql")) {
+        if ("mysql".equalsIgnoreCase(vendor)) {
             connect = new Connect.WithKeys(this.query);
         } else {
             connect = new Connect.Plain(this.query);
@@ -482,19 +482,12 @@ public final class JdbcSession {
     private <T> T fetch(final Outcome<T> outcome,
         final Request request, final PreparedStatement stmt) throws SQLException {
         final T result;
-        try {
+        try (stmt) {
             this.configure(stmt);
-            final ResultSet rset = request.fetch(stmt);
             // @checkstyle NestedTryDepth (5 lines)
-            try {
+            try (ResultSet rset = request.fetch(stmt)) {
                 result = outcome.handle(rset, stmt);
-            } finally {
-                if (rset != null) {
-                    rset.close();
-                }
             }
-        } finally {
-            stmt.close();
         }
         return result;
     }

@@ -196,9 +196,9 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-      <version>1.2.17</version>
+      <groupId>org.apache.logging.log4j</groupId>
+      <artifactId>log4j-core</artifactId>
+      <version>2.24.1</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -237,6 +237,14 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
           </execution>
         </executions>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <source>9</source>
+          <target>9</target>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
   <profiles>
@@ -247,7 +255,7 @@ OF THE POSSIBILITY OF SUCH DAMAGE.
           <plugin>
             <groupId>com.qulice</groupId>
             <artifactId>qulice-maven-plugin</artifactId>
-            <version>0.22.0</version>
+            <version>0.23.0</version>
             <configuration>
               <excludes combine.children="append">
                 <exclude>duplicatefinder:.*</exclude>

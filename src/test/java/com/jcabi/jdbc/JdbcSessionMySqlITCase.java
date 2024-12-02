@@ -90,6 +90,7 @@ final class JdbcSessionMySqlITCase {
             )
             .execute();
         MatcherAssert.assertThat(
+            "result should be equal 1",
             new JdbcSession(this.source())
                 .sql("INSERT INTO foo (name) VALUES (?)")
                 .set("test")
@@ -113,6 +114,7 @@ final class JdbcSessionMySqlITCase {
             .execute();
         final JdbcSession session = new JdbcSession(this.source());
         MatcherAssert.assertThat(
+            "result should be equal 1",
             session
                 .autocommit(false)
                 .sql("START TRANSACTION")
@@ -152,6 +154,7 @@ final class JdbcSessionMySqlITCase {
             )
             .call(new StoredProcedureOutcome<>(1, 2));
         MatcherAssert.assertThat(
+            "first item of result array should contains user name Jeff Charles and not null date",
             result,
             Matchers.arrayContaining(
                 Matchers.is("Jeff Charles"),

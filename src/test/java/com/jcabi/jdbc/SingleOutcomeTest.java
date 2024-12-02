@@ -47,6 +47,7 @@ final class SingleOutcomeTest {
     @Test
     void retrievesByte() throws Exception {
         MatcherAssert.assertThat(
+            "retrieve byte 'A'",
             new JdbcSession(this.datasource())
                 .sql("CALL 65")
                 .select(new SingleOutcome<>(Byte.class)),
@@ -57,6 +58,7 @@ final class SingleOutcomeTest {
     @Test
     void retrievesBigDecimal() throws Exception {
         MatcherAssert.assertThat(
+            "received value should be 1.0E+10",
             new JdbcSession(this.datasource())
                 .sql("CALL POWER(10, 10)")
                 .select(new SingleOutcome<>(BigDecimal.class)),
@@ -68,6 +70,7 @@ final class SingleOutcomeTest {
     void retrievesBytes() throws Exception {
         final int size = 256;
         MatcherAssert.assertThat(
+            "received bytes length should be 256",
             new JdbcSession(this.datasource())
                 .sql(String.format("CALL SECURE_RAND(%d)", size))
                 .select(new SingleOutcome<>(byte[].class))
@@ -79,6 +82,7 @@ final class SingleOutcomeTest {
     @Test
     void retrievesUtc() throws Exception {
         MatcherAssert.assertThat(
+            "received timestamp should be current timestamp",
             new JdbcSession(this.datasource())
                 .sql("CALL CURRENT_TIMESTAMP()")
                 .select(new SingleOutcome<>(Utc.class)),
@@ -89,6 +93,7 @@ final class SingleOutcomeTest {
     @Test
     void retrievesDate() throws Exception {
         MatcherAssert.assertThat(
+            "received date should be current date",
             new JdbcSession(this.datasource())
                 .sql("CALL CURRENT_DATE()")
                 .select(new SingleOutcome<>(Date.class)),
@@ -112,7 +117,7 @@ final class SingleOutcomeTest {
         final String name = new JdbcSession(source)
             .sql("SELECT name FROM foo")
             .select(new SingleOutcome<String>(String.class));
-        MatcherAssert.assertThat(name, Matchers.startsWith("Jeff"));
+        MatcherAssert.assertThat("name should be Jeff", name, Matchers.startsWith("Jeff"));
     }
 
     @Test
