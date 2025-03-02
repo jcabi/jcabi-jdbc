@@ -1,8 +1,9 @@
-target/
-.idea/
 *.iml
 .DS_Store
-bin/
 .classpath
+.idea/
 .project
 .settings/
+bin/
+node_modules/
+target/
