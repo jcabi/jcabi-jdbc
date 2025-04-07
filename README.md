@@ -1,13 +1,13 @@
 <img src="https://www.jcabi.com/logo-square.svg" width="64px" height="64px" />
 
 [![EO principles respected here](https://www.elegantobjects.org/badge.svg)](https://www.elegantobjects.org)
-[![DevOps By Rultor.com](http://www.rultor.com/b/jcabi/jcabi-jdbc)](http://www.rultor.com/p/jcabi/jcabi-jdbc)
+[![DevOps By Rultor.com](https://www.rultor.com/b/jcabi/jcabi-jdbc)](https://www.rultor.com/p/jcabi/jcabi-jdbc)
 [![We recommend IntelliJ IDEA](https://www.elegantobjects.org/intellij-idea.svg)](https://www.jetbrains.com/idea/)
 
 [![mvn](https://github.com/jcabi/jcabi-jdbc/actions/workflows/mvn.yml/badge.svg)](https://github.com/jcabi/jcabi-jdbc/actions/workflows/mvn.yml)
-[![PDD status](http://www.0pdd.com/svg?name=jcabi/jcabi-jdbc)](http://www.0pdd.com/p?name=jcabi/jcabi-jdbc)
+[![PDD status](https://www.0pdd.com/svg?name=jcabi/jcabi-jdbc)](https://www.0pdd.com/p?name=jcabi/jcabi-jdbc)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.jcabi/jcabi-jdbc/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.jcabi/jcabi-jdbc)
-[![Javadoc](https://javadoc.io/badge/com.jcabi/jcabi-jdbc.svg)](http://www.javadoc.io/doc/com.jcabi/jcabi-jdbc)
+[![Javadoc](https://javadoc.io/badge/com.jcabi/jcabi-jdbc.svg)](https://www.javadoc.io/doc/com.jcabi/jcabi-jdbc)
 [![Coverage Status](https://coveralls.io/repos/jcabi/jcabi-jdbc/badge.svg?branch=__rultor&service=github)](https://coveralls.io/github/jcabi/jcabi-jdbc?branch=__rultor)
 [![jpeek report](https://i.jpeek.org/com.jcabi/jcabi-jdbc/badge.svg)](https://i.jpeek.org/com.jcabi/jcabi-jdbc/)
 [![Hits-of-Code](https://hitsofcode.com/github/jcabi/jcabi-jdbc)](https://hitsofcode.com/view/github/jcabi-jdbc)
