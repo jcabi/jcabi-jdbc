@@ -9,7 +9,7 @@
  * <p>The only dependency you need is (check our latest version available
  * at <a href="http://jdbc.jcabi.com">jdbc.jcabi.com</a>):
  *
- * <pre>&lt;depedency&gt;
+ * <pre>&lt;dependency&gt;
  *   &lt;groupId&gt;com.jcabi&lt;/groupId&gt;
  *   &lt;artifactId&gt;jcabi-jdbc&lt;/artifactId&gt;
  * &lt;/dependency&gt;</pre>
