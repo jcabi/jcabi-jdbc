@@ -22,7 +22,7 @@ final class ListOutcomeTest {
      */
     @Test
     void retrievesList() throws Exception {
-        final DataSource source = new H2Source("tto98");
+        final DataSource source = new H2Source("to98");
         new JdbcSession(source)
             .autocommit(false)
             .sql("CREATE TABLE foo (name VARCHAR(50))")
