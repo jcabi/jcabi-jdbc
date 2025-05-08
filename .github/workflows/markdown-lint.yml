@@ -2,7 +2,7 @@
 # SPDX-License-Identifier: MIT
 ---
 # yamllint disable rule:line-length
-name: typos
+name: markdown-lint
 'on':
   push:
     branches:
@@ -11,9 +11,9 @@ name: typos
     branches:
       - master
 jobs:
-  typos:
+  markdown-lint:
     timeout-minutes: 15
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v4
-      - uses: crate-ci/typos@v1.32.0
+      - uses: articulate/actions-markdownlint@v1
