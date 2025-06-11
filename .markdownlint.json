@@ -1,7 +1,8 @@
 {
-    "default": true,
-    "MD033": {
-        "allowed_elements": [
-            "img"
-        ]
+  "default": true,
+  "MD033": {
+    "allowed_elements": [
+      "img"
+    ]
+  }
 }
