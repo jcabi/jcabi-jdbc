@@ -30,6 +30,7 @@ public class Main {
   }
 }
 ```
+
 ## How to contribute?
 
 Fork the repository, make changes, submit a pull request.
@@ -39,6 +40,7 @@ the `master` branch, if they look correct.
 Please run Maven build before submitting a pull request:
 
 ```
+
 $ mvn clean install -Pqulice
 ```
 
