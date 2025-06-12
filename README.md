@@ -1,4 +1,4 @@
-<img src="https://www.jcabi.com/logo-square.svg" width="64px" height="64px" />
+# [![Jcabi Logo](https://www.jcabi.com/logo-square.svg)](https://www.jcabi.com/logo-square.svg)
 
 [![EO principles respected here](https://www.elegantobjects.org/badge.svg)](https://www.elegantobjects.org)
 [![DevOps By Rultor.com](https://www.rultor.com/b/jcabi/jcabi-jdbc)](https://www.rultor.com/p/jcabi/jcabi-jdbc)
@@ -30,6 +30,7 @@ public class Main {
   }
 }
 ```
+
 ## How to contribute?
 
 Fork the repository, make changes, submit a pull request.
@@ -38,8 +39,11 @@ the `master` branch, if they look correct.
 
 Please run Maven build before submitting a pull request:
 
-```
-$ mvn clean install -Pqulice
+```shell
+
+mvn clean install -Pqulice
 ```
 
-Please make sure that you're doing so under user account without administrative rights, otherwise the build will fail (postgresql instance needed for tests can't be launched under admin/root account).
+Please make sure that you're doing so under user account without administrative
+rights, otherwise the build will fail (postgresql instance needed for tests
+can't be launched under admin/root account).
