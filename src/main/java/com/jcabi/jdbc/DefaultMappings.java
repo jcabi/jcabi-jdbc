@@ -93,12 +93,12 @@ final class DefaultMappings implements Outcome.Mappings {
 
     @Override
     @SuppressWarnings("unchecked")
-    public <X> Outcome.Mapping<X> forType(final Class<? extends X> tpe) {
-        if (!this.map.containsKey(tpe)) {
+    public <X> Outcome.Mapping<X> forType(final Class<? extends X> type) {
+        if (!this.map.containsKey(type)) {
             throw new IllegalArgumentException(
-                String.format("Type %s is not supported", tpe.getName())
+                String.format("Type %s is not supported", type.getName())
             );
         }
-        return (Outcome.Mapping<X>) this.map.get(tpe);
+        return (Outcome.Mapping<X>) this.map.get(type);
     }
 }
