@@ -52,11 +52,11 @@ public final class ColumnOutcome<T> implements Outcome<Collection<T>> {
     /**
      * Public ctor.
      *
-     * @param tpe The type to convert to
+     * @param type The type to convert to
      * @param mps The mappings.
      */
-    public ColumnOutcome(final Class<T> tpe, final Mappings mps) {
-        this(mps.forType(tpe));
+    public ColumnOutcome(final Class<T> type, final Mappings mps) {
+        this(mps.forType(type));
     }
 
     @Override
