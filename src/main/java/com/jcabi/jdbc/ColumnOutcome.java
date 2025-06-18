@@ -43,10 +43,10 @@ public final class ColumnOutcome<T> implements Outcome<Collection<T>> {
     /**
      * Public ctor.
      *
-     * @param tpe The type to convert to
+     * @param type The type to convert to
      */
-    public ColumnOutcome(final Class<T> tpe) {
-        this(tpe, Outcome.DEFAULT_MAPPINGS);
+    public ColumnOutcome(final Class<T> type) {
+        this(type, Outcome.DEFAULT_MAPPINGS);
     }
 
     /**
