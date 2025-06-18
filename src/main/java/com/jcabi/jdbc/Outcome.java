@@ -126,10 +126,10 @@ public interface Outcome<T> {
         /**
          * Mapping for a type.
          *
-         * @param tpe Class of result.
+         * @param type Class of result.
          * @param <T> Type of result.
          * @return Mapping.
          */
-        <T> Mapping<T> forType(Class<? extends T> tpe);
+        <T> Mapping<T> forType(Class<? extends T> type);
     }
 }
