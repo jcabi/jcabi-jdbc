@@ -60,22 +60,22 @@ public final class SingleOutcome<T> implements Outcome<T> {
     /**
      * Public ctor.
      *
-     * @param tpe The type to convert to
+     * @param type The type to convert to
      */
-    public SingleOutcome(final Class<T> tpe) {
-        this(tpe, false);
+    public SingleOutcome(final Class<T> type) {
+        this(type, false);
     }
 
     /**
      * Public ctor.
      *
-     * @param tpe The type to convert to
+     * @param type The type to convert to
      * @param slnt Silently return NULL if there is no row
      */
     @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
-    public SingleOutcome(final Class<T> tpe, final boolean slnt) {
+    public SingleOutcome(final Class<T> type, final boolean slnt) {
         this(
-            tpe,
+            type,
             Outcome.DEFAULT_MAPPINGS,
             slnt
         );
@@ -84,12 +84,12 @@ public final class SingleOutcome<T> implements Outcome<T> {
     /**
      * Public ctor.
      *
-     * @param tpe The type to convert to
+     * @param type The type to convert to
      * @param mps The mappings
      * @param slnt Silently return NULL if there is no row
      */
-    public SingleOutcome(final Class<T> tpe, final Mappings mps, final boolean slnt) {
-        this(mps.forType(tpe), slnt);
+    public SingleOutcome(final Class<T> type, final Mappings mps, final boolean slnt) {
+        this(mps.forType(type), slnt);
     }
 
     @Override
