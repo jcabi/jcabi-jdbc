@@ -10,7 +10,6 @@ import java.sql.Statement;
 import java.util.Date;
 import java.util.UUID;
 import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 /**
@@ -44,7 +43,6 @@ import lombok.ToString;
  */
 @ToString
 @EqualsAndHashCode(of = {"mapping", "silently"})
-@RequiredArgsConstructor
 public final class SingleOutcome<T> implements Outcome<T> {
 
     /**
@@ -56,6 +54,17 @@ public final class SingleOutcome<T> implements Outcome<T> {
      * Silently return NULL if no row found.
      */
     private final boolean silently;
+
+    /**
+     * Primary ctor.
+     *
+     * @param mpp The mapping
+     * @param slnt Silently return NULL if there is no row
+     */
+    public SingleOutcome(final Mapping<? extends T> mpp, final boolean slnt) {
+        this.mapping = mpp;
+        this.silently = slnt;
+    }
 
     /**
      * Public ctor.

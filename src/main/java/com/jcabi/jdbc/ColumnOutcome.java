@@ -12,7 +12,6 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.UUID;
 import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
 /**
@@ -32,13 +31,21 @@ import lombok.ToString;
  */
 @ToString
 @EqualsAndHashCode
-@RequiredArgsConstructor
 public final class ColumnOutcome<T> implements Outcome<Collection<T>> {
 
     /**
      * Mapping.
      */
     private final Mapping<T> mapping;
+
+    /**
+     * Primary ctor.
+     *
+     * @param mpp The mapping
+     */
+    public ColumnOutcome(final Mapping<T> mpp) {
+        this.mapping = mpp;
+    }
 
     /**
      * Public ctor.

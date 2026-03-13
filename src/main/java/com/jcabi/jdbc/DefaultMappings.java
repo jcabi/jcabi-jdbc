@@ -11,20 +11,26 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
 
 /**
  * Default mappings for types.
  *
  * @since 0.17.6
  */
-@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 final class DefaultMappings implements Outcome.Mappings {
     /**
      * Per-type extraction methods.
      */
     private final Map<Class<?>, Outcome.Mapping<?>> map;
+
+    /**
+     * Primary ctor.
+     *
+     * @param mpp The mappings map
+     */
+    private DefaultMappings(final Map<Class<?>, Outcome.Mapping<?>> mpp) {
+        this.map = mpp;
+    }
 
     /**
      * Ctor.
