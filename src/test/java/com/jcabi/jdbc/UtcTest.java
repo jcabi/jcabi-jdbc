@@ -25,6 +25,11 @@ import org.junit.jupiter.api.Test;
  * Test case of {@link Utc}.
  * @since 0.1
  */
+@SuppressWarnings({
+    "PMD.ReplaceJavaUtilDate",
+    "PMD.ReplaceJavaUtilCalendar",
+    "PMD.UnnecessaryLocalRule"
+})
 final class UtcTest {
 
     /**

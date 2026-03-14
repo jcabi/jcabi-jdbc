@@ -14,6 +14,7 @@ import java.sql.Statement;
  *
  * @since 0.13
  */
+@FunctionalInterface
 interface Connect {
 
     /**

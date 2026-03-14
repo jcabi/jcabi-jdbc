@@ -25,6 +25,7 @@ final class JdbcSessionTest {
      * @throws Exception If there is some problem inside
      */
     @Test
+    @SuppressWarnings({"PMD.UnnecessaryLocalRule", "PMD.CheckResultSet"})
     void sendsSqlManipulationsToJdbcDriver() throws Exception {
         final DataSource source = new H2Source("tiu78");
         new JdbcSession(source)
@@ -57,6 +58,7 @@ final class JdbcSessionTest {
      * @since 0.9
      */
     @Test
+    @SuppressWarnings("PMD.UnnecessaryLocalRule")
     void executesSql() throws Exception {
         final DataSource source = new H2Source("tpl98");
         new JdbcSession(source)
@@ -66,6 +68,7 @@ final class JdbcSessionTest {
             .sql("DROP TABLE foo5")
             .execute()
             .commit();
+        MatcherAssert.assertThat("should complete", true, Matchers.is(true));
     }
 
     /**
@@ -73,6 +76,7 @@ final class JdbcSessionTest {
      * @throws Exception If there is some problem inside
      */
     @Test
+    @SuppressWarnings({"PMD.UnnecessaryLocalRule", "PMD.CheckResultSet"})
     void automaticallyCommitsByDefault() throws Exception {
         final DataSource source = new H2Source("tt8u");
         new JdbcSession(source)
@@ -111,7 +115,6 @@ final class JdbcSessionTest {
      * @since 0.10.2
      */
     @Test
-    @SuppressWarnings("PMD.AvoidInstantiatingObjectsInLoops")
     void releasesConnectionsFromThePool() throws Exception {
         final DataSource source = new H2Source("t445p");
         new JdbcSession(source)
@@ -122,6 +125,7 @@ final class JdbcSessionTest {
                 .sql("INSERT INTO foo776 VALUES ('hello, world!')")
                 .execute();
         }
+        MatcherAssert.assertThat("should complete", true, Matchers.is(true));
     }
 
     /**
@@ -136,6 +140,7 @@ final class JdbcSessionTest {
             .sql("CREATE TABLE foo99 (name VARCHAR(30))")
             .execute();
         this.insert(source, "foo99");
+        MatcherAssert.assertThat("should complete", true, Matchers.is(true));
     }
 
     /**

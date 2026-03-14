@@ -81,7 +81,6 @@ public final class SingleOutcome<T> implements Outcome<T> {
      * @param type The type to convert to
      * @param slnt Silently return NULL if there is no row
      */
-    @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
     public SingleOutcome(final Class<T> type, final boolean slnt) {
         this(
             type,

@@ -13,6 +13,7 @@ import java.sql.SQLException;
  *
  * @since 0.13
  */
+@FunctionalInterface
 interface Request {
 
     /**

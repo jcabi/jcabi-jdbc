@@ -117,7 +117,12 @@ import lombok.ToString;
  */
 @ToString
 @EqualsAndHashCode(of = { "source", "connection", "args", "auto", "query" })
-@SuppressWarnings({ "PMD.TooManyMethods", "PMD.CloseResource" })
+@SuppressWarnings({
+    "PMD.TooManyMethods",
+    "PMD.CloseResource",
+    "PMD.CouplingBetweenObjects",
+    "PMD.AvoidSynchronizedStatement"
+})
 public final class JdbcSession {
 
     /**
@@ -454,6 +459,7 @@ public final class JdbcSession {
      * @return The result
      * @throws SQLException If fails
      */
+    @SuppressWarnings("PMD.UnnecessaryLocalRule")
     private <T> T fetch(final Outcome<T> outcome,
         final Request request, final PreparedStatement stmt) throws SQLException {
         final T result;

@@ -32,12 +32,6 @@ final class PrepareArgs implements Preparation {
     }
 
     @Override
-    @SuppressWarnings(
-        {
-            "PMD.CyclomaticComplexity", "PMD.StdCyclomaticComplexity",
-            "PMD.ModifiedCyclomaticComplexity"
-        }
-    )
     public void prepare(final PreparedStatement stmt) throws SQLException {
         int pos = 1;
         for (final Object arg : this.args) {

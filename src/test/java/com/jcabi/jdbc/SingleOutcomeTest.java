@@ -77,6 +77,7 @@ final class SingleOutcomeTest {
     }
 
     @Test
+    @SuppressWarnings("PMD.UnnecessaryLocalRule")
     void retrievesString() throws Exception {
         final DataSource source = this.datasource();
         new JdbcSession(source)

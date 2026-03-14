@@ -22,6 +22,7 @@ final class ColumnOutcomeTest {
      * @throws Exception If there is some problem inside
      */
     @Test
+    @SuppressWarnings("PMD.UnnecessaryLocalRule")
     void retrievesFirstColumn() throws Exception {
         final DataSource source = new H2Source("i8o98");
         new JdbcSession(source)

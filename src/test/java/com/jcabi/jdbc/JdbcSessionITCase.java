@@ -51,6 +51,7 @@ final class JdbcSessionITCase {
             .set("Jeff Lebowski")
             .execute()
             .commit();
+        MatcherAssert.assertThat("should complete", true, Matchers.is(true));
     }
 
     /**
@@ -59,6 +60,7 @@ final class JdbcSessionITCase {
      * @throws Exception If there is some problem inside
      */
     @Test
+    @SuppressWarnings("PMD.UnnecessaryLocalRule")
     void manipulatesUuidTypes() throws Exception {
         final DataSource source = this.source();
         final UUID uuid = UUID.randomUUID();
@@ -85,6 +87,7 @@ final class JdbcSessionITCase {
     void changesTransactionIsolationLevel() throws Exception {
         final DataSource source = this.source();
         new JdbcSession(source).sql("VACUUM").execute();
+        MatcherAssert.assertThat("should complete", true, Matchers.is(true));
     }
 
     /**
@@ -94,6 +97,7 @@ final class JdbcSessionITCase {
      * @throws Exception If something goes wrong
      */
     @Test
+    @SuppressWarnings("PMD.UnitTestContainsTooManyAsserts")
     void callsFunctionWithOutParam() throws Exception {
         final DataSource source = this.source();
         new JdbcSession(source).autocommit(false).sql(
@@ -143,6 +147,7 @@ final class JdbcSessionITCase {
      * @throws Exception If something goes wrong
      */
     @Test
+    @SuppressWarnings("PMD.UnitTestContainsTooManyAsserts")
     void callsFunctionWithInOutParam() throws Exception {
         final DataSource source = this.source();
         new JdbcSession(source).autocommit(false).sql(

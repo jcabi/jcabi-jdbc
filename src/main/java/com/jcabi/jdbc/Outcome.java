@@ -23,6 +23,8 @@ import java.sql.Statement;
  * @param <T> Type of expected result
  * @since 0.12
  */
+@FunctionalInterface
+@SuppressWarnings("PMD.CheckResultSet")
 public interface Outcome<T> {
 
     /**
@@ -106,6 +108,7 @@ public interface Outcome<T> {
      * @param <T> Type of output
      * @since 0.13
      */
+    @FunctionalInterface
     interface Mapping<T> {
         /**
          * Map.
@@ -122,6 +125,7 @@ public interface Outcome<T> {
      *
      * @since 0.17.6
      */
+    @FunctionalInterface
     interface Mappings {
         /**
          * Mapping for a type.

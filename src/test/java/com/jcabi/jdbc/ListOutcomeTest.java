@@ -21,6 +21,7 @@ final class ListOutcomeTest {
      * @throws Exception If there is some problem inside
      */
     @Test
+    @SuppressWarnings("PMD.UnnecessaryLocalRule")
     void retrievesList() throws Exception {
         final DataSource source = new H2Source("to98");
         new JdbcSession(source)

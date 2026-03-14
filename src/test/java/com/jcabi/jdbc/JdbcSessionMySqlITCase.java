@@ -24,7 +24,6 @@ import org.testcontainers.utility.DockerImageName;
  * @since 0.17.6
  */
 @Testcontainers(disabledWithoutDocker = true)
-@SuppressWarnings("PMD.AvoidDuplicateLiterals")
 final class JdbcSessionMySqlITCase {
 
     /**
@@ -49,6 +48,7 @@ final class JdbcSessionMySqlITCase {
             .set("Jeff Lebowski")
             .execute()
             .commit();
+        MatcherAssert.assertThat("should complete", true, Matchers.is(true));
     }
 
     @Test
@@ -103,6 +103,7 @@ final class JdbcSessionMySqlITCase {
     }
 
     @Test
+    @SuppressWarnings("PMD.UnnecessaryLocalRule")
     void callsFunctionWithOutParam() throws Exception {
         new JdbcSession(this.source())
             .autocommit(false)

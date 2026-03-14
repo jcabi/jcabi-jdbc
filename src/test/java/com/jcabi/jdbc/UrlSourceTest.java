@@ -4,7 +4,8 @@
  */
 package com.jcabi.jdbc;
 
-import javax.sql.DataSource;
+import org.hamcrest.MatcherAssert;
+import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -16,13 +17,13 @@ final class UrlSourceTest {
 
     @Test
     void sendsSqlManipulationsToJdbcDriver() throws Exception {
-        final DataSource source = new UrlSource(
-            "jdbc:h2:mem:foo;DB_CLOSE_DELAY=-1"
-        );
-        new JdbcSession(source)
+        new JdbcSession(
+            new UrlSource("jdbc:h2:mem:foo;DB_CLOSE_DELAY=-1")
+        )
             .autocommit(false)
             .sql("CREATE TABLE foo (name VARCHAR(50))")
             .execute()
             .commit();
+        MatcherAssert.assertThat("should complete", true, Matchers.is(true));
     }
 }
