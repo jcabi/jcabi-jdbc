@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link ColumnOutcome}.
- *
  * @since 0.13
  */
 final class ColumnOutcomeTest {
@@ -42,5 +41,4 @@ final class ColumnOutcomeTest {
             "result collection should have size 2", names, Matchers.hasSize(2)
         );
     }
-
 }

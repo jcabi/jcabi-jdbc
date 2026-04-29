@@ -69,8 +69,9 @@ public final class Utc {
 
     /**
      * Public ctor.
-     * @param when The date to use.
+     * @param when The date to use
      */
+    // @checkstyle ConstructorsCodeFreeCheck (3 lines)
     public Utc(final Date when) {
         this.date = when.getTime();
     }
@@ -115,5 +116,4 @@ public final class Utc {
         }
         return when;
     }
-
 }

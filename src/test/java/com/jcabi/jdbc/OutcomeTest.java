@@ -31,5 +31,4 @@ final class OutcomeTest {
             .update(Outcome.LAST_INSERT_ID);
         MatcherAssert.assertThat("last insert id is equal 1", num, Matchers.equalTo(1L));
     }
-
 }

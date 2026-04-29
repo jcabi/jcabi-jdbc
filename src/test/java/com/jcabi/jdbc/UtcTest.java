@@ -40,11 +40,13 @@ final class UtcTest {
     /**
      * Format to use in tests.
      */
+    // @checkstyle ProhibitFieldsInTestClassesCheck (3 lines)
     private transient DateFormat fmt;
 
     /**
      * Data source.
      */
+    // @checkstyle ProhibitFieldsInTestClassesCheck (3 lines)
     private transient DataSource source;
 
     /**
@@ -57,7 +59,7 @@ final class UtcTest {
             String.format("xpo%d", UtcTest.RND.nextInt())
         );
         new JdbcSession(this.source)
-            .sql("CREATE TABLE foo (date DATETIME)")
+            .sql("CREATE TABLE foo (date TIMESTAMP)")
             .execute();
         this.fmt = new SimpleDateFormat(
             "yyyy-MM-dd HH:mm:ss.SSS", Locale.ENGLISH
@@ -75,15 +77,20 @@ final class UtcTest {
         );
         final Date date = this.fmt.parse("2008-05-24 05:06:07.000");
         final String saved;
-        try (Connection conn = this.source.getConnection();
+        try (
+            Connection conn = this.source.getConnection();
             PreparedStatement ustmt = conn.prepareStatement(
                 "INSERT INTO foo (date) VALUES (?)"
-            )) {
+            )
+        ) {
             new Utc(date).setTimestamp(ustmt, 1);
             ustmt.executeUpdate();
-            try (PreparedStatement rstmt = conn.prepareStatement(
-                "SELECT date FROM foo"
-            ); ResultSet rset = rstmt.executeQuery()) {
+            try (
+                PreparedStatement rstmt = conn.prepareStatement(
+                    "SELECT date FROM foo"
+                );
+                ResultSet rset = rstmt.executeQuery()
+            ) {
                 if (!rset.next()) {
                     throw new IllegalArgumentException();
                 }
@@ -104,15 +111,20 @@ final class UtcTest {
     @Test
     void loadsDateWithUtcTimezone() throws Exception {
         final Date loaded;
-        try (Connection conn = this.source.getConnection();
+        try (
+            Connection conn = this.source.getConnection();
             PreparedStatement ustmt = conn.prepareStatement(
                 "INSERT INTO foo (date) VALUES (?) "
-             )) {
+            )
+        ) {
             ustmt.setString(1, "2005-02-02 10:07:08.000");
             ustmt.executeUpdate();
-            try (PreparedStatement rstmt = conn.prepareStatement(
-                "SELECT date FROM foo "
-            ); ResultSet rset = rstmt.executeQuery()) {
+            try (
+                PreparedStatement rstmt = conn.prepareStatement(
+                    "SELECT date FROM foo "
+                );
+                ResultSet rset = rstmt.executeQuery()
+            ) {
                 if (!rset.next()) {
                     throw new IllegalArgumentException();
                 }
@@ -141,10 +153,13 @@ final class UtcTest {
             .set(new Utc(date))
             .insert(Outcome.VOID);
         final String saved;
-        try (Connection conn = this.source.getConnection();
+        try (
+            Connection conn = this.source.getConnection();
             PreparedStatement stmt = conn.prepareStatement(
                 "SELECT date FROM foo  "
-            ); ResultSet rset = stmt.executeQuery()) {
+            );
+            ResultSet rset = stmt.executeQuery()
+        ) {
             if (!rset.next()) {
                 throw new IllegalStateException();
             }
@@ -158,5 +173,4 @@ final class UtcTest {
             Matchers.equalTo(date.toString())
         );
     }
-
 }

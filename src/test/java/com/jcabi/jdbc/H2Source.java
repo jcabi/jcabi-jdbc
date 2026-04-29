@@ -16,7 +16,6 @@ import lombok.ToString;
 
 /**
  * H2 data source, for unit testing.
- *
  * @since 0.13
  */
 @ToString
@@ -89,5 +88,4 @@ final class H2Source implements DataSource {
     public boolean isWrapperFor(final Class<?> iface) {
         throw new UnsupportedOperationException("#isWrapperFor()");
     }
-
 }

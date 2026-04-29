@@ -173,6 +173,7 @@ public final class JdbcSession {
      *
      * @param src Data source
      */
+    // @checkstyle ConstructorsCodeFreeCheck (10 lines)
     @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
     public JdbcSession(final DataSource src) {
         this.args = new LinkedList<>();
@@ -246,7 +247,6 @@ public final class JdbcSession {
 
     /**
      * Run this preparation before executing the statement.
-     *
      * @param prp Preparation
      * @return This object
      * @since 0.13
@@ -260,7 +260,6 @@ public final class JdbcSession {
 
     /**
      * Clear all pre-set parameters (args, preparations, etc).
-     *
      * @return This object
      * @since 0.13
      */
@@ -276,7 +275,6 @@ public final class JdbcSession {
     /**
      * Commit the transaction (calls {@link Connection#commit()} and then
      * {@link Connection#close()}).
-     *
      * @throws SQLException If fails to do the SQL operation
      */
     public void commit() throws SQLException {
@@ -293,7 +291,6 @@ public final class JdbcSession {
     /**
      * Rollback the transaction (calls {@link Connection#rollback()} and then
      * {@link Connection#close()}).
-     *
      * @throws SQLException If fails to do the SQL operation
      */
     public void rollback() throws SQLException {
@@ -320,8 +317,7 @@ public final class JdbcSession {
      * @return The result
      * @throws SQLException If fails
      */
-    public <T> T insert(final Outcome<T> outcome)
-        throws SQLException {
+    public <T> T insert(final Outcome<T> outcome) throws SQLException {
         return this.run(
             outcome,
             new Connect.WithKeys(this.query),
@@ -339,8 +335,7 @@ public final class JdbcSession {
      * @return This object
      * @throws SQLException If fails
      */
-    public <T> T update(final Outcome<T> outcome)
-        throws SQLException {
+    public <T> T update(final Outcome<T> outcome) throws SQLException {
         return this.run(
             outcome,
             new Connect.WithKeys(this.query),
@@ -361,8 +356,7 @@ public final class JdbcSession {
      * @return Result of type T
      * @throws SQLException If fails
      */
-    public <T> T call(final Outcome<T> outcome)
-        throws SQLException {
+    public <T> T call(final Outcome<T> outcome) throws SQLException {
         return this.run(
             outcome, new Connect.Call(this.query), Request.EXECUTE_UPDATE
         );
@@ -409,8 +403,7 @@ public final class JdbcSession {
      * @return The result
      * @throws SQLException If fails
      */
-    public <T> T select(final Outcome<T> outcome)
-        throws SQLException {
+    public <T> T select(final Outcome<T> outcome) throws SQLException {
         return this.run(
             outcome,
             new Connect.Plain(this.query),
@@ -420,7 +413,6 @@ public final class JdbcSession {
 
     /**
      * Run with this outcome, and this fetcher.
-     *
      * @param outcome The outcome of the operation
      * @param connect Connect
      * @param request Request
@@ -500,7 +492,6 @@ public final class JdbcSession {
 
     /**
      * Open connection and cache it locally in the class.
-     *
      * @return Connection to use
      * @throws SQLException If fails
      */
@@ -515,7 +506,6 @@ public final class JdbcSession {
 
     /**
      * Close connection if it's open (runtime exception otherwise).
-     *
      * @throws SQLException If fails to do the SQL operation
      */
     private void disconnect() throws SQLException {
@@ -530,7 +520,6 @@ public final class JdbcSession {
 
     /**
      * Configure the statement.
-     *
      * @param stmt Statement
      * @throws SQLException If fails
      */
@@ -539,5 +528,4 @@ public final class JdbcSession {
             prep.prepare(stmt);
         }
     }
-
 }

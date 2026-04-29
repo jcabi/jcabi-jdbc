@@ -9,11 +9,9 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Collection;
-import java.util.Collections;
 
 /**
  * Prepare arguments.
- *
  * @since 0.13
  */
 final class PrepareArgs implements Preparation {
@@ -28,7 +26,7 @@ final class PrepareArgs implements Preparation {
      * @param arguments Arguments
      */
     PrepareArgs(final Collection<Object> arguments) {
-        this.args = Collections.unmodifiableCollection(arguments);
+        this.args = arguments;
     }
 
     @Override

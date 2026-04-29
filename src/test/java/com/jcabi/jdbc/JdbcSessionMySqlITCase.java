@@ -20,7 +20,6 @@ import org.testcontainers.utility.DockerImageName;
 
 /**
  * Integration case for {@link JdbcSession} on MySQL.
- *
  * @since 0.17.6
  */
 @Testcontainers(disabledWithoutDocker = true)
@@ -39,8 +38,7 @@ final class JdbcSessionMySqlITCase {
 
     @Test
     void worksWithExecute() throws Exception {
-        final DataSource source = this.source();
-        new JdbcSession(source)
+        new JdbcSession(this.source())
             .autocommit(false)
             .sql("CREATE TABLE foo (name VARCHAR(50))")
             .execute()
@@ -52,17 +50,17 @@ final class JdbcSessionMySqlITCase {
     }
 
     @Test
+    @SuppressWarnings("PMD.UnnecessaryLocalRule")
     void worksLastInsertId() throws Exception {
+        final String create = StringUtils.join(
+            "CREATE TABLE IF NOT EXISTS foo (",
+            "id INT NOT NULL AUTO_INCREMENT, ",
+            "name VARCHAR(50), ",
+            "PRIMARY KEY (id)",
+            ")"
+        );
         new JdbcSession(this.source())
-            .sql(
-                StringUtils.join(
-                    "CREATE TABLE IF NOT EXISTS foo (",
-                    "id INT NOT NULL AUTO_INCREMENT, ",
-                    "name VARCHAR(50), ",
-                    "PRIMARY KEY (id)",
-                    ")"
-                )
-            )
+            .sql(create)
             .execute();
         MatcherAssert.assertThat(
             "result should be equal 1",
@@ -75,17 +73,17 @@ final class JdbcSessionMySqlITCase {
     }
 
     @Test
+    @SuppressWarnings("PMD.UnnecessaryLocalRule")
     void worksLastInsertIdAndTransaction() throws Exception {
+        final String create = StringUtils.join(
+            "CREATE TABLE IF NOT EXISTS foo (",
+            "id INT NOT NULL AUTO_INCREMENT, ",
+            "name VARCHAR(50), ",
+            "PRIMARY KEY (id)",
+            ")"
+        );
         new JdbcSession(this.source())
-            .sql(
-                StringUtils.join(
-                    "CREATE TABLE IF NOT EXISTS foo (",
-                    "id INT NOT NULL AUTO_INCREMENT, ",
-                    "name VARCHAR(50), ",
-                    "PRIMARY KEY (id)",
-                    ")"
-                )
-            )
+            .sql(create)
             .execute();
         final JdbcSession session = new JdbcSession(this.source());
         MatcherAssert.assertThat(
@@ -105,29 +103,27 @@ final class JdbcSessionMySqlITCase {
     @Test
     @SuppressWarnings("PMD.UnnecessaryLocalRule")
     void callsFunctionWithOutParam() throws Exception {
+        final String proc = StringUtils.join(
+            "CREATE PROCEDURE proc(OUT username text, OUT day date) ",
+            "BEGIN SELECT name, CURDATE() INTO username, day ",
+            "FROM users; ",
+            "SELECT username, day; ",
+            "END"
+        );
         new JdbcSession(this.source())
             .autocommit(false)
             .sql("CREATE TABLE IF NOT EXISTS users (name VARCHAR(50))")
             .execute()
             .sql("INSERT INTO users (name) VALUES (?)")
             .set("Jeff Charles").execute()
-            .sql(
-                StringUtils.join(
-                    "CREATE PROCEDURE proc(OUT username text, OUT day date) ",
-                    "BEGIN SELECT name, CURDATE() INTO username, day ",
-                    "FROM users; ",
-                    "SELECT username, day; ",
-                    "END"
-                )
-            ).execute().commit();
+            .sql(proc).execute().commit();
+        final Preparation prep = stmt -> {
+            ((CallableStatement) stmt).registerOutParameter(1, Types.VARCHAR);
+            ((CallableStatement) stmt).registerOutParameter(2, Types.DATE);
+        };
         final Object[] result = new JdbcSession(this.source())
             .sql("CALL proc(?, ?)")
-            .prepare(
-                stmt -> {
-                    ((CallableStatement) stmt).registerOutParameter(1, Types.VARCHAR);
-                    ((CallableStatement) stmt).registerOutParameter(2, Types.DATE);
-                }
-            )
+            .prepare(prep)
             .call(new StoredProcedureOutcome<>(1, 2));
         MatcherAssert.assertThat(
             "first item of result array should contains user name Jeff Charles and not null date",
@@ -141,7 +137,6 @@ final class JdbcSessionMySqlITCase {
 
     /**
      * Get data source.
-     *
      * @return Source
      */
     private DataSource source() {
@@ -151,5 +146,4 @@ final class JdbcSessionMySqlITCase {
         src.setPassword(this.container.getPassword());
         return src;
     }
-
 }
