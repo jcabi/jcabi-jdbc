@@ -14,23 +14,14 @@ import java.util.stream.Stream;
 
 /**
  * Default mappings for types.
- *
  * @since 0.17.6
  */
 final class DefaultMappings implements Outcome.Mappings {
+
     /**
      * Per-type extraction methods.
      */
     private final Map<Class<?>, Outcome.Mapping<?>> map;
-
-    /**
-     * Primary ctor.
-     *
-     * @param mpp The mappings map
-     */
-    private DefaultMappings(final Map<Class<?>, Outcome.Mapping<?>> mpp) {
-        this.map = mpp;
-    }
 
     /**
      * Ctor.
@@ -41,11 +32,39 @@ final class DefaultMappings implements Outcome.Mappings {
 
     /**
      * Ctor.
-     *
-     * @param column Column position.
+     * @param column Column position
      */
+    // @checkstyle ConstructorsCodeFreeCheck (3 lines)
     DefaultMappings(final int column) {
-        this(
+        this(DefaultMappings.defaults(column));
+    }
+
+    /**
+     * Primary ctor.
+     * @param mpp The mappings map
+     */
+    private DefaultMappings(final Map<Class<?>, Outcome.Mapping<?>> mpp) {
+        this.map = mpp;
+    }
+
+    @Override
+    @SuppressWarnings("unchecked")
+    public <X> Outcome.Mapping<X> forType(final Class<? extends X> type) {
+        if (!this.map.containsKey(type)) {
+            throw new IllegalArgumentException(
+                String.format("Type %s is not supported", type.getName())
+            );
+        }
+        return (Outcome.Mapping<X>) this.map.get(type);
+    }
+
+    /**
+     * Build the default mappings for a given column.
+     * @param column Column position
+     * @return The default mappings map
+     */
+    private static Map<Class<?>, Outcome.Mapping<?>> defaults(final int column) {
+        return Stream.<Map.Entry<Class<?>, Outcome.Mapping<?>>>of(
             new AbstractMap.SimpleImmutableEntry<>(
                 String.class, rs -> rs.getString(column)
             ),
@@ -73,38 +92,8 @@ final class DefaultMappings implements Outcome.Mappings {
             new AbstractMap.SimpleImmutableEntry<>(
                 UUID.class, rs -> rs.getObject(column, UUID.class)
             )
+        ).collect(
+            Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)
         );
-    }
-
-    /**
-     * Ctor.
-     *
-     * @param mappings Mappings.
-     */
-    @SafeVarargs
-    private DefaultMappings(
-        final Map.Entry<Class<?>, Outcome.Mapping<?>>... mappings
-    ) {
-        this(
-            Stream
-                .of(mappings)
-                .collect(
-                    Collectors.toMap(
-                        Map.Entry::getKey,
-                        Map.Entry::getValue
-                    )
-                )
-        );
-    }
-
-    @Override
-    @SuppressWarnings("unchecked")
-    public <X> Outcome.Mapping<X> forType(final Class<? extends X> type) {
-        if (!this.map.containsKey(type)) {
-            throw new IllegalArgumentException(
-                String.format("Type %s is not supported", type.getName())
-            );
-        }
-        return (Outcome.Mapping<X>) this.map.get(type);
     }
 }

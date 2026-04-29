@@ -10,7 +10,6 @@ import java.sql.SQLException;
 
 /**
  * Request.
- *
  * @since 0.13
  */
 @FunctionalInterface
@@ -58,5 +57,4 @@ interface Request {
      * @throws SQLException If some problem
      */
     ResultSet fetch(PreparedStatement stmt) throws SQLException;
-
 }

@@ -34,16 +34,14 @@ final class ListOutcomeTest {
             .set("Walter Sobchak")
             .execute()
             .commit();
+        final ListOutcome<String> outcome = new ListOutcome<>(
+            rset -> rset.getString(1)
+        );
         final Collection<String> names = new JdbcSession(source)
             .sql("SELECT name FROM foo")
-            .select(
-                new ListOutcome<>(
-                    rset -> rset.getString(1)
-                )
-            );
+            .select(outcome);
         MatcherAssert.assertThat(
             "names collection size should be 2", names, Matchers.hasSize(2)
         );
     }
-
 }

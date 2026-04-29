@@ -56,19 +56,7 @@ public final class SingleOutcome<T> implements Outcome<T> {
     private final boolean silently;
 
     /**
-     * Primary ctor.
-     *
-     * @param mpp The mapping
-     * @param slnt Silently return NULL if there is no row
-     */
-    public SingleOutcome(final Mapping<? extends T> mpp, final boolean slnt) {
-        this.mapping = mpp;
-        this.silently = slnt;
-    }
-
-    /**
      * Public ctor.
-     *
      * @param type The type to convert to
      */
     public SingleOutcome(final Class<T> type) {
@@ -77,7 +65,6 @@ public final class SingleOutcome<T> implements Outcome<T> {
 
     /**
      * Public ctor.
-     *
      * @param type The type to convert to
      * @param slnt Silently return NULL if there is no row
      */
@@ -91,13 +78,23 @@ public final class SingleOutcome<T> implements Outcome<T> {
 
     /**
      * Public ctor.
-     *
      * @param type The type to convert to
      * @param mps The mappings
      * @param slnt Silently return NULL if there is no row
      */
+    // @checkstyle ConstructorsCodeFreeCheck (3 lines)
     public SingleOutcome(final Class<T> type, final Mappings mps, final boolean slnt) {
         this(mps.forType(type), slnt);
+    }
+
+    /**
+     * Primary ctor.
+     * @param mpp The mapping
+     * @param slnt Silently return NULL if there is no row
+     */
+    public SingleOutcome(final Mapping<? extends T> mpp, final boolean slnt) {
+        this.mapping = mpp;
+        this.silently = slnt;
     }
 
     @Override
@@ -114,7 +111,6 @@ public final class SingleOutcome<T> implements Outcome<T> {
 
     /**
      * Fetch the value from result set.
-     *
      * @param rset Result set
      * @return The result
      * @throws SQLException If some error inside

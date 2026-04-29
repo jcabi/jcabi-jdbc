@@ -15,7 +15,6 @@ import lombok.ToString;
 
 /**
  * Data source when all you have is a URL.
- *
  * @since 0.19.0
  */
 @ToString
@@ -29,7 +28,7 @@ public final class UrlSource implements DataSource {
 
     /**
      * Public ctor.
-     * @param jdbc The JDBC URL.
+     * @param jdbc The JDBC URL
      */
     public UrlSource(final String jdbc) {
         this.url = jdbc;
@@ -84,5 +83,4 @@ public final class UrlSource implements DataSource {
     public boolean isWrapperFor(final Class<?> iface) {
         throw new UnsupportedOperationException("#isWrapperFor()");
     }
-
 }

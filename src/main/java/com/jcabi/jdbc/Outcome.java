@@ -87,14 +87,12 @@ public interface Outcome<T> {
 
     /**
      * Default mappings.
-     *
      * @since 0.17.6
      */
     Mappings DEFAULT_MAPPINGS = new DefaultMappings();
 
     /**
      * Process the result set and return some value.
-     *
      * @param rset The result set to process
      * @param stmt The statement used in the run
      * @return The result
@@ -104,15 +102,14 @@ public interface Outcome<T> {
 
     /**
      * Mapping.
-     *
      * @param <T> Type of output
      * @since 0.13
      */
     @FunctionalInterface
     interface Mapping<T> {
+
         /**
          * Map.
-         *
          * @param rset Result set
          * @return Object
          * @throws SQLException If fails
@@ -122,17 +119,16 @@ public interface Outcome<T> {
 
     /**
      * Mappings for different types.
-     *
      * @since 0.17.6
      */
     @FunctionalInterface
     interface Mappings {
+
         /**
          * Mapping for a type.
-         *
-         * @param type Class of result.
-         * @param <T> Type of result.
-         * @return Mapping.
+         * @param type Class of result
+         * @param <T> Type of result
+         * @return Mapping
          */
         <T> Mapping<T> forType(Class<? extends T> type);
     }

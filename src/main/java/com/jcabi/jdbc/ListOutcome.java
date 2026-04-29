@@ -59,5 +59,4 @@ public final class ListOutcome<T> implements Outcome<List<T>> {
         }
         return result;
     }
-
 }

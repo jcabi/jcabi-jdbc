@@ -27,8 +27,8 @@ public final class StoredProcedureOutcome<T> implements Outcome<T> {
 
     /**
      * Ctor.
-     * @param indexes Indexes of the OUT params.
-     *  <b>Index count starts from 1</b>.
+     * @param indexes Indexes of the OUT params
+     *  &lt;b&gt;Index count starts from 1&lt;/b&gt;
      */
     @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
     public StoredProcedureOutcome(final int... indexes) {
@@ -59,5 +59,4 @@ public final class StoredProcedureOutcome<T> implements Outcome<T> {
         }
         return (T) outs;
     }
-
 }

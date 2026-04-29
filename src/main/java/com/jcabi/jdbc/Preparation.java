@@ -9,7 +9,6 @@ import java.sql.SQLException;
 
 /**
  * Preparation of a {@link java.sql.PreparedStatement}.
- *
  * @since 0.13
  */
 @FunctionalInterface
@@ -22,5 +21,4 @@ public interface Preparation {
      * @since 0.12
      */
     void prepare(PreparedStatement stmt) throws SQLException;
-
 }

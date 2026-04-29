@@ -39,17 +39,7 @@ public final class ColumnOutcome<T> implements Outcome<Collection<T>> {
     private final Mapping<T> mapping;
 
     /**
-     * Primary ctor.
-     *
-     * @param mpp The mapping
-     */
-    public ColumnOutcome(final Mapping<T> mpp) {
-        this.mapping = mpp;
-    }
-
-    /**
      * Public ctor.
-     *
      * @param type The type to convert to
      */
     public ColumnOutcome(final Class<T> type) {
@@ -58,12 +48,20 @@ public final class ColumnOutcome<T> implements Outcome<Collection<T>> {
 
     /**
      * Public ctor.
-     *
      * @param type The type to convert to
-     * @param mps The mappings.
+     * @param mps The mappings
      */
+    // @checkstyle ConstructorsCodeFreeCheck (3 lines)
     public ColumnOutcome(final Class<T> type, final Mappings mps) {
         this(mps.forType(type));
+    }
+
+    /**
+     * Primary ctor.
+     * @param mpp The mapping
+     */
+    public ColumnOutcome(final Mapping<T> mpp) {
+        this.mapping = mpp;
     }
 
     @Override
@@ -75,5 +73,4 @@ public final class ColumnOutcome<T> implements Outcome<Collection<T>> {
         }
         return result;
     }
-
 }

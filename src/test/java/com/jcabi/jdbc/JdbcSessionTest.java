@@ -5,10 +5,6 @@
 package com.jcabi.jdbc;
 
 import com.jcabi.aspects.Parallel;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import javax.sql.DataSource;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -25,7 +21,7 @@ final class JdbcSessionTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-    @SuppressWarnings({"PMD.UnnecessaryLocalRule", "PMD.CheckResultSet"})
+    @SuppressWarnings("PMD.UnnecessaryLocalRule")
     void sendsSqlManipulationsToJdbcDriver() throws Exception {
         final DataSource source = new H2Source("tiu78");
         new JdbcSession(source)
@@ -36,19 +32,13 @@ final class JdbcSessionTest {
             .set("Jeff Lebowski")
             .execute()
             .commit();
+        final Outcome<String> outcome = (rset, stmt) -> {
+            rset.next();
+            return rset.getString(1);
+        };
         final String name = new JdbcSession(source)
             .sql("SELECT name FROM foo WHERE name = 'Jeff Lebowski'")
-            .select(
-                new Outcome<String>() {
-                    @Override
-                    public String handle(final ResultSet rset,
-                        final Statement stmt)
-                        throws SQLException {
-                        rset.next();
-                        return rset.getString(1);
-                    }
-                }
-            );
+            .select(outcome);
         MatcherAssert.assertThat("result starts with Jeff", name, Matchers.startsWith("Jeff"));
     }
 
@@ -76,36 +66,23 @@ final class JdbcSessionTest {
      * @throws Exception If there is some problem inside
      */
     @Test
-    @SuppressWarnings({"PMD.UnnecessaryLocalRule", "PMD.CheckResultSet"})
+    @SuppressWarnings("PMD.UnnecessaryLocalRule")
     void automaticallyCommitsByDefault() throws Exception {
         final DataSource source = new H2Source("tt8u");
+        final Preparation prep = stmt -> stmt.setString(1, "Walter");
         new JdbcSession(source)
             .sql("CREATE TABLE foo16 (name VARCHAR(50))")
             .execute()
             .sql("INSERT INTO foo16 (name) VALUES (?)")
-            .prepare(
-                new Preparation() {
-                    @Override
-                    public void prepare(final PreparedStatement stmt)
-                        throws SQLException {
-                        stmt.setString(1, "Walter");
-                    }
-                }
-            )
+            .prepare(prep)
             .execute();
+        final Outcome<String> outcome = (rset, stmt) -> {
+            rset.next();
+            return rset.getString(1);
+        };
         final String name = new JdbcSession(source)
             .sql("SELECT name FROM foo16 WHERE name = 'Walter'")
-            .select(
-                new Outcome<String>() {
-                    @Override
-                    public String handle(final ResultSet rset,
-                        final Statement stmt)
-                        throws SQLException {
-                        rset.next();
-                        return rset.getString(1);
-                    }
-                }
-            );
+            .select(outcome);
         MatcherAssert.assertThat("result starts with Wa", name, Matchers.startsWith("Wa"));
     }
 
@@ -181,5 +158,4 @@ final class JdbcSessionTest {
             .sql(String.format("INSERT INTO %s VALUES ('hey')", table))
             .execute();
     }
-
 }

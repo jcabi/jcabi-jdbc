@@ -6,8 +6,6 @@ package com.jcabi.jdbc;
 
 import com.jolbox.bonecp.BoneCPDataSource;
 import java.sql.CallableStatement;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.sql.Types;
 import java.util.Date;
 import java.util.UUID;
@@ -37,13 +35,11 @@ final class JdbcSessionITCase {
 
     /**
      * JdbcSession can do PostgreSQL manipulations.
-     *
      * @throws Exception If there is some problem inside
      */
     @Test
     void manipulatesPostgresql() throws Exception {
-        final DataSource source = this.source();
-        new JdbcSession(source)
+        new JdbcSession(this.source())
             .autocommit(false)
             .sql("CREATE TABLE IF NOT EXISTS foo (name VARCHAR(50))")
             .execute()
@@ -56,7 +52,6 @@ final class JdbcSessionITCase {
 
     /**
      * JdbcSession can manipulate UUID types.
-     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -80,24 +75,21 @@ final class JdbcSessionITCase {
 
     /**
      * JdbcSession can change transaction isolation level.
-     *
      * @throws Exception If there is some problem inside
      */
     @Test
     void changesTransactionIsolationLevel() throws Exception {
-        final DataSource source = this.source();
-        new JdbcSession(source).sql("VACUUM").execute();
+        new JdbcSession(this.source()).sql("VACUUM").execute();
         MatcherAssert.assertThat("should complete", true, Matchers.is(true));
     }
 
     /**
      * JdbcSession can run a function (stored procedure) with
      * output parameters.
-     *
      * @throws Exception If something goes wrong
      */
     @Test
-    @SuppressWarnings("PMD.UnitTestContainsTooManyAsserts")
+    @SuppressWarnings({"PMD.UnitTestContainsTooManyAsserts", "PMD.UnnecessaryLocalRule"})
     void callsFunctionWithOutParam() throws Exception {
         final DataSource source = this.source();
         new JdbcSession(source).autocommit(false).sql(
@@ -111,21 +103,14 @@ final class JdbcSessionITCase {
                 " FROM users; END; $$ LANGUAGE plpgsql;"
             )
         ).execute().commit();
+        final Preparation prep = stmt -> {
+            final CallableStatement cstmt = (CallableStatement) stmt;
+            cstmt.registerOutParameter(1, Types.VARCHAR);
+            cstmt.registerOutParameter(2, Types.DATE);
+        };
         final Object[] result = new JdbcSession(source)
             .sql("{call fetchUser(?, ?)}")
-            .prepare(
-                new Preparation() {
-                    @Override
-                    public void
-                        prepare(final PreparedStatement stmt)
-                        throws SQLException {
-                            final CallableStatement cstmt =
-                                (CallableStatement) stmt;
-                            cstmt.registerOutParameter(1, Types.VARCHAR);
-                            cstmt.registerOutParameter(2, Types.DATE);
-                    }
-                }
-             )
+            .prepare(prep)
             .call(new StoredProcedureOutcome<Object[]>(1, 2));
         MatcherAssert.assertThat("result array size should be 2", result.length, Matchers.is(2));
         MatcherAssert.assertThat(
@@ -143,11 +128,10 @@ final class JdbcSessionITCase {
     /**
      * JdbcSession can run a function (stored procedure) with
      * input and output parameters.
-     *
      * @throws Exception If something goes wrong
      */
     @Test
-    @SuppressWarnings("PMD.UnitTestContainsTooManyAsserts")
+    @SuppressWarnings({"PMD.UnitTestContainsTooManyAsserts", "PMD.UnnecessaryLocalRule"})
     void callsFunctionWithInOutParam() throws Exception {
         final DataSource source = this.source();
         new JdbcSession(source).autocommit(false).sql(
@@ -161,20 +145,12 @@ final class JdbcSessionITCase {
                 " END; $$ LANGUAGE plpgsql;"
             )
         ).execute().commit();
+        final Preparation prep = stmt -> ((CallableStatement) stmt)
+            .registerOutParameter(2, Types.VARCHAR);
         final Object[] result = new JdbcSession(source)
             .sql("{call fetchUserById(?, ?)}")
             .set(1)
-            .prepare(
-                new Preparation() {
-                    @Override
-                    public void
-                        prepare(final PreparedStatement stmt)
-                        throws SQLException {
-                            ((CallableStatement) stmt)
-                                .registerOutParameter(2, Types.VARCHAR);
-                    }
-                }
-             )
+            .prepare(prep)
             .call(new StoredProcedureOutcome<Object[]>(2));
         MatcherAssert.assertThat("result array length should be 1", result.length, Matchers.is(1));
         MatcherAssert.assertThat(
@@ -186,7 +162,6 @@ final class JdbcSessionITCase {
 
     /**
      * Get data source.
-     *
      * @return Source
      */
     private DataSource source() {
@@ -202,5 +177,4 @@ final class JdbcSessionITCase {
         src.setDisableConnectionTracking(true);
         return src;
     }
-
 }

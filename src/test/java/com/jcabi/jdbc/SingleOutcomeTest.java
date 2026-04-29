@@ -14,7 +14,6 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link SingleOutcome}.
- *
  * @since 0.1
  */
 final class SingleOutcomeTest {
@@ -106,8 +105,7 @@ final class SingleOutcomeTest {
 
     /**
      * Create datasource.
-     *
-     * @return Source.
+     * @return Source
      */
     private DataSource datasource() {
         return new H2Source("ytt68");
