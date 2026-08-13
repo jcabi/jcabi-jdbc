@@ -17,7 +17,7 @@ import lombok.ToString;
  *
  * <p>Use it when you need a full collection:
  *
- * <pre> Collection&lgt;User&gt; users = new JdbcSession(source)
+ * <pre> Collection&lt;User&gt; users = new JdbcSession(source)
  *   .sql("SELECT * FROM user")
  *   .select(
  *     new ListOutcome&lt;User&gt;(

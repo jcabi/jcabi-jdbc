@@ -19,7 +19,7 @@ import lombok.ToString;
  *
  * <p>Use it when you need the first column:
  *
- * <pre> Collection&lgt;Long&gt; salaries = new JdbcSession(source)
+ * <pre> Collection&lt;Long&gt; salaries = new JdbcSession(source)
  *   .sql("SELECT salary FROM user")
  *   .select(new ColumnOutcome&lt;Long&gt;(Long.class));</pre>
  *
