@@ -82,7 +82,6 @@ public final class SingleOutcome<T> implements Outcome<T> {
      * @param mps The mappings
      * @param slnt Silently return NULL if there is no row
      */
-    // @checkstyle ConstructorsCodeFreeCheck (3 lines)
     public SingleOutcome(final Class<T> type, final Mappings mps, final boolean slnt) {
         this(mps.forType(type), slnt);
     }

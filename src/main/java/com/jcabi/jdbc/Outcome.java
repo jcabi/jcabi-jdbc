@@ -14,10 +14,10 @@ import java.sql.Statement;
  * <p>The following convenience implementations are provided:
  *
  * <ul>
- *  <li>{@link Outcome#NOT_EMPTY} to check that at least one result row is
- *      returned.
- *  <li>{@link Outcome#VOID} for when you wish to disregard the result.
- *  <li>{@link Outcome#UPDATE_COUNT} to check the number of updated rows.
+ * <li>{@link Outcome#NOT_EMPTY} to check that at least one result row is
+ * returned.
+ * <li>{@link Outcome#VOID} for when you wish to disregard the result.
+ * <li>{@link Outcome#UPDATE_COUNT} to check the number of updated rows.
  * </ul>
  *
  * @param <T> Type of expected result

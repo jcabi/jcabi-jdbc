@@ -7,7 +7,7 @@ package com.jcabi.jdbc;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -40,20 +40,20 @@ public final class ListOutcome<T> implements Outcome<List<T>> {
     /**
      * Mapping.
      */
-    private final transient ListOutcome.Mapping<T> mapping;
+    private final transient Outcome.Mapping<T> mapping;
 
     /**
      * Public ctor.
      * @param mpg Mapping
      */
-    public ListOutcome(final ListOutcome.Mapping<T> mpg) {
+    public ListOutcome(final Outcome.Mapping<T> mpg) {
         this.mapping = mpg;
     }
 
     @Override
     public List<T> handle(final ResultSet rset, final Statement stmt)
         throws SQLException {
-        final List<T> result = new LinkedList<>();
+        final List<T> result = new ArrayList<>(0);
         while (rset.next()) {
             result.add(this.mapping.map(rset));
         }

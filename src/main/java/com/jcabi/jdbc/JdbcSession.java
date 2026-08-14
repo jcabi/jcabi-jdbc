@@ -8,8 +8,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.LinkedList;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 import javax.sql.DataSource;
@@ -92,7 +92,7 @@ import lombok.ToString;
  *   new JdbcSession(ds)
  *     .sql("SQL STATEMENT 2")
  *     .execute();</pre>
-
+ *
  * <p>The above example will <b>fail</b> because the first JdbcSession closes
  * the connection, and the next one tries to work with it closed. In order to
  * not have this failure, the first session has to call
@@ -134,7 +134,7 @@ public final class JdbcSession {
      * Arguments.
      *
      * <p>Every time this attribute is modified, we must synchronize, because
-     * a non-thread-safe {@link LinkedList} is assigned to it.</p>
+     * a non-thread-safe {@link ArrayList} is assigned to it.</p>
      */
     private final transient Collection<Object> args;
 
@@ -142,7 +142,7 @@ public final class JdbcSession {
      * Arguments.
      *
      * <p>Every time this attribute is modified, we must synchronize, because
-     * a non-thread-safe {@link LinkedList} is assigned to it.</p>
+     * a non-thread-safe {@link ArrayList} is assigned to it.</p>
      *
      * @since 0.13
      */
@@ -176,8 +176,8 @@ public final class JdbcSession {
     // @checkstyle ConstructorsCodeFreeCheck (10 lines)
     @SuppressWarnings("PMD.ConstructorOnlyInitializesOrCallOtherConstructors")
     public JdbcSession(final DataSource src) {
-        this.args = new LinkedList<>();
-        this.preparations = new LinkedList<>();
+        this.args = new ArrayList<>(0);
+        this.preparations = new ArrayList<>(0);
         this.connection = new AtomicReference<>();
         this.auto = true;
         this.source = src;
@@ -419,7 +419,6 @@ public final class JdbcSession {
      * @param <T> Type of response
      * @return The result
      * @throws SQLException If fails
-     * @checkstyle ExecutableStatementCount (100 lines)
      */
     private <T> T run(final Outcome<T> outcome,
         final Connect connect, final Request request)
@@ -451,13 +450,11 @@ public final class JdbcSession {
      * @return The result
      * @throws SQLException If fails
      */
-    @SuppressWarnings("PMD.UnnecessaryLocalRule")
     private <T> T fetch(final Outcome<T> outcome,
         final Request request, final PreparedStatement stmt) throws SQLException {
         final T result;
         try (stmt) {
             this.configure(stmt);
-            // @checkstyle NestedTryDepth (5 lines)
             try (ResultSet rset = request.fetch(stmt)) {
                 result = outcome.handle(rset, stmt);
             }

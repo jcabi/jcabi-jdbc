@@ -34,7 +34,6 @@ final class DefaultMappings implements Outcome.Mappings {
      * Ctor.
      * @param column Column position
      */
-    // @checkstyle ConstructorsCodeFreeCheck (3 lines)
     DefaultMappings(final int column) {
         this(DefaultMappings.defaults(column));
     }

@@ -46,7 +46,11 @@ import lombok.ToString;
  */
 @ToString
 @EqualsAndHashCode(of = "date")
-@SuppressWarnings({"PMD.ReplaceJavaUtilDate", "PMD.ReplaceJavaUtilCalendar"})
+@SuppressWarnings({
+    "PMD.ReplaceJavaUtilDate",
+    "PMD.ReplaceJavaUtilCalendar",
+    "JavaUtilDate"
+})
 public final class Utc {
 
     /**

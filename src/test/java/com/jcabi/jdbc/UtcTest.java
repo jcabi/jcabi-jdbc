@@ -28,7 +28,8 @@ import org.junit.jupiter.api.Test;
 @SuppressWarnings({
     "PMD.ReplaceJavaUtilDate",
     "PMD.ReplaceJavaUtilCalendar",
-    "PMD.UnnecessaryLocalRule"
+    "PMD.UnnecessaryLocalRule",
+    "JavaUtilDate"
 })
 final class UtcTest {
 

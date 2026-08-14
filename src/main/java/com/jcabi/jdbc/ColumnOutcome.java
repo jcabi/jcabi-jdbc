@@ -7,9 +7,9 @@ package com.jcabi.jdbc;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.UUID;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
@@ -51,7 +51,6 @@ public final class ColumnOutcome<T> implements Outcome<Collection<T>> {
      * @param type The type to convert to
      * @param mps The mappings
      */
-    // @checkstyle ConstructorsCodeFreeCheck (3 lines)
     public ColumnOutcome(final Class<T> type, final Mappings mps) {
         this(mps.forType(type));
     }
@@ -67,7 +66,7 @@ public final class ColumnOutcome<T> implements Outcome<Collection<T>> {
     @Override
     public Collection<T> handle(final ResultSet rset, final Statement stmt)
         throws SQLException {
-        final Collection<T> result = new LinkedList<>();
+        final Collection<T> result = new ArrayList<>(0);
         while (rset.next()) {
             result.add(this.mapping.map(rset));
         }
