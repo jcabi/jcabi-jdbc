@@ -135,10 +135,6 @@ final class JdbcSessionMySqlITCase {
         );
     }
 
-    /**
-     * Get data source.
-     * @return Source
-     */
     private DataSource source() {
         final MysqlDataSource src = new MysqlDataSource();
         src.setUrl(this.container.getJdbcUrl());

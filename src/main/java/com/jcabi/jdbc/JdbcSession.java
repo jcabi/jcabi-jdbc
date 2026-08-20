@@ -411,15 +411,6 @@ public final class JdbcSession {
         );
     }
 
-    /**
-     * Run with this outcome, and this fetcher.
-     * @param outcome The outcome of the operation
-     * @param connect Connect
-     * @param request Request
-     * @param <T> Type of response
-     * @return The result
-     * @throws SQLException If fails
-     */
     private <T> T run(final Outcome<T> outcome,
         final Connect connect, final Request request)
         throws SQLException {
@@ -441,15 +432,6 @@ public final class JdbcSession {
         }
     }
 
-    /**
-     * Fetch the result.
-     * @param outcome The outcome of the operation
-     * @param request Request
-     * @param stmt Statement
-     * @param <T> Type of response
-     * @return The result
-     * @throws SQLException If fails
-     */
     private <T> T fetch(final Outcome<T> outcome,
         final Request request, final PreparedStatement stmt) throws SQLException {
         final T result;
@@ -462,12 +444,6 @@ public final class JdbcSession {
         return result;
     }
 
-    /**
-     * Rollback in case of error.
-     * @param conn The connection
-     * @param failure The original failure
-     * @throws SQLException If fails
-     */
     @SuppressWarnings("PMD.PreserveStackTrace")
     private void rollbackOnFailure(final Connection conn, final SQLException failure)
         throws SQLException {
@@ -487,11 +463,6 @@ public final class JdbcSession {
         }
     }
 
-    /**
-     * Open connection and cache it locally in the class.
-     * @return Connection to use
-     * @throws SQLException If fails
-     */
     private Connection connect() throws SQLException {
         synchronized (this.args) {
             if (this.connection.get() == null) {
@@ -501,10 +472,6 @@ public final class JdbcSession {
         }
     }
 
-    /**
-     * Close connection if it's open (runtime exception otherwise).
-     * @throws SQLException If fails to do the SQL operation
-     */
     private void disconnect() throws SQLException {
         final Connection conn = this.connection.getAndSet(null);
         if (conn == null) {
@@ -515,11 +482,6 @@ public final class JdbcSession {
         conn.close();
     }
 
-    /**
-     * Configure the statement.
-     * @param stmt Statement
-     * @throws SQLException If fails
-     */
     private void configure(final PreparedStatement stmt) throws SQLException {
         for (final Preparation prep : this.preparations) {
             prep.prepare(stmt);

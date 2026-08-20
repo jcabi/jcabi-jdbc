@@ -57,11 +57,6 @@ final class DefaultMappings implements Outcome.Mappings {
         return (Outcome.Mapping<X>) this.map.get(type);
     }
 
-    /**
-     * Build the default mappings for a given column.
-     * @param column Column position
-     * @return The default mappings map
-     */
     private static Map<Class<?>, Outcome.Mapping<?>> defaults(final int column) {
         return Stream.<Map.Entry<Class<?>, Outcome.Mapping<?>>>of(
             new AbstractMap.SimpleImmutableEntry<>(

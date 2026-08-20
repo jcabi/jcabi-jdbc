@@ -103,10 +103,6 @@ final class SingleOutcomeTest {
         );
     }
 
-    /**
-     * Create datasource.
-     * @return Source
-     */
     private DataSource datasource() {
         return new H2Source("ytt68");
     }

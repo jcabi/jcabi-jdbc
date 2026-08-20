@@ -160,10 +160,6 @@ final class JdbcSessionITCase {
         );
     }
 
-    /**
-     * Get data source.
-     * @return Source
-     */
     private DataSource source() {
         final BoneCPDataSource src = new BoneCPDataSource();
         src.setDriverClass(this.container.getDriverClassName());

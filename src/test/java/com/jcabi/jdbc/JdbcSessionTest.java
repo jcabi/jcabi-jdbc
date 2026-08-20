@@ -144,13 +144,6 @@ final class JdbcSessionTest {
         );
     }
 
-    /**
-     * Insert a row into a table.
-     * @param src Data source
-     * @param table Name of the table to INSERT into
-     * @throws Exception If there is some problem inside
-     * @since 0.10.2
-     */
     @Parallel(threads = 50)
     private void insert(final DataSource src, final String table)
         throws Exception {

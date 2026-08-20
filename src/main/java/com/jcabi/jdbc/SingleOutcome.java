@@ -108,12 +108,6 @@ public final class SingleOutcome<T> implements Outcome<T> {
         return result;
     }
 
-    /**
-     * Fetch the value from result set.
-     * @param rset Result set
-     * @return The result
-     * @throws SQLException If some error inside
-     */
     private T fetch(final ResultSet rset) throws SQLException {
         return this.mapping.map(rset);
     }
