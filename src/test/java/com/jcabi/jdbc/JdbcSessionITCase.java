@@ -21,6 +21,7 @@ import org.testcontainers.junit.jupiter.Testcontainers;
 
 /**
  * Integration case for {@link JdbcSession}.
+ *
  * @since 0.1
  */
 @Testcontainers(disabledWithoutDocker = true)
@@ -35,6 +36,7 @@ final class JdbcSessionITCase {
 
     /**
      * JdbcSession can do PostgreSQL manipulations.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -52,6 +54,7 @@ final class JdbcSessionITCase {
 
     /**
      * JdbcSession can manipulate UUID types.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -75,6 +78,7 @@ final class JdbcSessionITCase {
 
     /**
      * JdbcSession can change transaction isolation level.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -86,6 +90,7 @@ final class JdbcSessionITCase {
     /**
      * JdbcSession can run a function (stored procedure) with
      * output parameters.
+     *
      * @throws Exception If something goes wrong
      */
     @Test
@@ -128,6 +133,7 @@ final class JdbcSessionITCase {
     /**
      * JdbcSession can run a function (stored procedure) with
      * input and output parameters.
+     *
      * @throws Exception If something goes wrong
      */
     @Test

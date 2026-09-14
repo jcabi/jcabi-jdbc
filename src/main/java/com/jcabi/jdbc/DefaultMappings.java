@@ -14,6 +14,7 @@ import java.util.stream.Stream;
 
 /**
  * Default mappings for types.
+ *
  * @since 0.17.6
  */
 final class DefaultMappings implements Outcome.Mappings {
@@ -32,6 +33,7 @@ final class DefaultMappings implements Outcome.Mappings {
 
     /**
      * Ctor.
+     *
      * @param column Column position
      */
     DefaultMappings(final int column) {
@@ -40,6 +42,7 @@ final class DefaultMappings implements Outcome.Mappings {
 
     /**
      * Primary ctor.
+     *
      * @param mpp The mappings map
      */
     private DefaultMappings(final Map<Class<?>, Outcome.Mapping<?>> mpp) {

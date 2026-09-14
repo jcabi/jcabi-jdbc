@@ -13,6 +13,7 @@ import lombok.ToString;
 
 /**
  * Static data source which wraps a single {@link Connection}.
+ *
  * @since 0.10
  */
 @ToString
@@ -26,6 +27,7 @@ public final class StaticSource implements DataSource {
 
     /**
      * Public ctor.
+     *
      * @param cnx Connection
      */
     public StaticSource(final Connection cnx) {

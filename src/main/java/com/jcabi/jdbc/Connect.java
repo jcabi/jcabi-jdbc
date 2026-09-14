@@ -11,6 +11,7 @@ import java.sql.Statement;
 
 /**
  * Connect.
+ *
  * @since 0.13
  */
 @FunctionalInterface
@@ -18,6 +19,7 @@ interface Connect {
 
     /**
      * Create prepare statement.
+     *
      * @param conn Open connection
      * @return The statement
      * @throws SQLException If some problem
@@ -27,6 +29,7 @@ interface Connect {
     /**
      * Connect which opens a <b>CallableStatement</b>, which
      * is used for calling stored procedures.
+     *
      * @since 0.13
      */
     final class Call implements Connect {
@@ -38,6 +41,7 @@ interface Connect {
 
         /**
          * Ctor.
+         *
          * @param query Query
          */
         Call(final String query) {
@@ -52,6 +56,7 @@ interface Connect {
 
     /**
      * Plain, without keys.
+     *
      * @since 0.13
      */
     final class Plain implements Connect {
@@ -63,6 +68,7 @@ interface Connect {
 
         /**
          * Ctor.
+         *
          * @param query Query
          */
         Plain(final String query) {
@@ -77,6 +83,7 @@ interface Connect {
 
     /**
      * With returned keys.
+     *
      * @since 0.13
      */
     final class WithKeys implements Connect {
@@ -88,6 +95,7 @@ interface Connect {
 
         /**
          * Ctor.
+         *
          * @param query Query
          */
         WithKeys(final String query) {

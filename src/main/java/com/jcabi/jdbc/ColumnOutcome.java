@@ -17,14 +17,14 @@ import lombok.ToString;
 /**
  * Outcome that returns first column.
  *
- * <p>Use it when you need the first column:
+ * <p>Use it when you need the first column:</p>
  *
  * <pre> Collection&lt;Long&gt; salaries = new JdbcSession(source)
  *   .sql("SELECT salary FROM user")
  *   .select(new ColumnOutcome&lt;Long&gt;(Long.class));</pre>
  *
  * <p>Supported types are: {@link String}, {@link Long}, {@link Boolean},
- * {@link Byte}, {@link Date}, {@link UUID}, and {@link Utc}.
+ * {@link Byte}, {@link Date}, {@link UUID}, and {@link Utc}.</p>
  *
  * @param <T> Type of items
  * @since 0.13
@@ -40,6 +40,7 @@ public final class ColumnOutcome<T> implements Outcome<Collection<T>> {
 
     /**
      * Public ctor.
+     *
      * @param type The type to convert to
      */
     public ColumnOutcome(final Class<T> type) {
@@ -48,6 +49,7 @@ public final class ColumnOutcome<T> implements Outcome<Collection<T>> {
 
     /**
      * Public ctor.
+     *
      * @param type The type to convert to
      * @param mps The mappings
      */
@@ -57,6 +59,7 @@ public final class ColumnOutcome<T> implements Outcome<Collection<T>> {
 
     /**
      * Primary ctor.
+     *
      * @param mpp The mapping
      */
     public ColumnOutcome(final Mapping<T> mpp) {

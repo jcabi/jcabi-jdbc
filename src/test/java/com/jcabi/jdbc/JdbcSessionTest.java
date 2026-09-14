@@ -12,12 +12,14 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link JdbcSession}.
+ *
  * @since 0.1
  */
 final class JdbcSessionTest {
 
     /**
      * JdbcSession can do SQL manipulations.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -44,6 +46,7 @@ final class JdbcSessionTest {
 
     /**
      * JdbcSession can execute SQL.
+     *
      * @throws Exception If there is some problem inside
      * @since 0.9
      */
@@ -63,6 +66,7 @@ final class JdbcSessionTest {
 
     /**
      * JdbcSession can automatically commit.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -88,6 +92,7 @@ final class JdbcSessionTest {
 
     /**
      * JdbcSession can release connections from the pool.
+     *
      * @throws Exception If there is some problem inside
      * @since 0.10.2
      */
@@ -107,6 +112,7 @@ final class JdbcSessionTest {
 
     /**
      * JdbcSession can execute SQL in parallel threads.
+     *
      * @throws Exception If there is some problem inside
      * @since 0.10.2
      */
@@ -122,6 +128,7 @@ final class JdbcSessionTest {
 
     /**
      * JdbcSession can rollback transaction.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test

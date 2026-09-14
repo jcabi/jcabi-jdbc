@@ -12,12 +12,14 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link ListOutcome}.
+ *
  * @since 0.13
  */
 final class ListOutcomeTest {
 
     /**
      * ListOutcome can return the full list.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test

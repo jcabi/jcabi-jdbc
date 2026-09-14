@@ -15,6 +15,7 @@ import lombok.ToString;
 
 /**
  * Data source when all you have is a URL.
+ *
  * @since 0.19.0
  */
 @ToString
@@ -28,6 +29,7 @@ public final class UrlSource implements DataSource {
 
     /**
      * Public ctor.
+     *
      * @param jdbc The JDBC URL
      */
     public UrlSource(final String jdbc) {

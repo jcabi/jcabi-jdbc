@@ -23,6 +23,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test case of {@link Utc}.
+ *
  * @since 0.1
  */
 @SuppressWarnings({
@@ -52,6 +53,7 @@ final class UtcTest {
 
     /**
      * Prepare this test case.
+     *
      * @throws Exception If there is some problem inside
      */
     @BeforeEach
@@ -69,6 +71,7 @@ final class UtcTest {
 
     /**
      * Utc can save date to prepared statement.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -107,6 +110,7 @@ final class UtcTest {
 
     /**
      * Utc can load date from result set.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
@@ -144,6 +148,7 @@ final class UtcTest {
 
     /**
      * Utc can set and read message date, with different timezone.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test

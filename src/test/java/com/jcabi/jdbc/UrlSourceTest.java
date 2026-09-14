@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link UrlSource}.
+ *
  * @since 0.19.0
  */
 final class UrlSourceTest {

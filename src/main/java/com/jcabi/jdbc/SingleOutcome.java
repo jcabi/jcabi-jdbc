@@ -15,7 +15,7 @@ import lombok.ToString;
 /**
  * Outcome that returns first column in the first row.
  *
- * <p>Use it when you need the first column in the first row:
+ * <p>Use it when you need the first column in the first row:</p>
  *
  * <pre> Long id = new JdbcSession(source)
  *   .sql("SELECT id FROM user WHERE name = ?")
@@ -23,12 +23,12 @@ import lombok.ToString;
  *   .select(new SingleOutcome&lt;Long&gt;(Long.class));</pre>
  *
  * <p>Supported types are: {@link String}, {@link Long}, {@link Boolean},
- * {@link Byte}, {@link Date}, {@link UUID}, and {@link Utc}.
+ * {@link Byte}, {@link Date}, {@link UUID}, and {@link Utc}.</p>
  *
  * <p>By default, the outcome throws {@link SQLException} if no records
  * are found in the {@link ResultSet}. You can change this behavior by using
  * a two-arguments constructor ({@code null} will be returned if
- * {@link ResultSet} is empty):
+ * {@link ResultSet} is empty):</p>
  *
  * <pre> String name = new JdbcSession(source)
  *   .sql("SELECT name FROM user WHERE id = ?")
@@ -57,6 +57,7 @@ public final class SingleOutcome<T> implements Outcome<T> {
 
     /**
      * Public ctor.
+     *
      * @param type The type to convert to
      */
     public SingleOutcome(final Class<T> type) {
@@ -65,6 +66,7 @@ public final class SingleOutcome<T> implements Outcome<T> {
 
     /**
      * Public ctor.
+     *
      * @param type The type to convert to
      * @param slnt Silently return NULL if there is no row
      */
@@ -78,6 +80,7 @@ public final class SingleOutcome<T> implements Outcome<T> {
 
     /**
      * Public ctor.
+     *
      * @param type The type to convert to
      * @param mps The mappings
      * @param slnt Silently return NULL if there is no row
@@ -88,6 +91,7 @@ public final class SingleOutcome<T> implements Outcome<T> {
 
     /**
      * Primary ctor.
+     *
      * @param mpp The mapping
      * @param slnt Silently return NULL if there is no row
      */

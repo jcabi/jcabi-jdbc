@@ -18,7 +18,7 @@ import lombok.ToString;
  * UTC time zone manipulator.
  *
  * <p>When it's necessary to save date/time to the DB in UTC timezone, use
- * this class:
+ * this class:</p>
  *
  * <pre> new JdbcSession(source)
  *   .sql("INSERT INTO payment (amount, date) VALUES (?, ?)")
@@ -26,7 +26,7 @@ import lombok.ToString;
  *   .set(new Utc()) // current date to be set, in UTC timezone
  *   .insert(Outcome.VOID);</pre>
  *
- * <p>This class also helps during date/time retrieval:
+ * <p>This class also helps during date/time retrieval:</p>
  *
  * <pre> Date date = new JdbcSession(source)
  *   .sql("SELECT date FROM payment WHERE id = 555")
@@ -40,7 +40,7 @@ import lombok.ToString;
  *   );</pre>
  *
  * <p>{@link Timestamp} is used because {@link java.sql.Date}
- * supports only dates (without time).
+ * supports only dates (without time).</p>
  *
  * @since 0.1.8
  */
@@ -73,6 +73,7 @@ public final class Utc {
 
     /**
      * Public ctor.
+     *
      * @param when The date to use
      */
     // @checkstyle ConstructorsCodeFreeCheck (3 lines)
@@ -82,6 +83,7 @@ public final class Utc {
 
     /**
      * Get date that is encapsulated.
+     *
      * @return The date
      */
     public Date getDate() {
@@ -90,6 +92,7 @@ public final class Utc {
 
     /**
      * Convert date to timestamp and save to the statement.
+     *
      * @param stmt The statement
      * @param pos Position in the statement
      * @throws SQLException If some SQL problem inside
@@ -105,6 +108,7 @@ public final class Utc {
 
     /**
      * Retrieve timestamp from the result set.
+     *
      * @param rset The result set
      * @param pos Position in the result set
      * @return The date

@@ -16,6 +16,7 @@ import lombok.ToString;
 
 /**
  * H2 data source, for unit testing.
+ *
  * @since 0.13
  */
 @ToString
@@ -34,6 +35,7 @@ final class H2Source implements DataSource {
 
     /**
      * Public ctor.
+     *
      * @param dbname DB name
      */
     H2Source(final String dbname) {

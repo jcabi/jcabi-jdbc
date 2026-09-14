@@ -20,6 +20,7 @@ import org.testcontainers.utility.DockerImageName;
 
 /**
  * Integration case for {@link JdbcSession} on MySQL.
+ *
  * @since 0.17.6
  */
 @Testcontainers(disabledWithoutDocker = true)

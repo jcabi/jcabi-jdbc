@@ -247,6 +247,7 @@ public final class JdbcSession {
 
     /**
      * Run this preparation before executing the statement.
+     *
      * @param prp Preparation
      * @return This object
      * @since 0.13
@@ -260,6 +261,7 @@ public final class JdbcSession {
 
     /**
      * Clear all pre-set parameters (args, preparations, etc).
+     *
      * @return This object
      * @since 0.13
      */
@@ -275,6 +277,7 @@ public final class JdbcSession {
     /**
      * Commit the transaction (calls {@link Connection#commit()} and then
      * {@link Connection#close()}).
+     *
      * @throws SQLException If fails to do the SQL operation
      */
     public void commit() throws SQLException {
@@ -291,6 +294,7 @@ public final class JdbcSession {
     /**
      * Rollback the transaction (calls {@link Connection#rollback()} and then
      * {@link Connection#close()}).
+     *
      * @throws SQLException If fails to do the SQL operation
      */
     public void rollback() throws SQLException {
@@ -411,6 +415,7 @@ public final class JdbcSession {
         );
     }
 
+    @SuppressWarnings("PMD.CloseInlineResourceRule")
     private <T> T run(final Outcome<T> outcome,
         final Connect connect, final Request request)
         throws SQLException {

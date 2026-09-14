@@ -11,7 +11,7 @@ import java.sql.Statement;
 /**
  * Outcome of ResultSet.
  *
- * <p>The following convenience implementations are provided:
+ * <p>The following convenience implementations are provided:</p>
  *
  * <ul>
  * <li>{@link Outcome#NOT_EMPTY} to check that at least one result row is
@@ -32,7 +32,7 @@ public interface Outcome<T> {
      * {@link ResultSet}.
      *
      * <p>The outcome returns the value of {@link ResultSet#next()} and throws
-     * {@link SQLException} in case of a problem.
+     * {@link SQLException} in case of a problem.</p>
      *
      * @since 0.12
      */
@@ -41,7 +41,7 @@ public interface Outcome<T> {
     /**
      * Outcome that does nothing (and always returns {@code null}).
      *
-     * <p>Useful when you're not interested in the result:
+     * <p>Useful when you're not interested in the result:</p>
      *
      * <pre> new JdbcSession(source)
      *   .sql("INSERT INTO foo (name) VALUES (?)")
@@ -55,7 +55,7 @@ public interface Outcome<T> {
     /**
      * Outcome that returns the number of updated rows.
      *
-     * <p>Use it when you need to determine the number of rows updated:
+     * <p>Use it when you need to determine the number of rows updated:</p>
      *
      * <pre> Integer count = new JdbcSession(source)
      *   .sql("UPDATE employee SET salary = 35000 WHERE department = ?")
@@ -69,7 +69,7 @@ public interface Outcome<T> {
     /**
      * Outcome that returns last insert ID.
      *
-     * <p>Use it when you need to get last insert ID from INSERT:
+     * <p>Use it when you need to get last insert ID from INSERT:</p>
      *
      * <pre> long id = new JdbcSession(source)
      *   .sql("INSERT INTO employee (name) VALUES (?)")
@@ -87,12 +87,14 @@ public interface Outcome<T> {
 
     /**
      * Default mappings.
+     *
      * @since 0.17.6
      */
     Mappings DEFAULT_MAPPINGS = new DefaultMappings();
 
     /**
      * Process the result set and return some value.
+     *
      * @param rset The result set to process
      * @param stmt The statement used in the run
      * @return The result
@@ -102,6 +104,7 @@ public interface Outcome<T> {
 
     /**
      * Mapping.
+     *
      * @param <T> Type of output
      * @since 0.13
      */
@@ -110,6 +113,7 @@ public interface Outcome<T> {
 
         /**
          * Map.
+         *
          * @param rset Result set
          * @return Object
          * @throws SQLException If fails
@@ -119,6 +123,7 @@ public interface Outcome<T> {
 
     /**
      * Mappings for different types.
+     *
      * @since 0.17.6
      */
     @FunctionalInterface
@@ -126,6 +131,7 @@ public interface Outcome<T> {
 
         /**
          * Mapping for a type.
+         *
          * @param type Class of result
          * @param <T> Type of result
          * @return Mapping

@@ -12,6 +12,7 @@ import java.util.Collection;
 
 /**
  * Prepare arguments.
+ *
  * @since 0.13
  */
 final class PrepareArgs implements Preparation {
@@ -23,6 +24,7 @@ final class PrepareArgs implements Preparation {
 
     /**
      * Ctor.
+     *
      * @param arguments Arguments
      */
     PrepareArgs(final Collection<Object> arguments) {

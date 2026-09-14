@@ -15,7 +15,7 @@ import lombok.ToString;
 /**
  * Outcome that returns a list.
  *
- * <p>Use it when you need a full collection:
+ * <p>Use it when you need a full collection:</p>
  *
  * <pre> Collection&lt;User&gt; users = new JdbcSession(source)
  *   .sql("SELECT * FROM user")
@@ -44,6 +44,7 @@ public final class ListOutcome<T> implements Outcome<List<T>> {
 
     /**
      * Public ctor.
+     *
      * @param mpg Mapping
      */
     public ListOutcome(final Outcome.Mapping<T> mpg) {

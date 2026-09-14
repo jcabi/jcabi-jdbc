@@ -11,12 +11,14 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link Outcome}.
+ *
  * @since 0.13
  */
 final class OutcomeTest {
 
     /**
      * Outcome can fetch last insert id.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test

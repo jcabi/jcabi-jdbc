@@ -13,6 +13,7 @@ import lombok.ToString;
 
 /**
  * Outcome of a stored procedure with OUT parameters.
+ *
  * @param <T> Type of the returned result, which <b>has to be</b> Object[]
  * @since 0.17
  */
@@ -27,6 +28,7 @@ public final class StoredProcedureOutcome<T> implements Outcome<T> {
 
     /**
      * Ctor.
+     *
      * @param indexes Indexes of the OUT params
      *  &lt;b&gt;Index count starts from 1&lt;/b&gt;
      */

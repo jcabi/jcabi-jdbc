@@ -12,12 +12,14 @@ import org.junit.jupiter.api.Test;
 
 /**
  * Test case for {@link ColumnOutcome}.
+ *
  * @since 0.13
  */
 final class ColumnOutcomeTest {
 
     /**
      * ColumnOutcome can return the first column.
+     *
      * @throws Exception If there is some problem inside
      */
     @Test
