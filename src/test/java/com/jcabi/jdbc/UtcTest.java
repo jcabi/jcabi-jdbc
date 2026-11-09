@@ -4,17 +4,25 @@
  */
 package com.jcabi.jdbc;
 
+import java.lang.reflect.Proxy;
 import java.security.SecureRandom;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 import java.util.Random;
 import java.util.TimeZone;
+import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import javax.sql.DataSource;
 import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
@@ -178,5 +186,75 @@ final class UtcTest {
             absolute.toString(),
             Matchers.equalTo(date.toString())
         );
+    }
+
+    /**
+     * Concurrent writes keep their timestamps isolated from driver mutations.
+     *
+     * @throws Exception If some problem occurs
+     */
+    @Test
+    void isolatesCalendarsWhenSaving() throws Exception {
+        UtcTest.checkCalendars(true);
+    }
+
+    /**
+     * Concurrent reads keep their timestamps isolated from driver mutations.
+     *
+     * @throws Exception If some problem occurs
+     */
+    @Test
+    void isolatesCalendarsWhenLoading() throws Exception {
+        UtcTest.checkCalendars(false);
+    }
+
+    private static void checkCalendars(final boolean saving) throws Exception {
+        final CyclicBarrier barrier = new CyclicBarrier(2);
+        final long first = 1000L;
+        final long second = 2000L;
+        try (ExecutorService threads = Executors.newFixedThreadPool(2)) {
+            final Future<Long> left = threads.submit(
+                () -> UtcTest.driverTimestamp(saving, first, barrier)
+            );
+            final Future<Long> right = threads.submit(
+                () -> UtcTest.driverTimestamp(saving, second, barrier)
+            );
+            MatcherAssert.assertThat(
+                "the first driver call retains its own timestamp",
+                left.get(10L, TimeUnit.SECONDS), Matchers.equalTo(first)
+            );
+            MatcherAssert.assertThat(
+                "the second driver call retains its own timestamp",
+                right.get(10L, TimeUnit.SECONDS), Matchers.equalTo(second)
+            );
+        }
+    }
+
+    private static long driverTimestamp(
+        final boolean saving, final long millis, final CyclicBarrier barrier
+    ) throws Exception {
+        final long[] observed = new long[1];
+        final Class<?> type;
+        if (saving) {
+            type = PreparedStatement.class;
+        } else {
+            type = ResultSet.class;
+        }
+        final Object driver = Proxy.newProxyInstance(
+            Thread.currentThread().getContextClassLoader(), new Class<?>[] {type},
+            (proxy, method, args) -> {
+                final Calendar calendar = (Calendar) args[args.length - 1];
+                calendar.setTimeInMillis(millis);
+                barrier.await(5L, TimeUnit.SECONDS);
+                observed[0] = calendar.getTimeInMillis();
+                return new Timestamp(observed[0]);
+            }
+        );
+        if (saving) {
+            new Utc(new Date(millis)).setTimestamp((PreparedStatement) driver, 1);
+        } else {
+            observed[0] = Utc.getTimestamp((ResultSet) driver, 1).getTime();
+        }
+        return observed[0];
     }
 }
