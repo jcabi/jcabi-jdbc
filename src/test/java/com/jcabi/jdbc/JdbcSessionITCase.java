@@ -15,9 +15,9 @@ import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.JdbcDatabaseContainer;
-import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.postgresql.PostgreSQLContainer;
 
 /**
  * Integration case for {@link JdbcSession}.
@@ -32,7 +32,7 @@ final class JdbcSessionITCase {
      */
     @Container
     private final JdbcDatabaseContainer<?> container =
-        new PostgreSQLContainer<>("postgres:9.6.12");
+        new PostgreSQLContainer("postgres:9.6.12");
 
     /**
      * JdbcSession can do PostgreSQL manipulations.
