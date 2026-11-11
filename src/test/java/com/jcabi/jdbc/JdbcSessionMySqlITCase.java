@@ -13,9 +13,9 @@ import org.hamcrest.MatcherAssert;
 import org.hamcrest.Matchers;
 import org.junit.jupiter.api.Test;
 import org.testcontainers.containers.JdbcDatabaseContainer;
-import org.testcontainers.containers.MySQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
+import org.testcontainers.mysql.MySQLContainer;
 import org.testcontainers.utility.DockerImageName;
 
 /**
@@ -31,7 +31,7 @@ final class JdbcSessionMySqlITCase {
      */
     @Container
     private final JdbcDatabaseContainer<?> container =
-        new MySQLContainer<>(
+        new MySQLContainer(
             DockerImageName
                 .parse("mysql/mysql-server:latest")
                 .asCompatibleSubstituteFor("mysql")
