@@ -48,16 +48,9 @@ import lombok.ToString;
 @EqualsAndHashCode(of = "date")
 @SuppressWarnings({
     "PMD.ReplaceJavaUtilDate",
-    "PMD.ReplaceJavaUtilCalendar",
     "JavaUtilDate"
 })
 public final class Utc {
-
-    /**
-     * The calendar to use.
-     */
-    private static final Calendar CALENDAR =
-        Calendar.getInstance(new SimpleTimeZone(0, "UTC"));
 
     /**
      * The date to work with.
@@ -102,7 +95,7 @@ public final class Utc {
         stmt.setTimestamp(
             pos,
             new Timestamp(this.date),
-            Utc.CALENDAR
+            Calendar.getInstance(new SimpleTimeZone(0, "UTC"))
         );
     }
 
@@ -117,7 +110,9 @@ public final class Utc {
     @SuppressWarnings("PMD.ProhibitPublicStaticMethods")
     public static Date getTimestamp(final ResultSet rset, final int pos)
         throws SQLException {
-        final Timestamp stamp = rset.getTimestamp(pos, Utc.CALENDAR);
+        final Timestamp stamp = rset.getTimestamp(
+            pos, Calendar.getInstance(new SimpleTimeZone(0, "UTC"))
+        );
         Date when = null;
         if (stamp != null) {
             when = new Date(stamp.getTime());
