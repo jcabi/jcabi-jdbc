@@ -97,6 +97,39 @@ final class SingleOutcomeTest {
     }
 
     @Test
+    void preservesNullLong() throws Exception {
+        MatcherAssert.assertThat(
+            "SQL NULL should remain null for Long",
+            new JdbcSession(this.datasource())
+                .sql("SELECT CAST(NULL AS BIGINT)")
+                .select(new SingleOutcome<>(Long.class)),
+            Matchers.nullValue()
+        );
+    }
+
+    @Test
+    void preservesNullBoolean() throws Exception {
+        MatcherAssert.assertThat(
+            "SQL NULL should remain null for Boolean",
+            new JdbcSession(this.datasource())
+                .sql("SELECT CAST(NULL AS BOOLEAN)")
+                .select(new SingleOutcome<>(Boolean.class)),
+            Matchers.nullValue()
+        );
+    }
+
+    @Test
+    void preservesNullByte() throws Exception {
+        MatcherAssert.assertThat(
+            "SQL NULL should remain null for Byte",
+            new JdbcSession(this.datasource())
+                .sql("SELECT CAST(NULL AS TINYINT)")
+                .select(new SingleOutcome<>(Byte.class)),
+            Matchers.nullValue()
+        );
+    }
+
+    @Test
     void failsFast() {
         Assertions.assertThrows(
             IllegalArgumentException.class,

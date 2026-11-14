@@ -43,4 +43,49 @@ final class ColumnOutcomeTest {
             "result collection should have size 2", names, Matchers.hasSize(2)
         );
     }
+
+    @Test
+    void distinguishesNullLongFromStoredValues() throws Exception {
+        MatcherAssert.assertThat(
+            "Long mapping should preserve null and stored values in the selected column",
+            new JdbcSession(new H2Source("nulllong")).sql(
+                String.join(
+                    " ",
+                    "SELECT * FROM (VALUES (1, CAST(NULL AS BIGINT)),",
+                    "(2, 0), (3, 42)) ORDER BY 1"
+                )
+            ).select(new ColumnOutcome<>(Long.class, new DefaultMappings(2))),
+            Matchers.contains(null, 0L, 42L)
+        );
+    }
+
+    @Test
+    void distinguishesNullBooleanFromStoredValues() throws Exception {
+        MatcherAssert.assertThat(
+            "Boolean mapping should preserve null and stored values in the selected column",
+            new JdbcSession(new H2Source("nullboolean")).sql(
+                String.join(
+                    " ",
+                    "SELECT * FROM (VALUES (1, CAST(NULL AS BOOLEAN)),",
+                    "(2, FALSE), (3, TRUE)) ORDER BY 1"
+                )
+            ).select(new ColumnOutcome<>(Boolean.class, new DefaultMappings(2))),
+            Matchers.contains(null, false, true)
+        );
+    }
+
+    @Test
+    void distinguishesNullByteFromStoredValues() throws Exception {
+        MatcherAssert.assertThat(
+            "Byte mapping should preserve null and stored values in the selected column",
+            new JdbcSession(new H2Source("nullbyte")).sql(
+                String.join(
+                    " ",
+                    "SELECT * FROM (VALUES (1, CAST(NULL AS TINYINT)),",
+                    "(2, 0), (3, 65)) ORDER BY 1"
+                )
+            ).select(new ColumnOutcome<>(Byte.class, new DefaultMappings(2))),
+            Matchers.contains(null, (byte) 0, (byte) 65)
+        );
+    }
 }

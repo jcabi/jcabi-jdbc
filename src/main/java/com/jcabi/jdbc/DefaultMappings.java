@@ -5,6 +5,8 @@
 package com.jcabi.jdbc;
 
 import java.math.BigDecimal;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.AbstractMap;
 import java.util.Date;
 import java.util.Map;
@@ -66,13 +68,13 @@ final class DefaultMappings implements Outcome.Mappings {
                 String.class, rs -> rs.getString(column)
             ),
             new AbstractMap.SimpleImmutableEntry<>(
-                Long.class, rs -> rs.getLong(column)
+                Long.class, rs -> DefaultMappings.nullable(rs, rs.getLong(column))
             ),
             new AbstractMap.SimpleImmutableEntry<>(
-                Boolean.class, rs -> rs.getBoolean(column)
+                Boolean.class, rs -> DefaultMappings.nullable(rs, rs.getBoolean(column))
             ),
             new AbstractMap.SimpleImmutableEntry<>(
-                Byte.class, rs -> rs.getByte(column)
+                Byte.class, rs -> DefaultMappings.nullable(rs, rs.getByte(column))
             ),
             new AbstractMap.SimpleImmutableEntry<>(
                 Date.class, rs -> rs.getDate(column)
@@ -92,5 +94,14 @@ final class DefaultMappings implements Outcome.Mappings {
         ).collect(
             Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)
         );
+    }
+
+    private static <T> T nullable(final ResultSet rset, final T value)
+        throws SQLException {
+        T result = null;
+        if (!rset.wasNull()) {
+            result = value;
+        }
+        return result;
     }
 }
