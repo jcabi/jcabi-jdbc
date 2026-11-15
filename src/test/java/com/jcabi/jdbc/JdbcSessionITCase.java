@@ -32,7 +32,7 @@ final class JdbcSessionITCase {
      */
     @Container
     private final JdbcDatabaseContainer<?> container =
-        new PostgreSQLContainer("postgres:9.6.12");
+        new PostgreSQLContainer("postgres:9.6.24");
 
     /**
      * JdbcSession can do PostgreSQL manipulations.
