@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.util.AbstractMap;
 import java.util.Date;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -80,7 +81,10 @@ final class DefaultMappings implements Outcome.Mappings {
                 Date.class, rs -> rs.getDate(column)
             ),
             new AbstractMap.SimpleImmutableEntry<>(
-                Utc.class, rs -> new Utc(Utc.getTimestamp(rs, column))
+                Utc.class, rs -> Optional
+                    .ofNullable(Utc.getTimestamp(rs, column))
+                    .map(Utc::new)
+                    .orElse(null)
             ),
             new AbstractMap.SimpleImmutableEntry<>(
                 byte[].class, rs -> rs.getBytes(column)
