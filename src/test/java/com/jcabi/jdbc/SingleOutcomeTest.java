@@ -130,6 +130,17 @@ final class SingleOutcomeTest {
     }
 
     @Test
+    void preservesNullUtc() throws Exception {
+        MatcherAssert.assertThat(
+            "SQL NULL should remain null for Utc",
+            new JdbcSession(this.datasource())
+                .sql("SELECT CAST(NULL AS TIMESTAMP)")
+                .select(new SingleOutcome<>(Utc.class)),
+            Matchers.nullValue()
+        );
+    }
+
+    @Test
     void failsFast() {
         Assertions.assertThrows(
             IllegalArgumentException.class,

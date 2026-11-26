@@ -75,6 +75,21 @@ final class ColumnOutcomeTest {
     }
 
     @Test
+    void preservesNullUtcInColumn() throws Exception {
+        MatcherAssert.assertThat(
+            "Utc mapping should keep SQL NULL as a null element in the column",
+            new JdbcSession(new H2Source("nullutc")).sql(
+                String.join(
+                    " ",
+                    "SELECT * FROM (VALUES (1, CAST(NULL AS TIMESTAMP)),",
+                    "(2, CURRENT_TIMESTAMP())) ORDER BY 1"
+                )
+            ).select(new ColumnOutcome<>(Utc.class, new DefaultMappings(2))),
+            Matchers.hasItem(Matchers.nullValue())
+        );
+    }
+
+    @Test
     void distinguishesNullByteFromStoredValues() throws Exception {
         MatcherAssert.assertThat(
             "Byte mapping should preserve null and stored values in the selected column",
